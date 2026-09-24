@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList, RequirementList, RatingSummary, ReportList, StatusBadge, Timeline, languagesText } from "@/components/booking";
-import { Field, RadioGroup, TextArea } from "@/components/fields";
+import { Field, RadioGroup, Select, TextArea } from "@/components/fields";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { RATING_COMMENT_MAX, RATING_DIMENSIONS, RATING_SCALE } from "@/config/ratings";
 import { serviceLabel } from "@/config/services";
@@ -12,7 +12,9 @@ import { availableActions } from "@/domain/lifecycle";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getBookingForCustomer } from "@/server/bookings";
 import { requireViewer } from "@/server/viewer";
-import { cancelBookingAction, rateBookingAction } from "../actions";
+import { cancelBookingAction, fileComplaintAction, rateBookingAction } from "../actions";
+import { COMPLAINT_CATEGORIES, COMPLAINT_TEXT_MAX, complaintCategoryLabel } from "@/config/complaints";
+import { listCustomerComplaints } from "@/server/complaints";
 
 export const metadata: Metadata = { title: "Booking" };
 
@@ -23,8 +25,10 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
   const viewer = await requireViewer();
   const id = idInput.safeParse((await params).id);
   if (!id.success) notFound();
-  const detail = await getBookingForCustomer(getDb(), viewer.sub, id.data);
+  const db = getDb();
+  const detail = await getBookingForCustomer(db, viewer.sub, id.data);
   if (!detail) notFound();
+  const myComplaints = await listCustomerComplaints(db, viewer.sub, id.data);
   const { booking, protector, events, rating, reports } = detail;
   const canCancel = availableActions(booking.status, "CUSTOMER").includes("CANCEL");
 
@@ -93,6 +97,29 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
           ) : (
             <p className="text-sm text-muted">You can tell us how it felt once it&apos;s completed.</p>
           )}
+        </Card>
+        <Card title="Something wrong?">
+          <p className="mb-4 text-sm text-muted">
+            Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about it,
+            they do so in their own words.
+          </p>
+          {myComplaints.length > 0 && (
+            <ul className="mb-4 space-y-1 text-sm">
+              {myComplaints.map((c) => (
+                <li key={c.id}>
+                  {complaintCategoryLabel(c.category)} — <strong>{c.status}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+          <ActionForm action={fileComplaintAction} submitLabel="Send to Operations" variant="secondary" hidden={{ bookingId: booking.id }}>
+            <Field label="What is it about?">
+              <Select name="category" options={COMPLAINT_CATEGORIES} />
+            </Field>
+            <Field label="What happened">
+              <TextArea name="body" maxLength={COMPLAINT_TEXT_MAX} required />
+            </Field>
+          </ActionForm>
         </Card>
         {reports.length > 0 && (
           <Card title="Protector's reports" className="md:col-span-2">

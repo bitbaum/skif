@@ -9,6 +9,8 @@ import { PAYMENT_STATUSES } from "@/domain/payment";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
 import { INCIDENT_REVIEW_STATUSES } from "@/domain/incidents";
 import { INCIDENT_SEVERITY_KEYS } from "@/config/reports";
+import { COMPLAINT_CATEGORY_KEYS } from "@/config/complaints";
+import { COMPLAINT_STATUSES } from "@/domain/complaints";
 
 export const bookingStatus = pgEnum("booking_status", BOOKING_STATUSES);
 export const paymentStatus = pgEnum("payment_status", PAYMENT_STATUSES);
@@ -23,3 +25,5 @@ export const incidentReview = pgEnum("incident_review", INCIDENT_REVIEW_STATUSES
 
 export const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 export const textArray = (name: string) => text(name).array().notNull().default(sql`'{}'::text[]`);
+export const complaintStatus = pgEnum("complaint_status", COMPLAINT_STATUSES);
+export const complaintCategory = pgEnum("complaint_category", COMPLAINT_CATEGORY_KEYS);

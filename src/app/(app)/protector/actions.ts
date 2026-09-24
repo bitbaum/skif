@@ -7,6 +7,7 @@ import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import {
   capabilityFields,
+  complaintActionInput,
   describeIssue,
   formFields,
   idInput,
@@ -17,6 +18,7 @@ import {
 import { fileReport } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { saveAvailability } from "@/server/availability";
+import { actOnComplaint } from "@/server/complaints";
 import { applyAsProtector } from "@/server/protectors";
 import { requireApprovedProtector, requireViewer } from "@/server/viewer";
 
@@ -69,4 +71,17 @@ export async function availabilityAction(_: ActionState, form: FormData): Promis
   if (!windows.success) return { error: windows.error };
   await saveAvailability(getDb(), viewer.protector.id, windows.data);
   redirect("/protector?saved=1");
+}
+
+export async function protectorComplaintAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireApprovedProtector();
+  const id = idInput.safeParse(form.get("complaintId"));
+  if (!id.success) return { error: "Complaint not found" };
+  const parsed = complaintActionInput.safeParse(formFields(form));
+  if (!parsed.success) return { error: describeIssue(parsed.error) };
+  const actor = { role: "PROTECTOR", sub: viewer.sub, protectorId: viewer.protector.id } as const;
+  const result = await actOnComplaint(getDb(), id.data, actor, parsed.data);
+  if (!result.success) return { error: result.error };
+  revalidatePath("/protector");
+  return null;
 }

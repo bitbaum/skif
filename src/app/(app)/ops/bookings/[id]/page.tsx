@@ -23,7 +23,11 @@ import { fitLabel, type MatchResult } from "@/domain/matching";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getBookingForOps } from "@/server/bookings";
 import { matchForBooking } from "@/server/matching";
+import { listComplaintsForBooking } from "@/server/complaints";
 import { getCustomerProfile } from "@/server/customers";
+import { complaintCategoryLabel } from "@/config/complaints";
+import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
+import Link from "next/link";
 import { getPreferences } from "@/server/preferences";
 import { requireOps } from "@/server/viewer";
 import { IncidentReview } from "@/components/incident-review";
@@ -100,10 +104,11 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
   const { booking, protector, events, rating, reports } = detail;
   const canAssign = availableActions(booking.status, "OPS").includes("ASSIGN");
   const canCancel = availableActions(booking.status, "OPS").includes("CANCEL");
-  const [match, prefs, profile] = await Promise.all([
+  const [match, prefs, profile, bookingComplaints] = await Promise.all([
     canAssign ? matchForBooking(db, booking) : null,
     getPreferences(db, booking.customerSub),
     getCustomerProfile(db, booking.customerSub),
+    listComplaintsForBooking(db, booking.id),
   ]);
 
   return (
@@ -152,6 +157,20 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
         <Card title="Customer's rating">
           <RatingSummary rating={rating} />
         </Card>
+        {bookingComplaints.length > 0 && (
+          <Card title="Complaints">
+            <ul className="space-y-1 text-sm">
+              {bookingComplaints.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/ops/complaints/${c.id}`} className="text-accent underline">
+                    {complaintCategoryLabel(c.category)}
+                  </Link>{" "}
+                  — {COMPLAINT_STATUS_LABELS[c.status]}
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
         <Card title="Reports and incidents">
           <ReportList reports={reports} showReview />
           {reports

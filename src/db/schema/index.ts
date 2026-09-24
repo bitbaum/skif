@@ -5,5 +5,6 @@
  */
 export * from "./assessments";
 export * from "./bookings";
+export * from "./complaints";
 export * from "./people";
 export * from "./shared";

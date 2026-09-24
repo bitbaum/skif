@@ -13,6 +13,7 @@ import { idInput } from "@/domain/inputs";
 import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { getProtector, listCapabilities, type ProtectorCapability } from "@/server/protectors";
 import { listAvailability } from "@/server/availability";
+import { countUpheld } from "@/server/complaints";
 import { requireOps } from "@/server/viewer";
 import { assessCapabilityAction, protectorStatusAction } from "../../actions";
 
@@ -68,9 +69,10 @@ export default async function OpsProtectorPage({ params }: { params: Promise<{ i
   const db = getDb();
   const protector = await getProtector(db, id.data);
   if (!protector) notFound();
-  const [capabilities, windows] = await Promise.all([
+  const [capabilities, windows, upheld] = await Promise.all([
     listCapabilities(db, protector.id),
     listAvailability(db, protector.id),
+    countUpheld(db, protector.id),
   ]);
   const today = zonedIsoDay(new Date());
 
@@ -103,6 +105,7 @@ export default async function OpsProtectorPage({ params }: { params: Promise<{ i
               ["Languages", languagesText(protector.languages)],
               ["Styles", protector.presenceStyles.map(presenceText).join(", ")],
               ["Available (Zürich)", <AvailabilitySummary key="a" windows={windows} />],
+              ["Upheld complaints", upheld === 0 ? "None" : `${upheld} — not used in ranking; decide on suspension yourself`],
             ]}
           />
         </Card>
