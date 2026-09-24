@@ -1,0 +1,20 @@
+name: Deploy
+
+# Push to main → deploy to bitbaum. All logic lives in one place:
+# bitbaum/loki/.github/workflows/selfhost-deploy.yml
+#
+# Seeded by Loki kickoff / register-cd so the repo is CD-ready once
+# scripts/hetzner/register-site.sh (or auto-register on the box) adds the
+# apps.conf row and deploy secret.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    uses: bitbaum/loki/.github/workflows/selfhost-deploy.yml@main
+    with:
+      app: skif
+    secrets:
+      HETZNER_SSH_PRIVATE_KEY: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
