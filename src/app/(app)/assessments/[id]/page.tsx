@@ -2,7 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ConstraintList } from "@/components/booking";
 import { Badge, Card, formatWhen, PageHeader } from "@/components/ui";
-import { concernLabel, costLabel, findIntervention, intrusivenessLabel } from "@/config/assessment";
+import { concernLabel, costLabel } from "@/config/assessment";
+import {
+  autonomyLabel,
+  basisLabel,
+  findIntervention,
+  kindLabel,
+  levelText,
+  needsPurchase,
+  privacyLabel,
+} from "@/config/interventions";
 import { constraintLabel } from "@/config/constraints";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
@@ -19,10 +28,22 @@ function Intervention({ id, emphasis = false }: { id: string; emphasis?: boolean
     <div className={`rounded-lg border p-3 text-sm ${emphasis ? "border-accent bg-accent-soft" : "border-line"}`}>
       <p className="font-medium">{i.title}</p>
       <p className="mt-1 flex flex-wrap gap-2">
-        <Badge>{costLabel(i.cost)}</Badge>
-        <Badge>{intrusivenessLabel(i.intrusiveness)}</Badge>
-        {!i.purchase && <Badge tone="accent">Nothing to buy</Badge>}
+        <Badge>{kindLabel(i.kind)}</Badge>
+        {!needsPurchase(i.kind) && <Badge tone="accent">Nothing to buy</Badge>}
       </p>
+      <dl className="mt-2 grid grid-cols-[max-content_1fr] gap-x-4 gap-y-0.5 text-muted">
+        <dt>Expected benefit</dt>
+        <dd>
+          {levelText(i.benefit)} · confidence {levelText(i.evidence.confidence).toLowerCase()} (
+          {basisLabel(i.evidence.basis)})
+        </dd>
+        <dt>Privacy</dt>
+        <dd>{privacyLabel(i.privacyImpact)}</dd>
+        <dt>Freedom</dt>
+        <dd>{autonomyLabel(i.autonomyImpact)}</dd>
+        <dt>Cost</dt>
+        <dd>{costLabel(i.cost)}</dd>
+      </dl>
       <p className="mt-2 text-muted">Trade-off: {i.tradeoffs}</p>
     </div>
   );
@@ -55,7 +76,7 @@ function ConcernSection({ plan }: { plan: ConcernPlan }) {
         {plan.alternatives.length > 0 && (
           <details className="space-y-2">
             <summary className="cursor-pointer text-sm font-semibold">
-              Stronger options, if you want more ({plan.alternatives.length})
+              Other options within your limits ({plan.alternatives.length})
             </summary>
             <div className="mt-2 space-y-2">
               {plan.alternatives.map((k) => (
