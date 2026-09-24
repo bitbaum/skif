@@ -15,7 +15,11 @@ import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { listProtectorJobs } from "@/server/bookings";
 import { listCapabilities, type Protector, type ProtectorCapability } from "@/server/protectors";
 import { requireViewer } from "@/server/viewer";
-import { applyAction, availabilityAction } from "./actions";
+import { applyAction, availabilityAction, protectorComplaintAction } from "./actions";
+import { ComplaintActions } from "@/components/complaints";
+import { complaintCategoryLabel } from "@/config/complaints";
+import { complaintActions, STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
+import { listComplaintsForProtector } from "@/server/complaints";
 
 export const metadata: Metadata = { title: "Protector" };
 
@@ -71,6 +75,7 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
   const jobs = protector?.status === "APPROVED" ? await listProtectorJobs(db, protector.id) : [];
   const held = protector ? await listCapabilities(db, protector.id) : [];
   const windows = protector ? await listAvailability(db, protector.id) : [];
+  const asked = protector?.status === "APPROVED" ? await listComplaintsForProtector(db, protector.id) : [];
 
   return (
     <>
@@ -105,6 +110,31 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
               ))}
             </ul>
           )}
+        </Card>
+      )}
+      {asked.length > 0 && (
+        <Card title="Questions from Operations" className="mb-6">
+          <ul className="space-y-5">
+            {asked.map((c) => (
+              <li key={c.id} className="space-y-2 text-sm">
+                <p className="flex flex-wrap items-center gap-2">
+                  <strong>{complaintCategoryLabel(c.category)}</strong>
+                  <Badge tone={c.status === "UPHELD" ? "danger" : "warn"}>{COMPLAINT_STATUS_LABELS[c.status]}</Badge>
+                  <Link href={`/protector/jobs/${c.bookingId}`} className="text-accent underline">
+                    The job
+                  </Link>
+                </p>
+                <p className="whitespace-pre-wrap">{c.summaryForProtector}</p>
+                {c.protectorResponse && <p className="text-muted">Your response: {c.protectorResponse}</p>}
+                {c.appeal && <p className="text-muted">Your appeal: {c.appeal}</p>}
+                <ComplaintActions
+                  complaintId={c.id}
+                  actions={complaintActions(c.status, "PROTECTOR")}
+                  action={protectorComplaintAction}
+                />
+              </li>
+            ))}
+          </ul>
         </Card>
       )}
       {protector && (

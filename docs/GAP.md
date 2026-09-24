@@ -41,8 +41,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] Rating lacks professionalism, communication and punctuality/reliability dimensions (§10). — PR #10
 - [x] Reports are free text only: no structured observations (verbal de-escalation, physical intervention, medical escalation, emergency services) (§6, §10, §29). — PR #10
 - [x] No incident lifecycle: Operations cannot mark an incident reviewed or resolved (§22, §11). — PR #10
-- [ ] No confidential complaint for customers, and no Ops complaint review (§5, §10, §11).
-- [ ] Complaints cannot be corroborated, appealed or corrected, and nothing keeps an unreviewed complaint from affecting reputation (§10).
+- [x] No confidential complaint for customers, and no Ops complaint review (§5, §10, §11). — PR #12
+- [x] Complaints cannot be corroborated, appealed or corrected, and nothing keeps an unreviewed complaint from affecting reputation (§10). — PR #12
 
 ### Permissions
 - [ ] Sensitive Operations access (booking detail, incidents, complaints) is not audited — no AuditEvent (§14, §21).

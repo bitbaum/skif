@@ -5,7 +5,8 @@ import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { BOOKING_LIMITS } from "@/config/services";
-import { describeIssue, formFields, idInput, incidentReviewInput } from "@/domain/inputs";
+import { complaintActionInput, describeIssue, formFields, idInput, incidentReviewInput } from "@/domain/inputs";
+import { actOnComplaint } from "@/server/complaints";
 import { reviewIncident } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
@@ -79,6 +80,19 @@ export async function reviewIncidentAction(_: ActionState, form: FormData): Prom
   const result = await reviewIncident(getDb(), id.data, viewer.sub, parsed.data);
   if (!result.success) return { error: result.error };
   revalidatePath(`/ops/bookings/${result.data.bookingId}`);
+  revalidatePath("/ops");
+  return null;
+}
+
+export async function opsComplaintAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const id = idInput.safeParse(form.get("complaintId"));
+  if (!id.success) return { error: "Complaint not found" };
+  const parsed = complaintActionInput.safeParse(formFields(form));
+  if (!parsed.success) return { error: describeIssue(parsed.error) };
+  const result = await actOnComplaint(getDb(), id.data, { role: "OPS", sub: viewer.sub }, parsed.data);
+  if (!result.success) return { error: result.error };
+  revalidatePath(`/ops/complaints/${id.data}`);
   revalidatePath("/ops");
   return null;
 }

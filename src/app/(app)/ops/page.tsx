@@ -8,6 +8,9 @@ import { getDb } from "@/db/client";
 import { listAllBookings } from "@/server/bookings";
 import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { listOpenIncidents } from "@/server/feedback";
+import { listOpenComplaints } from "@/server/complaints";
+import { complaintCategoryLabel } from "@/config/complaints";
+import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import { listProtectors } from "@/server/protectors";
 import { severityLabel } from "@/config/reports";
 import { REVIEW_LABELS } from "@/domain/incidents";
@@ -19,10 +22,11 @@ export const metadata: Metadata = { title: "Operations" };
 export default async function OpsPage() {
   await requireOps();
   const db = getDb();
-  const [bookings, protectors, incidents] = await Promise.all([
+  const [bookings, protectors, incidents, openComplaints] = await Promise.all([
     listAllBookings(db),
     listProtectors(db),
     listOpenIncidents(db),
+    listOpenComplaints(db),
   ]);
   const waiting = bookings.filter((b) => b.status === "REQUESTED").length;
 
@@ -41,6 +45,21 @@ export default async function OpsPage() {
                 <Link href={`/ops/bookings/${i.bookingId}`} className="text-accent underline">
                   Filed {formatWhen(i.createdAt)}
                 </Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+      {openComplaints.length > 0 && (
+        <Card title={`Complaints to review (${openComplaints.length})`} className="mb-6">
+          <ul className="space-y-2 text-sm">
+            {openComplaints.map((c) => (
+              <li key={c.id} className="flex flex-wrap items-center gap-2">
+                <Badge tone="warn">{COMPLAINT_STATUS_LABELS[c.status]}</Badge>
+                <Link href={`/ops/complaints/${c.id}`} className="text-accent underline">
+                  {complaintCategoryLabel(c.category)}
+                </Link>
+                <span className="text-muted">{formatWhen(c.createdAt)}</span>
               </li>
             ))}
           </ul>

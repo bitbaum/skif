@@ -8,6 +8,8 @@ import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/conf
 import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN, type RatingDimension } from "@/config/ratings";
+import { COMPLAINT_CATEGORY_KEYS, COMPLAINT_TEXT_MAX } from "@/config/complaints";
+import { COMPLAINT_ACTIONS } from "./complaints";
 import { INCIDENT_SEVERITY_KEYS, OBSERVATION_KEYS, REVIEW_NOTE_MAX } from "@/config/reports";
 import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICE_KEYS } from "@/config/services";
 import { WEEKDAYS } from "@/config/availability";
@@ -103,6 +105,18 @@ export const reportInput = z
   })
   .refine((r) => r.kind !== "INCIDENT" || r.severity, { message: "Give the incident a severity", path: ["severity"] })
   .transform((r) => ({ ...r, severity: r.kind === "INCIDENT" ? (r.severity ?? null) : null }));
+
+export const complaintInput = z.object({
+  category: z.enum(COMPLAINT_CATEGORY_KEYS),
+  body: required(COMPLAINT_TEXT_MAX),
+});
+export type ComplaintInput = z.infer<typeof complaintInput>;
+
+export const complaintActionInput = z.object({
+  action: z.enum(COMPLAINT_ACTIONS),
+  text: trimmed(COMPLAINT_TEXT_MAX),
+});
+export type ComplaintActionInput = z.infer<typeof complaintActionInput>;
 
 export const incidentReviewInput = z.object({
   review: z.enum(["UNDER_REVIEW", "RESOLVED"]),
