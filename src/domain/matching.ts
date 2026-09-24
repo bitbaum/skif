@@ -4,10 +4,16 @@
  * is listed with the reason. Same input, same output, always.
  */
 import { languageLabel, PRESENCE_STYLES, type PresenceStyle } from "@/config/constraints";
-import { MATCH_WEIGHTS, SERVICE_SKILLS, WORKLOAD_WINDOW_DAYS } from "@/config/matching";
-import { skillLabel } from "@/config/protectors";
+import {
+  LEVEL_FACTOR,
+  MATCH_WEIGHTS,
+  SERVICE_CAPABILITIES,
+  VERIFICATION_FACTOR,
+  WORKLOAD_WINDOW_DAYS,
+} from "@/config/matching";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
 import { serviceLabel, type ServiceKey } from "@/config/services";
+import { describeHeld, standing, type HeldCapability } from "./capabilities";
 
 export type MatchRequest = {
   service: ServiceKey;
@@ -20,7 +26,7 @@ export type MatchCandidate = {
   displayName: string;
   services: readonly string[];
   languages: readonly string[];
-  skills: readonly string[];
+  capabilities: readonly HeldCapability[];
   presenceStyles: readonly string[];
   /** Mean of past ratings normalised to 0..1, or null with no ratings yet. */
   ratingScore: number | null;
@@ -44,7 +50,7 @@ function exclusionReason(req: MatchRequest, c: MatchCandidate): string | null {
   return null;
 }
 
-function reasonsFor(req: MatchRequest, c: MatchCandidate): MatchReason[] {
+function reasonsFor(req: MatchRequest, c: MatchCandidate, today: string): MatchReason[] {
   const reasons: MatchReason[] = [];
 
   const shared = req.languages.filter((l) => c.languages.includes(l));
@@ -55,10 +61,15 @@ function reasonsFor(req: MatchRequest, c: MatchCandidate): MatchReason[] {
     });
   }
 
-  for (const skill of SERVICE_SKILLS[req.service]) {
-    if (c.skills.includes(skill)) {
-      reasons.push({ label: skillLabel(skill), points: MATCH_WEIGHTS.relevantSkill });
-    }
+  for (const key of SERVICE_CAPABILITIES[req.service]) {
+    const held = c.capabilities.find((h) => h.key === key);
+    if (!held) continue;
+    const s = standing(held, today);
+    const points =
+      s.kind === "UNUSABLE"
+        ? 0
+        : Math.round(MATCH_WEIGHTS.relevantCapability * LEVEL_FACTOR[held.level] * VERIFICATION_FACTOR[s.kind]);
+    reasons.push({ label: describeHeld(held, s), points });
   }
 
   if (c.presenceStyles.includes(req.presenceStyle)) {
@@ -88,7 +99,12 @@ function reasonsFor(req: MatchRequest, c: MatchCandidate): MatchReason[] {
   return reasons;
 }
 
-export function rankProtectors(req: MatchRequest, candidates: readonly MatchCandidate[]): MatchResult {
+/** `onDay` is the job's ISO date (YYYY-MM-DD): a certificate must still be valid then. */
+export function rankProtectors(
+  req: MatchRequest,
+  candidates: readonly MatchCandidate[],
+  onDay: string,
+): MatchResult {
   const ranked: RankedProtector[] = [];
   const excluded: ExcludedProtector[] = [];
 
@@ -98,7 +114,7 @@ export function rankProtectors(req: MatchRequest, candidates: readonly MatchCand
       excluded.push({ id: c.id, displayName: c.displayName, reason });
       continue;
     }
-    const reasons = reasonsFor(req, c);
+    const reasons = reasonsFor(req, c, onDay);
     const score = reasons.reduce((sum, r) => sum + r.points, 0);
     ranked.push({ id: c.id, displayName: c.displayName, score, reasons });
   }

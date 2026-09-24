@@ -16,19 +16,19 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [ ] Customer cannot keep a profile (the name a Protector should use) — step 2 of the definition of done (§5, §32.2).
 
 ### Protector profiles
-- [ ] No years of experience or driving capability on the profile (§6).
-- [ ] Operations can approve and suspend but not reject an application (§11).
+- [x] No years of experience or driving capability on the profile (§6). — PR #5
+- [x] Operations can approve and suspend but not reject an application (§11). — PR #5
 
 ### Capabilities
-- [ ] Capabilities are a flat self-declared tag list: no category, level, verification status, evidence, certification or expiry (§7).
-- [ ] Operations cannot verify or reject a declared capability; nothing records who assessed it (§7 "assessor/source", §11).
+- [x] Capabilities are a flat self-declared tag list: no category, level, verification status, evidence, certification or expiry (§7). — PR #5
+- [x] Operations cannot verify or reject a declared capability; nothing records who assessed it (§7 "assessor/source", §11). — PR #5
 
 ### Availability
 - [ ] Protectors cannot set availability, and Operations cannot see it (§6, §11).
 
 ### Matching
 - [ ] Hard filters missing: availability, required capability/qualification, driving requirement, certification validity (§9).
-- [ ] Unverified and verified capabilities count the same; expired certifications still count (§7, §9).
+- [x] Unverified and verified capabilities count the same; expired certifications still count (§7, §9). — PR #5
 - [ ] No relevant-experience signal (completed deployments of this service) (§9).
 - [ ] Raw points shown with no fit band; spec asks for EXCELLENT / STRONG / GOOD FIT until scores justify more (§9).
 - [ ] Operations cannot override the ranking to assign an ineligible Protector with a recorded reason (§9).

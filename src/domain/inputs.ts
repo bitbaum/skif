@@ -5,7 +5,8 @@
 import { z } from "zod";
 import { ASSESSMENT_LIMITS, CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessment";
 import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/config/constraints";
-import { PROTECTOR_LIMITS, PROTECTOR_SKILL_KEYS } from "@/config/protectors";
+import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
+import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN } from "@/config/ratings";
 import { AREAS, BOOKING_LIMITS, SERVICE_KEYS } from "@/config/services";
 import { zonedLocalToDate } from "./time";
@@ -42,11 +43,25 @@ export const bookingInput = z.object({
 });
 export type BookingInput = z.infer<typeof bookingInput>;
 
+const isoDate = z.iso.date();
+
+export const capabilityDeclaration = z.object({
+  key: z.enum(CAPABILITY_KEYS),
+  level: z.enum(CAPABILITY_LEVEL_KEYS),
+  certification: trimmed(CAPABILITY_LIMITS.certificationMax),
+  evidence: trimmed(CAPABILITY_LIMITS.evidenceMax),
+  expiresOn: z.union([isoDate, z.literal("").transform(() => null), z.null()]),
+});
+export type CapabilityDeclaration = z.infer<typeof capabilityDeclaration>;
+
 export const protectorApplication = z.object({
   displayName: required(PROTECTOR_LIMITS.displayNameMax),
   bio: required(PROTECTOR_LIMITS.bioMax),
+  experienceYears: z.coerce.number().int().min(0).max(PROTECTOR_LIMITS.experienceYearsMax),
   languages: z.array(z.enum(LANGUAGE_KEYS)).min(1, "Pick at least one language"),
-  skills: z.array(z.enum(PROTECTOR_SKILL_KEYS)),
+  capabilities: z
+    .array(capabilityDeclaration)
+    .refine((list) => new Set(list.map((c) => c.key)).size === list.length, "Each capability once"),
   services: z.array(z.enum(SERVICE_KEYS)).min(1, "Pick at least one service"),
   presenceStyles: z.array(z.enum(PRESENCE_STYLE_KEYS)).min(1, "Pick at least one style"),
 });
@@ -92,6 +107,30 @@ export function formFields(
   for (const key of arrays) out[key] = form.getAll(key).filter((v) => typeof v === "string");
   for (const key of booleans) out[key] = form.get(key) === "on";
   return out;
+}
+
+/** Form field name for one part of a capability row. */
+export const capabilityField = (key: string, part: keyof Omit<CapabilityDeclaration, "key">) => `cap.${key}.${part}`;
+
+/** Collect the capability rows a form declared; a row with no level is not held. */
+export function capabilityFields(form: FormData): Record<string, unknown>[] {
+  const text = (name: string) => {
+    const v = form.get(name);
+    return typeof v === "string" ? v : "";
+  };
+  return CAPABILITY_KEYS.flatMap((key) => {
+    const level = text(capabilityField(key, "level"));
+    if (!level) return [];
+    return [
+      {
+        key,
+        level,
+        certification: text(capabilityField(key, "certification")),
+        evidence: text(capabilityField(key, "evidence")),
+        expiresOn: text(capabilityField(key, "expiresOn")),
+      },
+    ];
+  });
 }
 
 /** First zod issue as a readable sentence. */

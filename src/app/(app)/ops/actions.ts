@@ -6,7 +6,8 @@ import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
 import { applyBookingAction } from "@/server/lifecycle";
-import { setProtectorStatus } from "@/server/protectors";
+import { PROTECTOR_STATUSES } from "@/domain/protector-status";
+import { assessCapability, setProtectorStatus } from "@/server/protectors";
 import { requireOps } from "@/server/viewer";
 
 export async function assignAction(_: ActionState, form: FormData): Promise<ActionState> {
@@ -35,7 +36,7 @@ export async function opsCancelAction(_: ActionState, form: FormData): Promise<A
   return null;
 }
 
-const PROTECTOR_STATUS = z.enum(["APPROVED", "SUSPENDED"]);
+const PROTECTOR_STATUS = z.enum(PROTECTOR_STATUSES);
 
 export async function protectorStatusAction(_: ActionState, form: FormData): Promise<ActionState> {
   await requireOps();
@@ -45,5 +46,19 @@ export async function protectorStatusAction(_: ActionState, form: FormData): Pro
   const result = await setProtectorStatus(getDb(), id.data, status.data);
   if (!result.success) return { error: result.error };
   revalidatePath("/ops");
+  revalidatePath(`/ops/protectors/${id.data}`);
+  return null;
+}
+
+const ASSESSMENT = z.enum(["VERIFIED", "REJECTED"]);
+
+export async function assessCapabilityAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const id = idInput.safeParse(form.get("capabilityId"));
+  const verdict = ASSESSMENT.safeParse(form.get("verification"));
+  if (!id.success || !verdict.success) return { error: "Invalid request" };
+  const result = await assessCapability(getDb(), id.data, verdict.data, viewer.sub);
+  if (!result.success) return { error: result.error };
+  revalidatePath(`/ops/protectors/${result.data.protectorId}`);
   return null;
 }

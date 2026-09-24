@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { StatusBadge } from "@/components/booking";
+import { CapabilityFields } from "@/components/capability-fields";
 import { CheckboxGroup, Field, TextArea, TextInput } from "@/components/fields";
 import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
 import { LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
-import { PROTECTOR_LIMITS, PROTECTOR_SKILLS } from "@/config/protectors";
+import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { SERVICES, serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
+import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { listProtectorJobs } from "@/server/bookings";
-import type { Protector } from "@/server/protectors";
+import { listCapabilities, type Protector, type ProtectorCapability } from "@/server/protectors";
 import { requireViewer } from "@/server/viewer";
 import { applyAction } from "./actions";
 
@@ -19,9 +21,10 @@ const STATUS_NOTE: Record<Protector["status"], string> = {
   APPLIED: "Your application is with Operations. You'll see jobs here once you're approved.",
   APPROVED: "You're approved. Jobs Operations assigns to you appear below.",
   SUSPENDED: "Your profile is paused. Contact Operations.",
+  REJECTED: "Operations did not accept your application. You can update it and it will be reviewed again.",
 };
 
-function ApplicationForm({ protector }: { protector: Protector | null }) {
+function ApplicationForm({ protector, held }: { protector: Protector | null; held: ProtectorCapability[] }) {
   return (
     <ActionForm action={applyAction} submitLabel={protector ? "Save profile" : "Apply"}>
       <Field label="Name shown to customers">
@@ -37,12 +40,17 @@ function ApplicationForm({ protector }: { protector: Protector | null }) {
       </Field>
       <CheckboxGroup legend="Services you offer" name="services" options={SERVICES} selected={protector?.services ?? []} />
       <CheckboxGroup legend="Languages" name="languages" options={LANGUAGES} selected={protector?.languages ?? []} />
-      <CheckboxGroup
-        legend="Training and experience"
-        name="skills"
-        options={PROTECTOR_SKILLS}
-        selected={protector?.skills ?? []}
-      />
+      <Field label="Years of relevant experience">
+        <TextInput
+          type="number"
+          name="experienceYears"
+          min={0}
+          max={PROTECTOR_LIMITS.experienceYearsMax}
+          defaultValue={protector?.experienceYears ?? 0}
+          required
+        />
+      </Field>
+      <CapabilityFields held={held} />
       <CheckboxGroup
         legend="Styles you work in"
         name="presenceStyles"
@@ -57,7 +65,9 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
   const viewer = await requireViewer();
   const { protector } = viewer;
   const { saved } = await searchParams;
-  const jobs = protector?.status === "APPROVED" ? await listProtectorJobs(getDb(), protector.id) : [];
+  const db = getDb();
+  const jobs = protector?.status === "APPROVED" ? await listProtectorJobs(db, protector.id) : [];
+  const held = protector ? await listCapabilities(db, protector.id) : [];
 
   return (
     <>
@@ -65,7 +75,9 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
         title={protector ? "Your Protector profile" : "Become a Protector"}
         lead="Skif Protectors are chosen for judgment and calm, not intimidation."
       >
-        {protector && <Badge tone={protector.status === "APPROVED" ? "accent" : "warn"}>{protector.status}</Badge>}
+        {protector && (
+          <Badge tone={protector.status === "APPROVED" ? "accent" : "warn"}>{PROTECTOR_STATUS_LABELS[protector.status]}</Badge>
+        )}
       </PageHeader>
       {saved && <p className="mb-4 rounded-lg bg-accent-soft p-3 text-sm text-accent">Saved.</p>}
       {protector && <p className="mb-6 text-muted">{STATUS_NOTE[protector.status]}</p>}
@@ -93,7 +105,7 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
         </Card>
       )}
       <Card title={protector ? "Profile" : "Application"}>
-        <ApplicationForm protector={protector} />
+        <ApplicationForm protector={protector} held={held} />
       </Card>
     </>
   );

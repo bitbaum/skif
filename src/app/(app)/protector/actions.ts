@@ -5,7 +5,14 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
-import { describeIssue, formFields, idInput, protectorApplication, reportInput } from "@/domain/inputs";
+import {
+  capabilityFields,
+  describeIssue,
+  formFields,
+  idInput,
+  protectorApplication,
+  reportInput,
+} from "@/domain/inputs";
 import { fileReport } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { applyAsProtector } from "@/server/protectors";
@@ -13,7 +20,10 @@ import { requireApprovedProtector, requireViewer } from "@/server/viewer";
 
 export async function applyAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireViewer();
-  const parsed = protectorApplication.safeParse(formFields(form, ["languages", "skills", "services", "presenceStyles"]));
+  const parsed = protectorApplication.safeParse({
+    ...formFields(form, ["languages", "services", "presenceStyles"]),
+    capabilities: capabilityFields(form),
+  });
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   await applyAsProtector(getDb(), viewer.sub, parsed.data);
   redirect("/protector?saved=1");
