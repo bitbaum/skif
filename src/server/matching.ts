@@ -1,0 +1,83 @@
+import "server-only";
+import { and, avg, count, eq, gt, inArray, lt, ne, sql } from "drizzle-orm";
+import { WORKLOAD_WINDOW_DAYS } from "@/config/matching";
+import { bookings, protectors, ratings } from "@/db/schema";
+import type { Db } from "@/db/types";
+import { ACTIVE_STATUSES } from "@/domain/lifecycle";
+import { normaliseRating, rankProtectors, type MatchCandidate, type MatchResult } from "@/domain/matching";
+
+type BookingSlot = Pick<
+  typeof bookings.$inferSelect,
+  "id" | "service" | "startsAt" | "hours" | "languages" | "presenceStyle"
+>;
+
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+
+/** Gather the facts about every approved Protector, then hand them to the
+ * pure ranking. All judgement lives in src/domain/matching.ts. */
+export async function matchForBooking(db: Db, booking: BookingSlot): Promise<MatchResult> {
+  const approved = await db.select().from(protectors).where(eq(protectors.status, "APPROVED"));
+  if (approved.length === 0) return { ranked: [], excluded: [] };
+  const ids = approved.map((p) => p.id);
+
+  const meanOfThree = sql<number>`(${ratings.respect} + ${ratings.discretion} + ${ratings.feltSafe}) / 3.0`;
+  const ratingRows = await db
+    .select({ protectorId: bookings.protectorId, mean: avg(meanOfThree), n: count() })
+    .from(ratings)
+    .innerJoin(bookings, eq(ratings.bookingId, bookings.id))
+    .where(inArray(bookings.protectorId, ids))
+    .groupBy(bookings.protectorId);
+
+  const windowStart = new Date(Date.now() - WORKLOAD_WINDOW_DAYS * DAY_MS);
+  const workloadRows = await db
+    .select({ protectorId: bookings.protectorId, n: count() })
+    .from(bookings)
+    .where(
+      and(
+        inArray(bookings.protectorId, ids),
+        eq(bookings.status, "COMPLETED"),
+        gt(bookings.startsAt, windowStart),
+      ),
+    )
+    .groupBy(bookings.protectorId);
+
+  const end = new Date(booking.startsAt.getTime() + booking.hours * HOUR_MS);
+  const busyRows = await db
+    .selectDistinct({ protectorId: bookings.protectorId })
+    .from(bookings)
+    .where(
+      and(
+        inArray(bookings.protectorId, ids),
+        inArray(bookings.status, [...ACTIVE_STATUSES]),
+        ne(bookings.id, booking.id),
+        lt(bookings.startsAt, end),
+        sql`${bookings.startsAt} + ${bookings.hours} * interval '1 hour' > ${booking.startsAt.toISOString()}::timestamptz`,
+      ),
+    );
+
+  const rating = new Map(ratingRows.map((r) => [r.protectorId, r]));
+  const workload = new Map(workloadRows.map((r) => [r.protectorId, r.n]));
+  const busy = new Set(busyRows.map((r) => r.protectorId));
+
+  const candidates: MatchCandidate[] = approved.map((p) => {
+    const r = rating.get(p.id);
+    return {
+      id: p.id,
+      displayName: p.displayName,
+      services: p.services,
+      languages: p.languages,
+      skills: p.skills,
+      presenceStyles: p.presenceStyles,
+      ratingScore: r?.mean == null ? null : normaliseRating(Number(r.mean)),
+      ratingCount: r?.n ?? 0,
+      completedRecently: workload.get(p.id) ?? 0,
+      busy: busy.has(p.id),
+    };
+  });
+
+  return rankProtectors(
+    { service: booking.service, languages: booking.languages, presenceStyle: booking.presenceStyle },
+    candidates,
+  );
+}
