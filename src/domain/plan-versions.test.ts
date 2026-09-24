@@ -37,6 +37,7 @@ describe("readPlan", () => {
       measures: [],
       constraints: [],
       budget: "LOW",
+      leans: {},
     });
     expect(readPlan(current)).toBe(current);
   });

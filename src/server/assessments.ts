@@ -4,6 +4,7 @@ import { assessments, environments } from "@/db/schema";
 import type { Db } from "@/db/types";
 import type { AssessmentInput } from "@/domain/inputs";
 import { fail, ok, type Result } from "@/domain/result";
+import { leansOf } from "@/domain/preference-fit";
 import { buildSafetyPlan } from "@/domain/safety-plan";
 import { getEnvironment, type Environment } from "./environments";
 import { getPreferences } from "./preferences";
@@ -22,7 +23,12 @@ export async function createAssessment(
   const environment = await getEnvironment(db, customerSub, input.environmentId);
   if (!environment) return fail("Choose one of your places");
   const { environmentId: _, protecting: __, ...answers } = input;
-  const plan = buildSafetyPlan({ ...answers, environment: environment.type, constraints: prefs.hardConstraints });
+  const plan = buildSafetyPlan({
+    ...answers,
+    environment: environment.type,
+    constraints: prefs.hardConstraints,
+    leans: leansOf(prefs.axes, prefs.presenceStyle),
+  });
   const [row] = await db
     .insert(assessments)
     .values({ customerSub, ...input, plan })

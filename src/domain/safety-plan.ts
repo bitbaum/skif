@@ -5,7 +5,8 @@
  *  - never one that breaks a hard constraint (listed as excluded, with which);
  *  - never one over budget (listed separately, so the person sees it exists);
  *  - only what suits the kind of place (no staff training for a flat);
- *  - for most findings, the *least intrusive* option that addresses it
+ *  - first what fits the person's trade-off leans (never excluding by them);
+ *  - for most findings, then the *least intrusive* option that addresses it
  *    (privacy first, then cost, then freedom);
  *  - for a high-priority finding (a known threat), the *most effective* one,
  *    because proportionality cuts both ways;
@@ -15,13 +16,24 @@
  */
 import type { HardConstraintKey } from "@/config/constraints";
 import { costRank, type ConcernKey, type CostTier, type MeasureKey } from "@/config/assessment";
-import { findIntervention, INTERVENTIONS, needsPurchase, suits, type Intervention, type Level } from "@/config/interventions";
+import {
+  findIntervention,
+  INTERVENTIONS,
+  needsPurchase,
+  suits,
+  type Intervention,
+  type Leans,
+  type Level,
+} from "@/config/interventions";
+import { preferenceFit } from "./preference-fit";
 import { deriveFindings, type Finding, type FindingInput } from "./findings";
 
 export type PlanInput = FindingInput & {
   measures: readonly MeasureKey[];
   constraints: readonly HardConstraintKey[];
   budget: CostTier;
+  /** The person's trade-off leans; DISCRETION comes from their presence style. */
+  leans: Leans;
 };
 
 export type ExcludedIntervention = { key: string; constraints: HardConstraintKey[] };
@@ -44,6 +56,8 @@ export type SafetyPlan = {
   constraints: HardConstraintKey[];
   /** Null only on plans made before budgets were asked (see plan-versions.ts). */
   budget: CostTier | null;
+  /** The leans the ordering followed. Absent on plans made before they counted. */
+  leans?: Leans;
   findings: FindingPlan[];
   /** True when nothing recommended requires buying a product or service. */
   nothingToBuy: boolean;
@@ -62,16 +76,29 @@ function leastIntrusive(a: Intervention, b: Intervention): number {
   );
 }
 
-function mostEffective(a: Intervention, b: Intervention): number {
-  return BENEFIT_RANK[b.benefit] - BENEFIT_RANK[a.benefit] || leastIntrusive(a, b);
+/** Normal findings: fewest clashes with the person's leans, then most leans
+ * met, then least intrusive. High priority: most effective first, then leans,
+ * then intrusion. */
+function ordering(high: boolean, leans: Leans) {
+  const fit = (i: Intervention) => preferenceFit(i, leans);
+  const benefit = (a: Intervention, b: Intervention) => BENEFIT_RANK[b.benefit] - BENEFIT_RANK[a.benefit];
+  const byLeans = (a: Intervention, b: Intervention) =>
+    fit(a).against.length - fit(b).against.length || fit(b).with.length - fit(a).with.length;
+  return (a: Intervention, b: Intervention) =>
+    high ? benefit(a, b) || byLeans(a, b) || leastIntrusive(a, b) : byLeans(a, b) || leastIntrusive(a, b);
 }
 
-function whyRecommended(i: Intervention, finding: Finding, covered: boolean): string[] {
+function whyRecommended(i: Intervention, finding: Finding, covered: boolean, leans: Leans): string[] {
   const why =
     finding.priority === "HIGH"
       ? ["The most effective option within your limits and budget — this is a high priority."]
       : ["The least intrusive option within your limits and budget that addresses this."];
   if (covered) why.push("What you already do helps, but a known threat justifies more.");
+  const fit = preferenceFit(i, leans);
+  if (fit.with.length) why.push(`Fits your lean towards ${fit.with.join(", ")}.`);
+  if (fit.against.length) {
+    why.push(`Goes against your lean towards ${fit.against.join(", ")} — nothing that fits better was within your limits and budget.`);
+  }
   if (!needsPurchase(i.kind)) why.push("Needs nothing bought.");
   return why;
 }
@@ -80,7 +107,7 @@ function planFinding(finding: Finding, input: PlanInput): FindingPlan {
   const high = finding.priority === "HIGH";
   const candidates = (INTERVENTIONS as readonly Intervention[])
     .filter((i) => (i.addresses as readonly ConcernKey[]).includes(finding.concern) && suits(i, input.environment))
-    .sort(high ? mostEffective : leastIntrusive);
+    .sort(ordering(high, input.leans));
 
   const excluded: ExcludedIntervention[] = [];
   const alreadyCovered: string[] = [];
@@ -104,7 +131,7 @@ function planFinding(finding: Finding, input: PlanInput): FindingPlan {
   return {
     ...base,
     outcome: "RECOMMENDED",
-    recommended: { key: best.key, why: whyRecommended(best, finding, covered) },
+    recommended: { key: best.key, why: whyRecommended(best, finding, covered, input.leans) },
     alternatives: rest.map((i) => i.key),
   };
 }
@@ -115,5 +142,12 @@ export function buildSafetyPlan(input: PlanInput): SafetyPlan {
     const i = f.recommended && findIntervention(f.recommended.key);
     return !i || !needsPurchase(i.kind);
   });
-  return { version: 2, constraints: [...input.constraints], budget: input.budget, findings, nothingToBuy };
+  return {
+    version: 2,
+    constraints: [...input.constraints],
+    budget: input.budget,
+    leans: input.leans,
+    findings,
+    nothingToBuy,
+  };
 }

@@ -8,6 +8,7 @@ import { environmentTypeLabel } from "@/config/environments";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
 import { readPlan } from "@/domain/plan-versions";
+import { describeLeans } from "@/domain/preference-fit";
 import { getAssessment } from "@/server/assessments";
 import { requireViewer } from "@/server/viewer";
 
@@ -42,8 +43,13 @@ export default async function AssessmentPage({ params }: { params: Promise<{ id:
             ]}
           />
         </Card>
-        <Card title="Limits this plan respects">
+        <Card title="Limits and leans this plan follows">
           <ConstraintList constraints={plan.constraints} />
+          <p className="mt-3 text-sm text-muted">
+            {plan.leans
+              ? `Leans: ${describeLeans(plan.leans).join(", ") || "balanced on everything"}.`
+              : "Made before trade-off leans were taken into account."}
+          </p>
         </Card>
       </div>
       <div className="space-y-6">
