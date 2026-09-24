@@ -25,6 +25,11 @@ export const preferencesInput = z.object({
 });
 export type PreferencesInput = z.infer<typeof preferencesInput>;
 
+export const profileInput = z.object({
+  preferredName: required(PROTECTOR_LIMITS.displayNameMax),
+});
+export type ProfileInput = z.infer<typeof profileInput>;
+
 export const bookingInput = z.object({
   service: z.enum(SERVICE_KEYS),
   /** A Date (from code) or a datetime-local string, read as Zürich time. */

@@ -59,6 +59,14 @@ export const preferenceProfiles = pgTable("preference_profiles", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** What a customer chooses to tell us about themselves — deliberately little. */
+export const customerProfiles = pgTable("customer_profiles", {
+  sub: text("sub").primaryKey(),
+  /** The name a Protector should use; shown to them only once they accept. */
+  preferredName: text("preferred_name").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const protectors = pgTable("protectors", {
   id: uuid("id").primaryKey().defaultRandom(),
   sub: text("sub").notNull().unique(),

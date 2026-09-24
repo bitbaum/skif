@@ -23,6 +23,7 @@ import { fitLabel, type MatchResult } from "@/domain/matching";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getBookingForOps } from "@/server/bookings";
 import { matchForBooking } from "@/server/matching";
+import { getCustomerProfile } from "@/server/customers";
 import { getPreferences } from "@/server/preferences";
 import { requireOps } from "@/server/viewer";
 import { assignAction, opsCancelAction } from "../../actions";
@@ -98,9 +99,10 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
   const { booking, protector, events, rating, reports } = detail;
   const canAssign = availableActions(booking.status, "OPS").includes("ASSIGN");
   const canCancel = availableActions(booking.status, "OPS").includes("CANCEL");
-  const [match, prefs] = await Promise.all([
+  const [match, prefs, profile] = await Promise.all([
     canAssign ? matchForBooking(db, booking) : null,
     getPreferences(db, booking.customerSub),
+    getCustomerProfile(db, booking.customerSub),
   ]);
 
   return (
@@ -120,6 +122,7 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
         <Card title="Request">
           <DefinitionList
             items={[
+              ["Customer", profile?.preferredName ?? "No name given"],
               ["Meeting point", booking.meetingPoint],
               ["Notes", booking.notes || "—"],
               ["Presence", presenceText(booking.presenceStyle)],

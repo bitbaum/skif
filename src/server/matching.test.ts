@@ -32,7 +32,7 @@ describe("matchForBooking", () => {
     const done = await book(db, "oc-cust");
     await applyBookingAction(db, done.id, { action: "ASSIGN", protectorId: mira.id }, OPS);
     const asMira = { role: "PROTECTOR", sub: "oc-mira", protectorId: mira.id } as const;
-    for (const action of ["ACCEPT", "START", "COMPLETE"] as const) {
+    for (const action of ["ACCEPT", "CHECK_IN", "START", "COMPLETE"] as const) {
       await applyBookingAction(db, done.id, { action }, asMira);
     }
     const next = await book(db, "oc-cust");

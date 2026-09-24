@@ -31,7 +31,7 @@ export async function applyAction(_: ActionState, form: FormData): Promise<Actio
   redirect("/protector?saved=1");
 }
 
-const JOB_ACTIONS = z.enum(["ACCEPT", "DECLINE", "START", "COMPLETE"]);
+const JOB_ACTIONS = z.enum(["ACCEPT", "DECLINE", "CHECK_IN", "START", "COMPLETE"]);
 
 export async function protectorJobAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireApprovedProtector();
