@@ -1,6 +1,9 @@
+import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { constraintLabel, languageLabel, PRESENCE_STYLES, type HardConstraintKey } from "@/config/constraints";
 import { ratingLabel, RATING_DIMENSIONS } from "@/config/ratings";
 import { STATUS_LABELS, type BookingStatus } from "@/domain/lifecycle";
+import { requirementsFor } from "@/domain/matching";
+import type { ServiceKey } from "@/config/services";
 import type { BookingEvent, Rating, Report } from "@/server/bookings";
 import { Badge, Empty, formatWhen, type Tone } from "./ui";
 
@@ -94,5 +97,18 @@ export function ReportList({ reports }: { reports: Report[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/** The service's own requirements plus the customer's must-haves. */
+export function RequirementList({ service, extra }: { service: ServiceKey; extra: readonly CapabilityKey[] }) {
+  const all = requirementsFor(service, extra);
+  if (all.length === 0) return <span className="text-muted">None beyond the service</span>;
+  return (
+    <span className="flex flex-wrap gap-1">
+      {all.map((k) => (
+        <Badge key={k}>{capabilityLabel(k)}</Badge>
+      ))}
+    </span>
   );
 }

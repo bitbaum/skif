@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
-import { ConstraintList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
+import { ConstraintList, RequirementList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
 import { Field, RadioGroup, TextArea } from "@/components/fields";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { BOOKING_LIMITS, serviceLabel } from "@/config/services";
@@ -48,6 +48,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
               ["Notes", job.notes ?? "Shown once you accept"],
               ["Presence", presenceText(job.presenceStyle)],
               ["Languages", languagesText(job.languages)],
+              ["Requirements", <RequirementList key="r" service={job.service} extra={job.requiredCapabilities} />],
               ["Their hard limits", <ConstraintList key="c" constraints={job.hardConstraints} />],
             ]}
           />

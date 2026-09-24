@@ -10,7 +10,7 @@ import { normaliseRating, rankProtectors, type MatchCandidate, type MatchResult 
 
 type BookingSlot = Pick<
   typeof bookings.$inferSelect,
-  "id" | "service" | "startsAt" | "hours" | "languages" | "presenceStyle"
+  "id" | "service" | "startsAt" | "hours" | "languages" | "presenceStyle" | "requiredCapabilities"
 >;
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -91,6 +91,7 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
       presenceStyle: booking.presenceStyle,
       startsAt: booking.startsAt,
       hours: booking.hours,
+      required: booking.requiredCapabilities,
     },
     candidates,
   );

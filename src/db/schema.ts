@@ -130,6 +130,8 @@ export const bookings = pgTable(
     notes: text("notes").notNull().default(""),
     languages: textArray("languages").$type<LanguageKey[]>(),
     presenceStyle: presenceStyleKind("presence_style").notNull(),
+    /** Capabilities the customer insisted on (on top of the service's own). */
+    requiredCapabilities: textArray("required_capabilities").$type<CapabilityKey[]>(),
     /** Snapshot of the customer's hard constraints when they booked. */
     hardConstraints: textArray("hard_constraints").$type<HardConstraintKey[]>(),
     protectorId: uuid("protector_id").references(() => protectors.id),

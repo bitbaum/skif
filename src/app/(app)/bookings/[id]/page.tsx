@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
-import { ConstraintList, RatingSummary, ReportList, StatusBadge, Timeline, languagesText } from "@/components/booking";
+import { ConstraintList, RequirementList, RatingSummary, ReportList, StatusBadge, Timeline, languagesText } from "@/components/booking";
 import { Field, RadioGroup, TextArea } from "@/components/fields";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { RATING_COMMENT_MAX, RATING_DIMENSIONS, RATING_SCALE } from "@/config/ratings";
@@ -41,6 +41,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
               ["Notes", booking.notes || "—"],
               ["Hard limits", <ConstraintList key="c" constraints={booking.hardConstraints} />],
               ["Languages", languagesText(booking.languages)],
+              ["Requirements", <RequirementList key="r" service={booking.service} extra={booking.requiredCapabilities} />],
               ["Payment", PAYMENT_LABELS[booking.paymentStatus]],
             ]}
           />

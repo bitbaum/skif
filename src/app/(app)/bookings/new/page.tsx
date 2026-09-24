@@ -3,9 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList, languagesText, presenceText } from "@/components/booking";
-import { Field, RadioGroup, Select, TextArea, TextInput, toOptions } from "@/components/fields";
+import { CheckboxGroup, Field, RadioGroup, Select, TextArea, TextInput, toOptions } from "@/components/fields";
 import { Card, DefinitionList, PageHeader } from "@/components/ui";
-import { AREAS, BOOKING_LIMITS, SERVICES } from "@/config/services";
+import { capabilityLabel } from "@/config/capabilities";
+import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICES } from "@/config/services";
 import { getDb } from "@/db/client";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getPreferences } from "@/server/preferences";
@@ -13,6 +14,16 @@ import { requireViewer } from "@/server/viewer";
 import { createBookingAction } from "../actions";
 
 export const metadata: Metadata = { title: "Request a Protector" };
+
+const SERVICE_OPTIONS = SERVICES.map((s) => ({
+  key: s.key,
+  label: s.label,
+  description: s.requires.length
+    ? `${s.description} Always with: ${s.requires.map(capabilityLabel).join(", ")}.`
+    : s.description,
+}));
+
+const MUST_HAVE_OPTIONS = REQUIRABLE_CAPABILITIES.map((k) => ({ key: k, label: capabilityLabel(k) }));
 
 export default async function NewBookingPage() {
   const viewer = await requireViewer();
@@ -25,7 +36,7 @@ export default async function NewBookingPage() {
       <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
         <Card>
           <ActionForm action={createBookingAction} submitLabel="Send request">
-            <RadioGroup legend="What do you need?" name="service" options={SERVICES} selected="NIGHT_OUT" />
+            <RadioGroup legend="What do you need?" name="service" options={SERVICE_OPTIONS} selected="NIGHT_OUT" />
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="When" hint="Zürich time">
                 <TextInput type="datetime-local" name="startsAt" required />
@@ -47,6 +58,13 @@ export default async function NewBookingPage() {
             <Field label="Meeting point" hint="Revealed to the Protector only once they have accepted.">
               <TextInput name="meetingPoint" maxLength={BOOKING_LIMITS.meetingPointMax} required />
             </Field>
+            <CheckboxGroup
+              legend="Must-haves (optional)"
+              hint="Only Protectors whose qualification Operations has verified will be matched."
+              name="requiredCapabilities"
+              options={MUST_HAVE_OPTIONS}
+              selected={[]}
+            />
             <Field label="Anything they should know (optional)" hint="Also revealed only after acceptance.">
               <TextArea name="notes" maxLength={BOOKING_LIMITS.notesMax} />
             </Field>
