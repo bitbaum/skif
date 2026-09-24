@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { LEVEL_FACTOR, MATCH_WEIGHTS, VERIFICATION_FACTOR } from "@/config/matching";
+import { windowFromClock } from "./availability";
 import type { HeldCapability } from "./capabilities";
+import { zonedLocalToDate } from "./time";
 import { rankProtectors, type MatchCandidate } from "./matching";
+
+const EVERY_DAY = [1, 2, 3, 4, 5, 6, 7].map((weekday) => windowFromClock(weekday, 0, 0));
 
 const base: MatchCandidate = {
   id: "a",
@@ -9,6 +13,7 @@ const base: MatchCandidate = {
   services: ["NIGHT_OUT"],
   languages: ["de"],
   capabilities: [],
+  availability: EVERY_DAY,
   presenceStyles: ["DISCREET"],
   ratingScore: null,
   ratingCount: 0,
@@ -16,9 +21,15 @@ const base: MatchCandidate = {
   busy: false,
 };
 
-const request = { service: "NIGHT_OUT", languages: ["de"], presenceStyle: "DISCREET" } as const;
-const DAY = "2026-10-01";
-const rank = (candidates: MatchCandidate[]) => rankProtectors(request, candidates, DAY);
+// Thursday 2026-10-01, 20:00 Zürich, 4 hours.
+const request = {
+  service: "NIGHT_OUT",
+  languages: ["de"],
+  presenceStyle: "DISCREET",
+  startsAt: zonedLocalToDate("2026-10-01T20:00")!,
+  hours: 4,
+} as const;
+const rank = (candidates: MatchCandidate[]) => rankProtectors(request, candidates);
 
 const held = (overrides: Partial<HeldCapability> = {}): HeldCapability => ({
   key: "DE_ESCALATION",
@@ -97,13 +108,27 @@ describe("rankProtectors", () => {
     const expired = held({ key: "FIRST_AID", expiresOn: "2026-09-30" });
     const { ranked } = rank([{ ...base, capabilities: [expired] }]);
     expect(ranked[0]!.reasons).toContainEqual({ label: "First aid — certificate expired", points: 0 });
-    const stillValid = rankProtectors(request, [{ ...base, capabilities: [expired] }], "2026-09-30");
+    const earlier = { ...request, startsAt: zonedLocalToDate("2026-09-30T20:00")! };
+    const stillValid = rankProtectors(earlier, [{ ...base, capabilities: [expired] }]);
     expect(stillValid.ranked[0]!.reasons.find((r) => r.label.startsWith("First aid"))!.points).toBeGreaterThan(0);
   });
 
   it("gives nothing for a capability Operations rejected", () => {
     const { ranked } = rank([{ ...base, capabilities: [held({ verification: "REJECTED" })] }]);
     expect(ranked[0]!.reasons).toContainEqual({ label: "De-escalation — not accepted", points: 0 });
+  });
+
+  it("excludes Protectors who are not available, or never said when they are", () => {
+    const { ranked, excluded } = rank([
+      { ...base, id: "none", displayName: "Anna", availability: [] },
+      { ...base, id: "fri", displayName: "Ben", availability: [windowFromClock(5, 18 * 60, 2 * 60)] },
+      { ...base, id: "thu", displayName: "Cleo", availability: [windowFromClock(4, 19 * 60, 0)] },
+    ]);
+    expect(ranked.map((r) => r.id)).toEqual(["thu"]);
+    expect(excluded.map((e) => [e.id, e.reason])).toEqual([
+      ["none", "Has not set availability"],
+      ["fri", "Not available at that time"],
+    ]);
   });
 
   it("weighs level", () => {

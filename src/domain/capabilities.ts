@@ -23,10 +23,6 @@ export type Standing =
   | { kind: "SELF_DECLARED" }
   | { kind: "UNUSABLE"; reason: "rejected" | "expired" };
 
-export function isoDay(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
-
 export function standing(c: HeldCapability, today: string): Standing {
   if (c.verification === "REJECTED") return { kind: "UNUSABLE", reason: "rejected" };
   if (c.expiresOn !== null && c.expiresOn < today) return { kind: "UNUSABLE", reason: "expired" };
