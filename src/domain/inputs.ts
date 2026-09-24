@@ -3,7 +3,15 @@
  * these; server modules accept only the parsed types.
  */
 import { z } from "zod";
-import { CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessment";
+import {
+  ASSESSMENT_LIMITS,
+  CONCERN_KEYS,
+  COST_TIER_KEYS,
+  EXPOSURE_KEYS,
+  MEASURE_KEYS,
+  PROTECTED_KEYS,
+  THREAT_KEYS,
+} from "@/config/assessment";
 import { ENVIRONMENT_LIMITS, ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
 import {
   AXIS_KEYS,
@@ -144,8 +152,13 @@ export type EnvironmentInput = z.infer<typeof environmentInput>;
 
 export const assessmentInput = z.object({
   environmentId: z.uuid(),
-  concerns: z.array(z.enum(CONCERN_KEYS)),
+  protecting: z.array(z.enum(PROTECTED_KEYS)),
+  concerns: z.array(z.enum(CONCERN_KEYS).refine((c) => c !== "UPCOMING_EVENT", "Not a concern you can tick")),
+  exposures: z.array(z.enum(EXPOSURE_KEYS)),
+  threats: z.array(z.enum(THREAT_KEYS)),
   measures: z.array(z.enum(MEASURE_KEYS)),
+  budget: z.enum(COST_TIER_KEYS),
+  upcoming: trimmed(ASSESSMENT_LIMITS.upcomingMax),
 });
 export type AssessmentInput = z.infer<typeof assessmentInput>;
 

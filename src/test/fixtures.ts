@@ -2,7 +2,14 @@
  * preferences, and a booking — each overridable per test. */
 import type { Db } from "@/db/types";
 import { windowFromClock } from "@/domain/availability";
-import type { BookingInput, PreferencesInput, ProtectorApplication, RatingInput, ReportInput } from "@/domain/inputs";
+import type {
+  AssessmentInput,
+  BookingInput,
+  PreferencesInput,
+  ProtectorApplication,
+  RatingInput,
+  ReportInput,
+} from "@/domain/inputs";
 import { saveAvailability } from "@/server/availability";
 import { createBooking } from "@/server/bookings";
 import { savePreferences } from "@/server/preferences";
@@ -79,5 +86,17 @@ export const report = (overrides: Partial<ReportInput> = {}): ReportInput => ({
   policeInvolved: false,
   observations: ["NOTHING_NOTABLE"],
   severity: null,
+  ...overrides,
+});
+
+export const answers = (environmentId: string, overrides: Partial<AssessmentInput> = {}): AssessmentInput => ({
+  environmentId,
+  protecting: ["SELF"],
+  concerns: [],
+  exposures: [],
+  threats: [],
+  measures: [],
+  budget: "LOW",
+  upcoming: "",
   ...overrides,
 });

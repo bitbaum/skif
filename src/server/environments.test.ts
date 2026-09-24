@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createTestDb } from "@/test/db";
-import { customerWithPreferences } from "@/test/fixtures";
+import { answers, customerWithPreferences } from "@/test/fixtures";
 import { createAssessment, getAssessment, listAssessments } from "./assessments";
 import { createEnvironment, getEnvironment, listEnvironments } from "./environments";
 
@@ -15,10 +15,10 @@ describe("environments", () => {
     expect((await listEnvironments(db, "oc-a")).map((e) => e.name)).toEqual(["Flat"]);
     expect(await getEnvironment(db, "oc-a", club.id)).toBeNull();
 
-    const theirs = await createAssessment(db, "oc-a", { environmentId: club.id, concerns: [], measures: [] });
+    const theirs = await createAssessment(db, "oc-a", answers(club.id));
     expect(theirs).toEqual({ success: false, error: "Choose one of your places" });
 
-    const mine = await createAssessment(db, "oc-a", { environmentId: flat.id, concerns: ["BURGLARY"], measures: [] });
+    const mine = await createAssessment(db, "oc-a", answers(flat.id, { concerns: ["BURGLARY"] }));
     if (!mine.success) throw new Error(mine.error);
     expect((await getAssessment(db, "oc-a", mine.data.id))?.environment).toMatchObject({ name: "Flat", type: "HOME" });
     expect(await getAssessment(db, "oc-b", mine.data.id)).toBeNull();

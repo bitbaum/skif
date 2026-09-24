@@ -10,7 +10,9 @@ import { requireViewer } from "@/server/viewer";
 
 export async function createAssessmentAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireViewer();
-  const parsed = assessmentInput.safeParse(formFields(form, ["concerns", "measures"]));
+  const parsed = assessmentInput.safeParse(
+    formFields(form, ["protecting", "concerns", "exposures", "threats", "measures"]),
+  );
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await createAssessment(getDb(), viewer.sub, parsed.data);
   if (!result.success) return { error: result.error };
@@ -22,5 +24,5 @@ export async function createEnvironmentAction(_: ActionState, form: FormData): P
   const parsed = environmentInput.safeParse(formFields(form));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const env = await createEnvironment(getDb(), viewer.sub, parsed.data);
-  redirect(`/assessments?place=${env.id}`);
+  redirect(`/assessments/new?place=${env.id}`);
 }

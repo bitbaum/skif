@@ -11,7 +11,7 @@ import { getPreferences } from "./preferences";
 export type Assessment = typeof assessments.$inferSelect;
 
 /** Run an assessment against the person's current hard constraints and save
- * the resulting Safety Plan, constraints included, as it was decided. */
+ * the answers and the resulting Safety Plan, constraints included, as decided. */
 export async function createAssessment(
   db: Db,
   customerSub: string,
@@ -21,11 +21,8 @@ export async function createAssessment(
   if (!prefs) return fail("Set your safety preferences before an assessment");
   const environment = await getEnvironment(db, customerSub, input.environmentId);
   if (!environment) return fail("Choose one of your places");
-  const plan = buildSafetyPlan({
-    concerns: input.concerns,
-    measures: input.measures,
-    constraints: prefs.hardConstraints,
-  });
+  const { environmentId: _, protecting: __, ...answers } = input;
+  const plan = buildSafetyPlan({ ...answers, environment: environment.type, constraints: prefs.hardConstraints });
   const [row] = await db
     .insert(assessments)
     .values({ customerSub, ...input, plan })

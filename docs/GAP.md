@@ -53,12 +53,12 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] Safety Preference Profile has no trade-off axes (privacy ↔ observability, autonomy ↔ automation, local ↔ cloud, …) (§3). — PR #15
 - [x] Missing hard constraints: local-only processing, no persistent recording (§3). — PR #15
 - [ ] Preferences beyond hard constraints do not affect recommendations (§3 "must affect recommendations").
-- [ ] Assessment does not capture who/what is protected, known threats, routines/exposure, budget, or upcoming events (§12).
-- [ ] No AssessmentFinding: the plan is not built from explicit findings (§12, §21).
+- [x] Assessment does not capture who/what is protected, known threats, routines/exposure, budget, or upcoming events (§12). — PR #17
+- [x] No AssessmentFinding: the plan is not built from explicit findings (§12, §21). — PR #17
 - [x] Interventions lack expected benefit, evidence confidence and autonomy impact as separate dimensions (§2, §12). — PR #16
 - [x] Interventions don't say whether they need a product, a professional service, a Protector, or are simply behavioural/environmental (§12). — PR #16
-- [ ] Safety Plan items don't say why they are recommended or which finding they address (§12).
-- [ ] Budget is not taken into account (§12).
+- [x] Safety Plan items don't say why they are recommended or which finding they address (§12). — PR #17
+- [x] Budget is not taken into account (§12). — PR #17
 
 ## P2 — Marketplace foundation
 - [ ] No providers, items, product/service taxonomy, intervention linkage, or privacy/evidence metadata (§13, §31).

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CONCERN_KEYS } from "./assessment";
-import { INTERVENTIONS, needsPurchase } from "./interventions";
+import { CONCERN_KEYS } from "../assessment";
+import { INTERVENTIONS, needsPurchase } from ".";
 
 describe("intervention catalogue", () => {
   it("claims no high confidence until real evidence is attached (SPEC §16)", () => {
