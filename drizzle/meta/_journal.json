@@ -15,6 +15,13 @@
       "when": 1790284628515,
       "tag": "0001_capabilities",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790284962160,
+      "tag": "0002_availability",
+      "breakpoints": true
     }
   ]
 }

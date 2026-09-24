@@ -96,6 +96,26 @@ export const protectorCapabilities = pgTable(
   (t) => [unique("protector_capabilities_unique").on(t.protectorId, t.capability)],
 );
 
+export const protectorAvailability = pgTable(
+  "protector_availability",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    protectorId: uuid("protector_id")
+      .notNull()
+      .references(() => protectors.id),
+    /** ISO weekday, 1 = Monday. Times are Zürich wall-clock. */
+    weekday: smallint("weekday").notNull(),
+    startMinute: smallint("start_minute").notNull(),
+    durationMinutes: smallint("duration_minutes").notNull(),
+  },
+  (t) => [
+    unique("protector_availability_day").on(t.protectorId, t.weekday),
+    check("availability_weekday", sql`${t.weekday} BETWEEN 1 AND 7`),
+    check("availability_start", sql`${t.startMinute} BETWEEN 0 AND 1439`),
+    check("availability_duration", sql`${t.durationMinutes} BETWEEN 1 AND 1440`),
+  ],
+);
+
 export const bookings = pgTable(
   "bookings",
   {

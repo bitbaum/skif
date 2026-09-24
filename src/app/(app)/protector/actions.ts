@@ -10,11 +10,13 @@ import {
   describeIssue,
   formFields,
   idInput,
+  parseAvailability,
   protectorApplication,
   reportInput,
 } from "@/domain/inputs";
 import { fileReport } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
+import { saveAvailability } from "@/server/availability";
 import { applyAsProtector } from "@/server/protectors";
 import { requireApprovedProtector, requireViewer } from "@/server/viewer";
 
@@ -58,4 +60,13 @@ export async function reportAction(_: ActionState, form: FormData): Promise<Acti
   if (!result.success) return { error: result.error };
   revalidatePath(`/protector/jobs/${id.data}`);
   return null;
+}
+
+export async function availabilityAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireViewer();
+  if (!viewer.protector) return { error: "Apply as a Protector first" };
+  const windows = parseAvailability(form);
+  if (!windows.success) return { error: windows.error };
+  await saveAvailability(getDb(), viewer.protector.id, windows.data);
+  redirect("/protector?saved=1");
 }

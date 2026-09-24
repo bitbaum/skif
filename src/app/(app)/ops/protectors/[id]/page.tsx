@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
+import { AvailabilitySummary } from "@/components/availability-fields";
 import { languagesText, presenceText } from "@/components/booking";
 import { Badge, Card, DefinitionList, Empty, formatWhen, PageHeader } from "@/components/ui";
 import { capabilityLabel, findCapability, levelLabel, verificationLabel } from "@/config/capabilities";
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
-import { isoDay, standing } from "@/domain/capabilities";
+import { standing } from "@/domain/capabilities";
+import { zonedIsoDay } from "@/domain/time";
 import { idInput } from "@/domain/inputs";
 import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { getProtector, listCapabilities, type ProtectorCapability } from "@/server/protectors";
+import { listAvailability } from "@/server/availability";
 import { requireOps } from "@/server/viewer";
 import { assessCapabilityAction, protectorStatusAction } from "../../actions";
 
@@ -65,8 +68,11 @@ export default async function OpsProtectorPage({ params }: { params: Promise<{ i
   const db = getDb();
   const protector = await getProtector(db, id.data);
   if (!protector) notFound();
-  const capabilities = await listCapabilities(db, protector.id);
-  const today = isoDay(new Date());
+  const [capabilities, windows] = await Promise.all([
+    listCapabilities(db, protector.id),
+    listAvailability(db, protector.id),
+  ]);
+  const today = zonedIsoDay(new Date());
 
   return (
     <>
@@ -96,6 +102,7 @@ export default async function OpsProtectorPage({ params }: { params: Promise<{ i
               ["Services", protector.services.map(serviceLabel).join(", ")],
               ["Languages", languagesText(protector.languages)],
               ["Styles", protector.presenceStyles.map(presenceText).join(", ")],
+              ["Available (Zürich)", <AvailabilitySummary key="a" windows={windows} />],
             ]}
           />
         </Card>

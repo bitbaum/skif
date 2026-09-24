@@ -24,10 +24,10 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] Operations cannot verify or reject a declared capability; nothing records who assessed it (§7 "assessor/source", §11). — PR #5
 
 ### Availability
-- [ ] Protectors cannot set availability, and Operations cannot see it (§6, §11).
+- [x] Protectors cannot set availability, and Operations cannot see it (§6, §11). — PR #6
 
 ### Matching
-- [ ] Hard filters missing: availability, required capability/qualification, driving requirement, certification validity (§9).
+- [ ] Hard filters missing: required capability/qualification, driving requirement, certification validity (§9). (Availability filter: PR #6.)
 - [x] Unverified and verified capabilities count the same; expired certifications still count (§7, §9). — PR #5
 - [ ] No relevant-experience signal (completed deployments of this service) (§9).
 - [ ] Raw points shown with no fit band; spec asks for EXCELLENT / STRONG / GOOD FIT until scores justify more (§9).

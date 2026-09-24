@@ -9,7 +9,10 @@ import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/con
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN } from "@/config/ratings";
 import { AREAS, BOOKING_LIMITS, SERVICE_KEYS } from "@/config/services";
-import { zonedLocalToDate } from "./time";
+import { WEEKDAYS } from "@/config/availability";
+import { windowFromClock, type AvailabilityWindow } from "./availability";
+import { fail, ok, type Result } from "./result";
+import { clockToMinute, zonedLocalToDate } from "./time";
 
 const trimmed = (max: number) => z.string().trim().max(max);
 const required = (max: number) => trimmed(max).min(1, "Required");
@@ -131,6 +134,23 @@ export function capabilityFields(form: FormData): Record<string, unknown>[] {
       },
     ];
   });
+}
+
+export const availabilityField = (weekday: number, part: "from" | "to") => `avail.${weekday}.${part}`;
+
+/** One optional from/to pair per weekday; both empty means not available. */
+export function parseAvailability(form: FormData): Result<AvailabilityWindow[]> {
+  const windows: AvailabilityWindow[] = [];
+  for (const { day, label } of WEEKDAYS) {
+    const from = form.get(availabilityField(day, "from"));
+    const to = form.get(availabilityField(day, "to"));
+    if (!from && !to) continue;
+    const start = typeof from === "string" ? clockToMinute(from) : null;
+    const end = typeof to === "string" ? clockToMinute(to) : null;
+    if (start === null || end === null) return fail(`${label}: give both a start and an end time`);
+    windows.push(windowFromClock(day, start, end));
+  }
+  return ok(windows);
 }
 
 /** First zod issue as a readable sentence. */

@@ -13,12 +13,16 @@ import {
 } from "@/config/matching";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
 import { serviceLabel, type ServiceKey } from "@/config/services";
+import { isAvailable, type AvailabilityWindow } from "./availability";
 import { describeHeld, standing, type HeldCapability } from "./capabilities";
+import { zonedIsoDay } from "./time";
 
 export type MatchRequest = {
   service: ServiceKey;
   languages: readonly string[];
   presenceStyle: PresenceStyle;
+  startsAt: Date;
+  hours: number;
 };
 
 export type MatchCandidate = {
@@ -27,6 +31,7 @@ export type MatchCandidate = {
   services: readonly string[];
   languages: readonly string[];
   capabilities: readonly HeldCapability[];
+  availability: readonly AvailabilityWindow[];
   presenceStyles: readonly string[];
   /** Mean of past ratings normalised to 0..1, or null with no ratings yet. */
   ratingScore: number | null;
@@ -43,6 +48,8 @@ export type MatchResult = { ranked: RankedProtector[]; excluded: ExcludedProtect
 
 function exclusionReason(req: MatchRequest, c: MatchCandidate): string | null {
   if (!c.services.includes(req.service)) return `Does not offer ${serviceLabel(req.service)}`;
+  if (c.availability.length === 0) return "Has not set availability";
+  if (!isAvailable(c.availability, req.startsAt, req.hours)) return "Not available at that time";
   if (c.busy) return "Already committed to an overlapping booking";
   if (req.languages.length > 0 && !req.languages.some((l) => c.languages.includes(l))) {
     return "Shares no language with the customer";
@@ -99,12 +106,9 @@ function reasonsFor(req: MatchRequest, c: MatchCandidate, today: string): MatchR
   return reasons;
 }
 
-/** `onDay` is the job's ISO date (YYYY-MM-DD): a certificate must still be valid then. */
-export function rankProtectors(
-  req: MatchRequest,
-  candidates: readonly MatchCandidate[],
-  onDay: string,
-): MatchResult {
+export function rankProtectors(req: MatchRequest, candidates: readonly MatchCandidate[]): MatchResult {
+  // A certificate must still be valid on the day of the job.
+  const onDay = zonedIsoDay(req.startsAt);
   const ranked: RankedProtector[] = [];
   const excluded: ExcludedProtector[] = [];
 

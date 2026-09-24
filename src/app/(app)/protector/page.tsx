@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { StatusBadge } from "@/components/booking";
+import { AvailabilityFields } from "@/components/availability-fields";
 import { CapabilityFields } from "@/components/capability-fields";
 import { CheckboxGroup, Field, TextArea, TextInput } from "@/components/fields";
 import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
@@ -9,11 +10,12 @@ import { LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { SERVICES, serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
+import { listAvailability } from "@/server/availability";
 import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { listProtectorJobs } from "@/server/bookings";
 import { listCapabilities, type Protector, type ProtectorCapability } from "@/server/protectors";
 import { requireViewer } from "@/server/viewer";
-import { applyAction } from "./actions";
+import { applyAction, availabilityAction } from "./actions";
 
 export const metadata: Metadata = { title: "Protector" };
 
@@ -68,6 +70,7 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
   const db = getDb();
   const jobs = protector?.status === "APPROVED" ? await listProtectorJobs(db, protector.id) : [];
   const held = protector ? await listCapabilities(db, protector.id) : [];
+  const windows = protector ? await listAvailability(db, protector.id) : [];
 
   return (
     <>
@@ -102,6 +105,13 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
               ))}
             </ul>
           )}
+        </Card>
+      )}
+      {protector && (
+        <Card title="Availability" className="mb-6">
+          <ActionForm action={availabilityAction} submitLabel="Save availability">
+            <AvailabilityFields windows={windows} />
+          </ActionForm>
         </Card>
       )}
       <Card title={protector ? "Profile" : "Application"}>

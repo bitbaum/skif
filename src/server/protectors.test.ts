@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import type { ProtectorApplication } from "@/domain/inputs";
 import { createTestDb } from "@/test/db";
+import { windowFromClock } from "@/domain/availability";
+import { listAvailability, saveAvailability } from "./availability";
 import { applyAsProtector, assessCapability, listCapabilities, setProtectorStatus } from "./protectors";
 
 const application: ProtectorApplication = {
@@ -56,6 +58,19 @@ describe("protector profiles and capabilities", () => {
     expect((await setProtectorStatus(db, p.id, "REJECTED")).success).toBe(true);
     const reopened = await applyAsProtector(db, "oc-mira", application);
     expect(reopened.status).toBe("APPLIED");
+  });
+});
+
+describe("availability", () => {
+  it("replaces the whole week on save", async () => {
+    const db = await createTestDb();
+    const p = await applyAsProtector(db, "oc-mira", application);
+    await saveAvailability(db, p.id, [windowFromClock(5, 20 * 60, 4 * 60), windowFromClock(6, 20 * 60, 4 * 60)]);
+    await saveAvailability(db, p.id, [windowFromClock(1, 9 * 60, 17 * 60)]);
+    const rows = await listAvailability(db, p.id);
+    expect(rows.map((r) => [r.weekday, r.startMinute, r.durationMinutes])).toEqual([[1, 540, 480]]);
+    await saveAvailability(db, p.id, []);
+    expect(await listAvailability(db, p.id)).toEqual([]);
   });
 });
 
