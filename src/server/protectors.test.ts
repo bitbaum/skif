@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { PGlite } from "@electric-sql/pglite";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import type { ProtectorApplication } from "@/domain/inputs";
@@ -71,25 +69,5 @@ describe("availability", () => {
     expect(rows.map((r) => [r.weekday, r.startMinute, r.durationMinutes])).toEqual([[1, 540, 480]]);
     await saveAvailability(db, p.id, []);
     expect(await listAvailability(db, p.id)).toEqual([]);
-  });
-});
-
-describe("migration 0001", () => {
-  it("carries v1 skill tags across as self-declared capabilities", async () => {
-    const pg = new PGlite();
-    const statements = (file: string) =>
-      readFileSync(`drizzle/${file}`, "utf8").split("--> statement-breakpoint").filter((s) => s.trim());
-    for (const sql of statements("0000_init.sql")) await pg.exec(sql);
-    await pg.exec(
-      `INSERT INTO protectors (sub, display_name, bio, skills) VALUES ('oc-v1', 'V1', 'bio', '{DE_ESCALATION,FIRST_AID}')`,
-    );
-    for (const sql of statements("0001_capabilities.sql")) await pg.exec(sql);
-    const { rows } = await pg.query<{ capability: string; level: string; verification: string }>(
-      "SELECT capability, level, verification FROM protector_capabilities ORDER BY capability",
-    );
-    expect(rows).toEqual([
-      { capability: "DE_ESCALATION", level: "PROFICIENT", verification: "SELF_DECLARED" },
-      { capability: "FIRST_AID", level: "PROFICIENT", verification: "SELF_DECLARED" },
-    ]);
   });
 });

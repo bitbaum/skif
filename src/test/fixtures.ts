@@ -2,7 +2,7 @@
  * preferences, and a booking — each overridable per test. */
 import type { Db } from "@/db/types";
 import { windowFromClock } from "@/domain/availability";
-import type { BookingInput, PreferencesInput, ProtectorApplication } from "@/domain/inputs";
+import type { BookingInput, PreferencesInput, ProtectorApplication, RatingInput, ReportInput } from "@/domain/inputs";
 import { saveAvailability } from "@/server/availability";
 import { createBooking } from "@/server/bookings";
 import { savePreferences } from "@/server/preferences";
@@ -59,3 +59,24 @@ export async function book(db: Db, customerSub: string, overrides: Partial<Booki
   if (!r.success) throw new Error(r.error);
   return r.data;
 }
+
+export const rating = (overrides: Partial<RatingInput> = {}): RatingInput => ({
+  respect: 5,
+  discretion: 5,
+  feltSafe: 5,
+  professionalism: 5,
+  communication: 5,
+  punctuality: 5,
+  judgment: null,
+  comment: "",
+  ...overrides,
+});
+
+export const report = (overrides: Partial<ReportInput> = {}): ReportInput => ({
+  kind: "REPORT",
+  summary: "Quiet night.",
+  policeInvolved: false,
+  observations: ["NOTHING_NOTABLE"],
+  severity: null,
+  ...overrides,
+});

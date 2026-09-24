@@ -7,7 +7,10 @@ import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { listAllBookings } from "@/server/bookings";
 import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
+import { listOpenIncidents } from "@/server/feedback";
 import { listProtectors } from "@/server/protectors";
+import { severityLabel } from "@/config/reports";
+import { REVIEW_LABELS } from "@/domain/incidents";
 import { requireOps } from "@/server/viewer";
 import { protectorStatusAction } from "./actions";
 
@@ -16,12 +19,33 @@ export const metadata: Metadata = { title: "Operations" };
 export default async function OpsPage() {
   await requireOps();
   const db = getDb();
-  const [bookings, protectors] = await Promise.all([listAllBookings(db), listProtectors(db)]);
+  const [bookings, protectors, incidents] = await Promise.all([
+    listAllBookings(db),
+    listProtectors(db),
+    listOpenIncidents(db),
+  ]);
   const waiting = bookings.filter((b) => b.status === "REQUESTED").length;
 
   return (
     <>
       <PageHeader title="Operations" lead={`${waiting} booking(s) waiting for a Protector.`} />
+      {incidents.length > 0 && (
+        <Card title={`Incidents to review (${incidents.length})`} className="mb-6">
+          <ul className="space-y-2 text-sm">
+            {incidents.map((i) => (
+              <li key={i.id} className="flex flex-wrap items-center gap-2">
+                <Badge tone={i.severity === "HIGH" ? "danger" : "warn"}>
+                  {i.severity ? severityLabel(i.severity) : "Severity unknown"}
+                </Badge>
+                <Badge>{REVIEW_LABELS[i.review]}</Badge>
+                <Link href={`/ops/bookings/${i.bookingId}`} className="text-accent underline">
+                  Filed {formatWhen(i.createdAt)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       <Card title="Bookings" className="mb-6">
         {bookings.length === 0 ? (
           <Empty>No bookings yet.</Empty>
