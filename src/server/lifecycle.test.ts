@@ -3,6 +3,7 @@ import type { Db } from "@/db/types";
 import { createTestDb } from "@/test/db";
 import { application, approvedProtector, OPS, rating as ratingOf, report, tomorrow } from "@/test/fixtures";
 import { createAssessment } from "./assessments";
+import { createEnvironment } from "./environments";
 import {
   createBooking,
   getBookingForCustomer,
@@ -168,7 +169,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
 
   it("saves a Safety Plan that respects hard constraints", async () => {
     const r = await createAssessment(db, CUSTOMER, {
-      placeName: "My flat",
+      environmentId: (await createEnvironment(db, CUSTOMER, { type: "HOME", name: "My flat", area: null })).id,
       concerns: ["BURGLARY", "UNWANTED_VISITORS"],
       measures: ["NEIGHBOUR_CONTACT"],
     });

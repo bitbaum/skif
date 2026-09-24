@@ -3,7 +3,8 @@
  * these; server modules accept only the parsed types.
  */
 import { z } from "zod";
-import { ASSESSMENT_LIMITS, CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessment";
+import { CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessment";
+import { ENVIRONMENT_LIMITS, ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
 import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/config/constraints";
 import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
@@ -125,8 +126,15 @@ export const incidentReviewInput = z.object({
 export type IncidentReviewInput = z.infer<typeof incidentReviewInput>;
 export type ReportInput = z.infer<typeof reportInput>;
 
+export const environmentInput = z.object({
+  type: z.enum(ENVIRONMENT_TYPE_KEYS),
+  name: required(ENVIRONMENT_LIMITS.nameMax),
+  area: z.preprocess((v) => (v === "" ? null : v), z.enum(AREAS).nullable()),
+});
+export type EnvironmentInput = z.infer<typeof environmentInput>;
+
 export const assessmentInput = z.object({
-  placeName: required(ASSESSMENT_LIMITS.placeNameMax),
+  environmentId: z.uuid(),
   concerns: z.array(z.enum(CONCERN_KEYS)),
   measures: z.array(z.enum(MEASURE_KEYS)),
 });

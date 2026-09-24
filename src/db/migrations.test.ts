@@ -57,3 +57,28 @@ describe("migration 0001", () => {
     ]);
   });
 });
+
+describe("migration 0009", () => {
+  it("turns each distinct legacy place name into a Home environment its assessments point at", async () => {
+    const pg = new PGlite();
+    await migrateThrough(pg, "0008");
+    await pg.exec(`
+      INSERT INTO assessments (customer_sub, place_name, plan) VALUES
+        ('oc-a', 'My flat', '{}'), ('oc-a', 'My flat', '{}'), ('oc-a', 'Office', '{}'), ('oc-b', 'My flat', '{}');
+    `);
+    await migrateThrough(pg, "0009", "0009");
+    const envs = await pg.query<{ owner_sub: string; name: string; type: string }>(
+      "SELECT owner_sub, name, type::text FROM environments ORDER BY owner_sub, name",
+    );
+    expect(envs.rows).toEqual([
+      { owner_sub: "oc-a", name: "My flat", type: "HOME" },
+      { owner_sub: "oc-a", name: "Office", type: "HOME" },
+      { owner_sub: "oc-b", name: "My flat", type: "HOME" },
+    ]);
+    const linked = await pg.query<{ n: number }>(
+      `SELECT count(*)::int AS n FROM assessments a JOIN environments e ON e.id = a.environment_id
+       WHERE e.owner_sub = a.customer_sub AND e.name = a.place_name`,
+    );
+    expect(linked.rows[0]?.n).toBe(4);
+  });
+});

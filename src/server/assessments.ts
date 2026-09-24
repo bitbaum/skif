@@ -1,10 +1,11 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { assessments } from "@/db/schema";
+import { assessments, environments } from "@/db/schema";
 import type { Db } from "@/db/types";
 import type { AssessmentInput } from "@/domain/inputs";
 import { fail, ok, type Result } from "@/domain/result";
 import { buildSafetyPlan } from "@/domain/safety-plan";
+import { getEnvironment, type Environment } from "./environments";
 import { getPreferences } from "./preferences";
 
 export type Assessment = typeof assessments.$inferSelect;
@@ -18,6 +19,8 @@ export async function createAssessment(
 ): Promise<Result<Assessment>> {
   const prefs = await getPreferences(db, customerSub);
   if (!prefs) return fail("Set your safety preferences before an assessment");
+  const environment = await getEnvironment(db, customerSub, input.environmentId);
+  if (!environment) return fail("Choose one of your places");
   const plan = buildSafetyPlan({
     concerns: input.concerns,
     measures: input.measures,
@@ -30,18 +33,23 @@ export async function createAssessment(
   return ok(row!);
 }
 
-export async function listAssessments(db: Db, customerSub: string): Promise<Assessment[]> {
-  return db
-    .select()
+export type AssessmentWithPlace = Assessment & { environment: Environment };
+
+export async function listAssessments(db: Db, customerSub: string): Promise<AssessmentWithPlace[]> {
+  const rows = await db
+    .select({ assessment: assessments, environment: environments })
     .from(assessments)
+    .innerJoin(environments, eq(assessments.environmentId, environments.id))
     .where(eq(assessments.customerSub, customerSub))
     .orderBy(desc(assessments.createdAt));
+  return rows.map((r) => ({ ...r.assessment, environment: r.environment }));
 }
 
-export async function getAssessment(db: Db, customerSub: string, id: string): Promise<Assessment | null> {
+export async function getAssessment(db: Db, customerSub: string, id: string): Promise<AssessmentWithPlace | null> {
   const [row] = await db
-    .select()
+    .select({ assessment: assessments, environment: environments })
     .from(assessments)
+    .innerJoin(environments, eq(assessments.environmentId, environments.id))
     .where(and(eq(assessments.id, id), eq(assessments.customerSub, customerSub)));
-  return row ?? null;
+  return row ? { ...row.assessment, environment: row.environment } : null;
 }
