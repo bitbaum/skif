@@ -8,17 +8,19 @@ import { getDb } from "@/db/client";
 import { complaintActions, STATUS_LABELS } from "@/domain/complaints";
 import { idInput } from "@/domain/inputs";
 import { getComplaint } from "@/server/complaints";
+import { audit } from "@/server/audit";
 import { requireOps } from "@/server/viewer";
 import { opsComplaintAction } from "../../actions";
 
 export const metadata: Metadata = { title: "Complaint · Operations" };
 
 export default async function OpsComplaintPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireOps();
+  const viewer = await requireOps();
   const id = idInput.safeParse((await params).id);
   if (!id.success) notFound();
   const complaint = await getComplaint(getDb(), id.data);
   if (!complaint) notFound();
+  await audit(getDb(), viewer.sub, "VIEW_COMPLAINT", { type: "COMPLAINT", id: id.data });
 
   return (
     <>

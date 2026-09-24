@@ -32,7 +32,11 @@ export default async function OpsPage() {
 
   return (
     <>
-      <PageHeader title="Operations" lead={`${waiting} booking(s) waiting for a Protector.`} />
+      <PageHeader title="Operations" lead={`${waiting} booking(s) waiting for a Protector.`}>
+        <Link href="/ops/audit" className="text-sm text-accent underline">
+          Audit log
+        </Link>
+      </PageHeader>
       {incidents.length > 0 && (
         <Card title={`Incidents to review (${incidents.length})`} className="mb-6">
           <ul className="space-y-2 text-sm">

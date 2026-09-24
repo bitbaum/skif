@@ -14,6 +14,7 @@ import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-sta
 import { getProtector, listCapabilities, type ProtectorCapability } from "@/server/protectors";
 import { listAvailability } from "@/server/availability";
 import { countUpheld } from "@/server/complaints";
+import { audit } from "@/server/audit";
 import { requireOps } from "@/server/viewer";
 import { assessCapabilityAction, protectorStatusAction } from "../../actions";
 
@@ -63,12 +64,13 @@ function CapabilityRow({ c, today }: { c: ProtectorCapability; today: string }) 
 }
 
 export default async function OpsProtectorPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireOps();
+  const viewer = await requireOps();
   const id = idInput.safeParse((await params).id);
   if (!id.success) notFound();
   const db = getDb();
   const protector = await getProtector(db, id.data);
   if (!protector) notFound();
+  await audit(db, viewer.sub, "VIEW_PROTECTOR", { type: "PROTECTOR", id: id.data });
   const [capabilities, windows, upheld] = await Promise.all([
     listCapabilities(db, protector.id),
     listAvailability(db, protector.id),

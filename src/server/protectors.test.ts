@@ -52,8 +52,8 @@ describe("protector profiles and capabilities", () => {
 
   it("allows only the declared status moves, and reopens a rejected application on update", async () => {
     const p = await applyAsProtector(db, "oc-mira", application);
-    expect((await setProtectorStatus(db, p.id, "SUSPENDED")).success).toBe(false);
-    expect((await setProtectorStatus(db, p.id, "REJECTED")).success).toBe(true);
+    expect((await setProtectorStatus(db, p.id, "SUSPENDED", "oc-ops")).success).toBe(false);
+    expect((await setProtectorStatus(db, p.id, "REJECTED", "oc-ops")).success).toBe(true);
     const reopened = await applyAsProtector(db, "oc-mira", application);
     expect(reopened.status).toBe("APPLIED");
   });

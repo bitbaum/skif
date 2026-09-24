@@ -6,6 +6,7 @@ import type { Db } from "@/db/types";
 import type { CapabilityDeclaration, ProtectorApplication } from "@/domain/inputs";
 import { mayMove, type ProtectorStatus } from "@/domain/protector-status";
 import { fail, ok, type Result } from "@/domain/result";
+import { audit } from "./audit";
 
 export type Protector = typeof protectors.$inferSelect;
 export type ProtectorCapability = typeof protectorCapabilities.$inferSelect;
@@ -88,14 +89,23 @@ export async function listProtectors(db: Db): Promise<Protector[]> {
   return db.select().from(protectors).orderBy(asc(protectors.status), asc(protectors.displayName));
 }
 
-export async function setProtectorStatus(db: Db, id: string, status: ProtectorStatus): Promise<Result> {
+/** Operations changes a Protector's status; the change is audited. */
+export async function setProtectorStatus(
+  db: Db,
+  id: string,
+  status: ProtectorStatus,
+  actorSub: string,
+): Promise<Result> {
   const current = await getProtector(db, id);
   if (!current) return fail("Protector not found");
   if (!mayMove(current.status, status)) return fail(`Cannot move a Protector from ${current.status} to ${status}`);
-  await db
-    .update(protectors)
-    .set({ status, approvedAt: status === "APPROVED" ? new Date() : null })
-    .where(eq(protectors.id, id));
+  await db.transaction(async (tx) => {
+    await tx
+      .update(protectors)
+      .set({ status, approvedAt: status === "APPROVED" ? new Date() : null })
+      .where(eq(protectors.id, id));
+    await audit(tx, actorSub, "CHANGE_PROTECTOR_STATUS", { type: "PROTECTOR", id }, { from: current.status, to: status });
+  });
   return ok(undefined);
 }
 
@@ -123,10 +133,17 @@ export async function assessCapability(
   verification: Exclude<VerificationStatus, "SELF_DECLARED">,
   assessorSub: string,
 ): Promise<Result<{ protectorId: string }>> {
-  const [row] = await db
-    .update(protectorCapabilities)
-    .set({ verification, assessedBy: assessorSub, assessedAt: new Date() })
-    .where(eq(protectorCapabilities.id, capabilityId))
-    .returning({ protectorId: protectorCapabilities.protectorId });
-  return row ? ok(row) : fail("Capability not found");
+  return db.transaction(async (tx) => {
+    const [row] = await tx
+      .update(protectorCapabilities)
+      .set({ verification, assessedBy: assessorSub, assessedAt: new Date() })
+      .where(eq(protectorCapabilities.id, capabilityId))
+      .returning({ protectorId: protectorCapabilities.protectorId, capability: protectorCapabilities.capability });
+    if (!row) return fail("Capability not found");
+    await audit(tx, assessorSub, "ASSESS_CAPABILITY", { type: "CAPABILITY", id: capabilityId }, {
+      capability: row.capability,
+      verification,
+    });
+    return ok({ protectorId: row.protectorId });
+  });
 }
