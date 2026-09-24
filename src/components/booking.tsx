@@ -1,7 +1,7 @@
 import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { constraintLabel, languageLabel, PRESENCE_STYLES, type HardConstraintKey } from "@/config/constraints";
 import { ratingLabel, RATING_DIMENSIONS } from "@/config/ratings";
-import { STATUS_LABELS, type BookingStatus } from "@/domain/lifecycle";
+import { STATUS_LABELS, type BookingAction, type BookingStatus } from "@/domain/lifecycle";
 import { requirementsFor, type MatchReason } from "@/domain/matching";
 import type { ServiceKey } from "@/config/services";
 import type { BookingEvent, Rating, Report } from "@/server/bookings";
@@ -11,23 +11,27 @@ const STATUS_TONES: Record<BookingStatus, Tone> = {
   REQUESTED: "warn",
   ASSIGNED: "warn",
   ACCEPTED: "accent",
+  CHECKED_IN: "accent",
   IN_PROGRESS: "accent",
   COMPLETED: "neutral",
   CANCELLED: "danger",
+  EXPIRED: "danger",
 };
 
 export function StatusBadge({ status }: { status: BookingStatus }) {
   return <Badge tone={STATUS_TONES[status]}>{STATUS_LABELS[status]}</Badge>;
 }
 
-const ACTION_LABELS: Record<string, string> = {
+const ACTION_LABELS: Record<BookingAction | "REQUEST", string> = {
   REQUEST: "Requested",
   ASSIGN: "Protector assigned by Operations",
   ACCEPT: "Accepted by the Protector",
   DECLINE: "Declined by the Protector — back to Operations",
+  CHECK_IN: "Protector checked in at the meeting point",
   START: "Started",
   COMPLETE: "Completed",
   CANCEL: "Cancelled",
+  EXPIRE: "Expired: the start time passed before anyone accepted",
 };
 
 /** `showNotes` reveals Operations' override notes — pass it on Ops pages only. */
@@ -36,7 +40,7 @@ export function Timeline({ events, showNotes = false }: { events: BookingEvent[]
     <ol className="space-y-3 border-l border-line pl-4">
       {events.map((e) => (
         <li key={e.id} className="text-sm">
-          <p className="font-medium">{ACTION_LABELS[e.action] ?? e.action}</p>
+          <p className="font-medium">{ACTION_LABELS[e.action as keyof typeof ACTION_LABELS] ?? e.action}</p>
           <p className="text-muted">
             {formatWhen(e.at)} · by {e.actorRole.toLowerCase()}
           </p>

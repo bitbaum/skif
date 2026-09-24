@@ -17,6 +17,7 @@ export const metadata: Metadata = { title: "Job" };
 const ACTION_BUTTONS: Partial<Record<BookingAction, { label: string; variant: "primary" | "secondary" | "danger" }>> = {
   ACCEPT: { label: "Accept job", variant: "primary" },
   DECLINE: { label: "Decline", variant: "danger" },
+  CHECK_IN: { label: "Check in — I've arrived", variant: "primary" },
   START: { label: "Start — I'm with them", variant: "primary" },
   COMPLETE: { label: "Complete", variant: "primary" },
 };
@@ -33,7 +34,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   const job = await getJobForProtector(getDb(), viewer.protector.id, id.data);
   if (!job) notFound();
   const actions = availableActions(job.status, "PROTECTOR");
-  const canReport = protectorHasAccepted(job.status);
+  const accepted = protectorHasAccepted(job.status);
 
   return (
     <>
@@ -44,6 +45,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         <Card title="What the job needs">
           <DefinitionList
             items={[
+              ["Name to use", accepted ? (job.customerName ?? "Not given") : "Shown once you accept"],
               ["Meeting point", job.meetingPoint ?? "Shown once you accept"],
               ["Notes", job.notes ?? "Shown once you accept"],
               ["Presence", presenceText(job.presenceStyle)],
@@ -80,7 +82,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         )}
         <Card title="Reports">
           <ReportList reports={job.reports} />
-          {canReport && (
+          {accepted && (
             <div className="mt-5 border-t border-line pt-5">
               <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }}>
                 <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />

@@ -12,8 +12,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 ### Customer booking
 - [x] Services are not the spec's: Personal Protection, Protector + Driver and Specialist Support are missing (§5). — PR #7
 - [x] A booking cannot state requirements (e.g. first aid, a driver, a must-have language) — no BookingRequirement (§9, §21). — PR #7
-- [ ] No EXPIRED state: a request never assigned before its start time stays "Requested" forever (§22, §4 "do not fake instant availability").
-- [ ] Customer cannot keep a profile (the name a Protector should use) — step 2 of the definition of done (§5, §32.2).
+- [x] No EXPIRED state: a request never assigned before its start time stays "Requested" forever (§22, §4 "do not fake instant availability"). — PR #9
+- [x] Customer cannot keep a profile (the name a Protector should use) — step 2 of the definition of done (§5, §32.2). — PR #9
 
 ### Protector profiles
 - [x] No years of experience or driving capability on the profile (§6). — PR #5
@@ -35,7 +35,7 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 
 ### Protector acceptance / start / end
 - [x] Protector cannot see why they were matched to a job (§6). — PR #8
-- [ ] No check-in (arrived) step separate from starting the assignment (§6).
+- [x] No check-in (arrived) step separate from starting the assignment (§6). — PR #9
 
 ### Feedback / incidents
 - [ ] Rating lacks professionalism, communication and punctuality/reliability dimensions (§10).

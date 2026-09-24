@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { ActionForm } from "@/components/action-form";
-import { CheckboxGroup, Field, RadioGroup, TextArea } from "@/components/fields";
+import { CheckboxGroup, Field, RadioGroup, TextArea, TextInput } from "@/components/fields";
 import { Card, PageHeader } from "@/components/ui";
 import { HARD_CONSTRAINTS, LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
+import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { BOOKING_LIMITS } from "@/config/services";
 import { getDb } from "@/db/client";
 import { getPreferences } from "@/server/preferences";
 import { requireViewer } from "@/server/viewer";
-import { savePreferencesAction } from "./actions";
+import { getCustomerProfile } from "@/server/customers";
+import { savePreferencesAction, saveProfileAction } from "./actions";
 
 export const metadata: Metadata = { title: "Safety preferences" };
 
@@ -17,7 +19,8 @@ export default async function PreferencesPage({
   searchParams: Promise<{ saved?: string; next?: string }>;
 }) {
   const viewer = await requireViewer();
-  const prefs = await getPreferences(getDb(), viewer.sub);
+  const db = getDb();
+  const [prefs, profile] = await Promise.all([getPreferences(db, viewer.sub), getCustomerProfile(db, viewer.sub)]);
   const { saved, next } = await searchParams;
 
   return (
@@ -32,7 +35,22 @@ export default async function PreferencesPage({
           Set these once before you book or run a safety assessment.
         </p>
       )}
-      <Card>
+      <Card title="How should your Protector address you?" className="mb-6">
+        <ActionForm action={saveProfileAction} submitLabel="Save name">
+          <Field
+            label="Name to use"
+            hint="Any name you like — it needn't be your legal one. A Protector sees it only after accepting your booking."
+          >
+            <TextInput
+              name="preferredName"
+              maxLength={PROTECTOR_LIMITS.displayNameMax}
+              defaultValue={profile?.preferredName ?? ""}
+              required
+            />
+          </Field>
+        </ActionForm>
+      </Card>
+      <Card title="Limits and preferences">
         <ActionForm action={savePreferencesAction} submitLabel="Save preferences" hidden={next ? { next } : {}}>
           <CheckboxGroup
             legend="Hard limits"

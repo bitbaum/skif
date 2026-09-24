@@ -7,6 +7,8 @@ import type { MatchReason } from "@/domain/matching";
 import { protectorHasAccepted } from "@/domain/lifecycle";
 import { manualPayments, type PaymentProvider } from "@/domain/payment";
 import { fail, ok, type Result } from "@/domain/result";
+import { getCustomerProfile } from "./customers";
+import { expireOverdue } from "./lifecycle";
 import { getPreferences } from "./preferences";
 
 export type Booking = typeof bookings.$inferSelect;
@@ -55,6 +57,7 @@ export async function createBooking(
 }
 
 export async function listCustomerBookings(db: Db, customerSub: string): Promise<Booking[]> {
+  await expireOverdue(db);
   return db
     .select()
     .from(bookings)
@@ -63,6 +66,7 @@ export async function listCustomerBookings(db: Db, customerSub: string): Promise
 }
 
 export async function listProtectorJobs(db: Db, protectorId: string): Promise<Booking[]> {
+  await expireOverdue(db);
   return db
     .select()
     .from(bookings)
@@ -73,6 +77,7 @@ export async function listProtectorJobs(db: Db, protectorId: string): Promise<Bo
 export type OpsBookingRow = Booking & { protectorName: string | null };
 
 export async function listAllBookings(db: Db): Promise<OpsBookingRow[]> {
+  await expireOverdue(db);
   const rows = await db
     .select({ booking: bookings, protectorName: protectors.displayName })
     .from(bookings)
@@ -115,7 +120,10 @@ async function loadDetail(db: Db, booking: Booking): Promise<BookingDetail> {
   return { booking, protector: protector ?? null, events, rating: rating ?? null, reports: bookingReports };
 }
 
+/** Every read of a booking first expires overdue requests, so no page shows
+ * a request as still open after its start time has passed. */
 async function findBooking(db: Db, id: string): Promise<Booking | null> {
+  await expireOverdue(db);
   const [row] = await db.select().from(bookings).where(eq(bookings.id, id));
   return row ?? null;
 }
@@ -136,6 +144,8 @@ export async function getBookingForOps(db: Db, id: string) {
 export type ProtectorJob = Omit<Booking, "customerSub" | "meetingPoint" | "notes"> & {
   meetingPoint: string | null;
   notes: string | null;
+  /** The name the customer asked to be called, once accepted. */
+  customerName: string | null;
   reports: Report[];
   /** Why they were matched, as Operations saw it when assigning them. */
   whyMatched: MatchReason[];
@@ -153,16 +163,23 @@ export async function getJobForProtector(db: Db, protectorId: string, id: string
     )
     .orderBy(desc(bookingEvents.at))
     .limit(1);
-  return redactForProtector(booking, jobReports, assigned?.matchReasons ?? []);
+  const profile = await getCustomerProfile(db, booking.customerSub);
+  return redactForProtector(booking, jobReports, assigned?.matchReasons ?? [], profile?.preferredName ?? null);
 }
 
-export function redactForProtector(booking: Booking, jobReports: Report[], whyMatched: MatchReason[]): ProtectorJob {
+export function redactForProtector(
+  booking: Booking,
+  jobReports: Report[],
+  whyMatched: MatchReason[],
+  preferredName: string | null,
+): ProtectorJob {
   const { customerSub: _customer, meetingPoint, notes, ...rest } = booking;
   const visible = protectorHasAccepted(booking.status);
   return {
     ...rest,
     meetingPoint: visible ? meetingPoint : null,
     notes: visible ? notes : null,
+    customerName: visible ? preferredName : null,
     reports: jobReports,
     whyMatched,
   };

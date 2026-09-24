@@ -68,7 +68,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
     expect(beforeAccept?.meetingPoint).toBeNull();
     expect(beforeAccept).not.toHaveProperty("customerSub");
 
-    for (const action of ["ACCEPT", "START"] as const) {
+    for (const action of ["ACCEPT", "CHECK_IN", "START"] as const) {
       expect((await applyBookingAction(db, booking.id, { action }, asMira)).success).toBe(true);
     }
     const running = await getJobForProtector(db, mira.id, booking.id);
@@ -103,6 +103,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
       "REQUESTED",
       "ASSIGNED",
       "ACCEPTED",
+      "CHECKED_IN",
       "IN_PROGRESS",
       "COMPLETED",
     ]);
