@@ -7,16 +7,19 @@ import {
   languagesText,
   presenceText,
   RatingSummary,
+  ReasonList,
   ReportList,
   StatusBadge,
   Timeline,
 } from "@/components/booking";
-import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
+import { Badge, Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
+import { Field, TextInput } from "@/components/fields";
+import { BOOKING_LIMITS } from "@/config/services";
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
 import { availableActions } from "@/domain/lifecycle";
-import type { MatchResult } from "@/domain/matching";
+import { fitLabel, type MatchResult } from "@/domain/matching";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getBookingForOps } from "@/server/bookings";
 import { matchForBooking } from "@/server/matching";
@@ -36,6 +39,7 @@ function Matches({ bookingId, match }: { bookingId: string; match: MatchResult }
             <div className="mb-2 flex flex-wrap items-center gap-3">
               <span className="text-sm text-muted">#{index + 1}</span>
               <span className="font-medium">{r.displayName}</span>
+              <Badge tone={r.band === "GOOD" ? "neutral" : "accent"}>{fitLabel(r.band)}</Badge>
               <span className="text-sm text-muted">{r.score} points</span>
               <span className="ml-auto">
                 <ActionForm
@@ -46,27 +50,35 @@ function Matches({ bookingId, match }: { bookingId: string; match: MatchResult }
                 />
               </span>
             </div>
-            <ul className="space-y-0.5 text-sm">
-              {r.reasons.map((reason) => (
-                <li key={reason.label} className="flex justify-between gap-4">
-                  <span>{reason.label}</span>
-                  <span className="tabular-nums text-muted">
-                    {reason.points > 0 ? "+" : ""}
-                    {reason.points}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <ReasonList reasons={r.reasons} />
           </li>
         ))}
       </ol>
       {match.excluded.length > 0 && (
         <div>
           <h3 className="mb-1 text-sm font-semibold">Not eligible</h3>
-          <ul className="space-y-0.5 text-sm text-muted">
+          <ul className="space-y-3 text-sm">
             {match.excluded.map((e) => (
-              <li key={e.id}>
-                {e.displayName} — {e.reason}
+              <li key={e.id} className="space-y-2">
+                <p className="text-muted">
+                  {e.displayName} — {e.reason}
+                </p>
+                {e.overridable && (
+                  <details>
+                    <summary className="cursor-pointer text-xs text-muted underline">Assign anyway…</summary>
+                    <ActionForm
+                      action={assignAction}
+                      submitLabel="Assign anyway"
+                      variant="secondary"
+                      hidden={{ bookingId, protectorId: e.id }}
+                      className="mt-2 space-y-2"
+                    >
+                      <Field label="Why override the matcher?" hint="Recorded on the booking; visible to Operations only.">
+                        <TextInput name="overrideReason" maxLength={BOOKING_LIMITS.notesMax} required />
+                      </Field>
+                    </ActionForm>
+                  </details>
+                )}
               </li>
             ))}
           </ul>
@@ -131,7 +143,7 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
           )}
         </Card>
         <Card title="Lifecycle">
-          <Timeline events={events} />
+          <Timeline events={events} showNotes />
         </Card>
         <Card title="Customer's rating">
           <RatingSummary rating={rating} />

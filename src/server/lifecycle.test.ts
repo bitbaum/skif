@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
-import { windowFromClock } from "@/domain/availability";
-import type { ProtectorApplication } from "@/domain/inputs";
 import { createTestDb } from "@/test/db";
+import { application, approvedProtector, OPS, tomorrow } from "@/test/fixtures";
 import { createAssessment } from "./assessments";
 import {
   createBooking,
@@ -14,35 +13,10 @@ import {
 import { fileReport, rateBooking } from "./feedback";
 import { applyBookingAction } from "./lifecycle";
 import { matchForBooking } from "./matching";
-import { saveAvailability } from "./availability";
 import { savePreferences } from "./preferences";
-import { applyAsProtector, setProtectorStatus } from "./protectors";
+import { applyAsProtector } from "./protectors";
 
 const CUSTOMER = "oc-customer";
-const OPS = { role: "OPS", sub: "oc-ops" } as const;
-
-const application: ProtectorApplication = {
-  displayName: "Mira",
-  bio: "Ten years of nightlife de-escalation.",
-  languages: ["de", "en"],
-  experienceYears: 10,
-  capabilities: [
-    { key: "DE_ESCALATION", level: "ADVANCED", certification: "", evidence: "Club work", expiresOn: null },
-    { key: "FIRST_AID", level: "PROFICIENT", certification: "SRK", evidence: "", expiresOn: "2030-01-01" },
-  ],
-  services: ["NIGHT_OUT", "GET_HOME"],
-  presenceStyles: ["DISCREET"],
-};
-
-const ALWAYS = [1, 2, 3, 4, 5, 6, 7].map((weekday) => windowFromClock(weekday, 0, 0));
-const tomorrow = () => new Date(Date.now() + 24 * 60 * 60 * 1000);
-
-async function approvedProtector(db: Db, sub: string, overrides: Partial<ProtectorApplication> = {}) {
-  const p = await applyAsProtector(db, sub, { ...application, ...overrides });
-  await setProtectorStatus(db, p.id, "APPROVED");
-  await saveAvailability(db, p.id, ALWAYS);
-  return p;
-}
 
 describe("booking lifecycle, end to end against Postgres", () => {
   let db: Db;

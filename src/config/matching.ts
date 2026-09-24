@@ -17,7 +17,23 @@ export const MATCH_WEIGHTS = {
   pastRatings: 30,
   /** Subtracted per job the Protector completed in the fairness window. */
   recentWorkload: 2,
+  /** Per completed job of the same service, up to `relevantJobsCap` jobs. */
+  relevantJob: 2,
+  relevantJobsCap: 10,
 } as const;
+
+/**
+ * Fit bands instead of percentages (SPEC §9). A band is the share of the
+ * points this particular booking makes possible — so it is comparable across
+ * bookings, and it says nothing more precise than that.
+ */
+export const FIT_BANDS = [
+  { key: "EXCELLENT", label: "Excellent fit", minShare: 0.7 },
+  { key: "STRONG", label: "Strong fit", minShare: 0.45 },
+  { key: "GOOD", label: "Good fit", minShare: 0 },
+] as const;
+
+export type FitBand = (typeof FIT_BANDS)[number]["key"];
 
 export const LEVEL_FACTOR: Record<CapabilityLevel, number> = {
   BASIC: 0.5,

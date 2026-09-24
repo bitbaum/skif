@@ -44,6 +44,18 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
     )
     .groupBy(bookings.protectorId);
 
+  const relevantRows = await db
+    .select({ protectorId: bookings.protectorId, n: count() })
+    .from(bookings)
+    .where(
+      and(
+        inArray(bookings.protectorId, ids),
+        eq(bookings.status, "COMPLETED"),
+        eq(bookings.service, booking.service),
+      ),
+    )
+    .groupBy(bookings.protectorId);
+
   const end = new Date(booking.startsAt.getTime() + booking.hours * HOUR_MS);
   const busyRows = await db
     .selectDistinct({ protectorId: bookings.protectorId })
@@ -63,6 +75,7 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
 
   const rating = new Map(ratingRows.map((r) => [r.protectorId, r]));
   const workload = new Map(workloadRows.map((r) => [r.protectorId, r.n]));
+  const relevant = new Map(relevantRows.map((r) => [r.protectorId, r.n]));
   const busy = new Set(busyRows.map((r) => r.protectorId));
 
   const candidates: MatchCandidate[] = approved.map((p) => {
@@ -80,6 +93,7 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
       ratingScore: r?.mean == null ? null : normaliseRating(Number(r.mean)),
       ratingCount: r?.n ?? 0,
       completedRecently: workload.get(p.id) ?? 0,
+      relevantJobs: relevant.get(p.id) ?? 0,
       busy: busy.has(p.id),
     };
   });

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
-import { ConstraintList, RequirementList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
+import { ConstraintList, ReasonList, RequirementList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
 import { Field, RadioGroup, TextArea } from "@/components/fields";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { BOOKING_LIMITS, serviceLabel } from "@/config/services";
@@ -73,6 +73,11 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
             })}
           </div>
         </Card>
+        {job.whyMatched.length > 0 && (
+          <Card title="Why you were matched">
+            <ReasonList reasons={job.whyMatched} />
+          </Card>
+        )}
         <Card title="Reports">
           <ReportList reports={job.reports} />
           {canReport && (
