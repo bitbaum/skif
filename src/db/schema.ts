@@ -6,6 +6,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   index,
   integer,
   jsonb,
@@ -14,10 +15,12 @@ import {
   smallint,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { BOOKING_STATUSES } from "@/domain/lifecycle";
 import { PAYMENT_STATUSES } from "@/domain/payment";
+import { PROTECTOR_STATUSES } from "@/domain/protector-status";
 import type { SafetyPlan } from "@/domain/safety-plan";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
 import {
@@ -26,13 +29,19 @@ import {
   type LanguageKey,
   type PresenceStyle,
 } from "@/config/constraints";
-import type { ProtectorSkill } from "@/config/protectors";
+import {
+  CAPABILITY_LEVEL_KEYS,
+  VERIFICATION_KEYS,
+  type CapabilityKey,
+} from "@/config/capabilities";
 import { SERVICE_KEYS, type ServiceKey } from "@/config/services";
 import type { ConcernKey, MeasureKey } from "@/config/assessment";
 
 export const bookingStatus = pgEnum("booking_status", BOOKING_STATUSES);
 export const paymentStatus = pgEnum("payment_status", PAYMENT_STATUSES);
-export const protectorStatus = pgEnum("protector_status", ["APPLIED", "APPROVED", "SUSPENDED"]);
+export const protectorStatus = pgEnum("protector_status", PROTECTOR_STATUSES);
+export const capabilityLevel = pgEnum("capability_level", CAPABILITY_LEVEL_KEYS);
+export const verificationStatus = pgEnum("verification_status", VERIFICATION_KEYS);
 export const serviceKind = pgEnum("service", SERVICE_KEYS);
 export const presenceStyleKind = pgEnum("presence_style", PRESENCE_STYLE_KEYS);
 export const reportKind = pgEnum("report_kind", ["REPORT", "INCIDENT"]);
@@ -55,13 +64,37 @@ export const protectors = pgTable("protectors", {
   displayName: text("display_name").notNull(),
   bio: text("bio").notNull(),
   languages: textArray("languages").$type<LanguageKey[]>(),
-  skills: textArray("skills").$type<ProtectorSkill[]>(),
+  /** Deprecated: superseded by protector_capabilities (0001 copied it
+   * across). Kept because the box's schema step refuses DROP COLUMN. */
+  skills: textArray("skills"),
+  experienceYears: integer("experience_years").notNull().default(0),
   services: textArray("services").$type<ServiceKey[]>(),
   presenceStyles: textArray("presence_styles").$type<PresenceStyle[]>(),
   status: protectorStatus("status").notNull().default("APPLIED"),
   createdAt: createdAt(),
   approvedAt: timestamp("approved_at", { withTimezone: true }),
 });
+
+export const protectorCapabilities = pgTable(
+  "protector_capabilities",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    protectorId: uuid("protector_id")
+      .notNull()
+      .references(() => protectors.id),
+    capability: text("capability").$type<CapabilityKey>().notNull(),
+    level: capabilityLevel("level").notNull(),
+    verification: verificationStatus("verification").notNull().default("SELF_DECLARED"),
+    certification: text("certification").notNull().default(""),
+    evidence: text("evidence").notNull().default(""),
+    expiresOn: date("expires_on", { mode: "string" }),
+    /** Operations sub that verified or rejected it (the assessor, SPEC §7). */
+    assessedBy: text("assessed_by"),
+    assessedAt: timestamp("assessed_at", { withTimezone: true }),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [unique("protector_capabilities_unique").on(t.protectorId, t.capability)],
+);
 
 export const bookings = pgTable(
   "bookings",

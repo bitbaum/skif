@@ -23,7 +23,11 @@ const application: ProtectorApplication = {
   displayName: "Mira",
   bio: "Ten years of nightlife de-escalation.",
   languages: ["de", "en"],
-  skills: ["DE_ESCALATION", "FIRST_AID"],
+  experienceYears: 10,
+  capabilities: [
+    { key: "DE_ESCALATION", level: "ADVANCED", certification: "", evidence: "Club work", expiresOn: null },
+    { key: "FIRST_AID", level: "PROFICIENT", certification: "SRK", evidence: "", expiresOn: "2030-01-01" },
+  ],
   services: ["NIGHT_OUT", "GET_HOME"],
   presenceStyles: ["DISCREET"],
 };

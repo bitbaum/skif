@@ -4,6 +4,8 @@ import { WORKLOAD_WINDOW_DAYS } from "@/config/matching";
 import { bookings, protectors, ratings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { ACTIVE_STATUSES } from "@/domain/lifecycle";
+import { capabilitiesFor } from "./protectors";
+import { isoDay } from "@/domain/capabilities";
 import { normaliseRating, rankProtectors, type MatchCandidate, type MatchResult } from "@/domain/matching";
 
 type BookingSlot = Pick<
@@ -56,6 +58,8 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
       ),
     );
 
+  const capabilityRows = await capabilitiesFor(db, ids);
+
   const rating = new Map(ratingRows.map((r) => [r.protectorId, r]));
   const workload = new Map(workloadRows.map((r) => [r.protectorId, r.n]));
   const busy = new Set(busyRows.map((r) => r.protectorId));
@@ -67,7 +71,9 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
       displayName: p.displayName,
       services: p.services,
       languages: p.languages,
-      skills: p.skills,
+      capabilities: capabilityRows
+        .filter((c) => c.protectorId === p.id)
+        .map((c) => ({ key: c.capability, level: c.level, verification: c.verification, expiresOn: c.expiresOn })),
       presenceStyles: p.presenceStyles,
       ratingScore: r?.mean == null ? null : normaliseRating(Number(r.mean)),
       ratingCount: r?.n ?? 0,
@@ -79,5 +85,6 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
   return rankProtectors(
     { service: booking.service, languages: booking.languages, presenceStyle: booking.presenceStyle },
     candidates,
+    isoDay(booking.startsAt),
   );
 }

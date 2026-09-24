@@ -3,21 +3,15 @@ import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { languagesText, StatusBadge } from "@/components/booking";
 import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
-import { skillLabel } from "@/config/protectors";
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { listAllBookings } from "@/server/bookings";
-import { listProtectors, type Protector } from "@/server/protectors";
+import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
+import { listProtectors } from "@/server/protectors";
 import { requireOps } from "@/server/viewer";
 import { protectorStatusAction } from "./actions";
 
 export const metadata: Metadata = { title: "Operations" };
-
-const NEXT_PROTECTOR_STATUS: Record<Protector["status"], { status: "APPROVED" | "SUSPENDED"; label: string }> = {
-  APPLIED: { status: "APPROVED", label: "Approve" },
-  APPROVED: { status: "SUSPENDED", label: "Suspend" },
-  SUSPENDED: { status: "APPROVED", label: "Reinstate" },
-};
 
 export default async function OpsPage() {
   await requireOps();
@@ -69,31 +63,32 @@ export default async function OpsPage() {
           <Empty>No applications yet.</Empty>
         ) : (
           <ul className="divide-y divide-line">
-            {protectors.map((p) => {
-              const next = NEXT_PROTECTOR_STATUS[p.status];
-              return (
-                <li key={p.id} className="flex flex-wrap items-start gap-4 py-4">
-                  <div className="min-w-0 flex-1 space-y-1 text-sm">
-                    <p className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium">{p.displayName}</span>
-                      <Badge tone={p.status === "APPROVED" ? "accent" : "warn"}>{p.status}</Badge>
-                    </p>
-                    <p className="whitespace-pre-wrap text-muted">{p.bio}</p>
-                    <p className="text-muted">
-                      {p.services.map(serviceLabel).join(", ")} · {languagesText(p.languages)}
-                    </p>
-                    <p className="text-muted">{p.skills.map(skillLabel).join(", ") || "No training listed"}</p>
-                  </div>
+            {protectors.map((p) => (
+              <li key={p.id} className="flex flex-wrap items-start gap-4 py-4">
+                <div className="min-w-0 flex-1 space-y-1 text-sm">
+                  <p className="flex flex-wrap items-center gap-2">
+                    <Link href={`/ops/protectors/${p.id}`} className="font-medium text-accent underline">
+                      {p.displayName}
+                    </Link>
+                    <Badge tone={p.status === "APPROVED" ? "accent" : "warn"}>{PROTECTOR_STATUS_LABELS[p.status]}</Badge>
+                  </p>
+                  <p className="text-muted">
+                    {p.services.map(serviceLabel).join(", ")} · {languagesText(p.languages)} · {p.experienceYears}{" "}
+                    years
+                  </p>
+                </div>
+                {PROTECTOR_MOVES[p.status].map((m) => (
                   <ActionForm
+                    key={m.to}
                     action={protectorStatusAction}
-                    submitLabel={next.label}
-                    variant={next.status === "SUSPENDED" ? "danger" : "primary"}
-                    hidden={{ protectorId: p.id, status: next.status }}
+                    submitLabel={m.label}
+                    variant={m.tone}
+                    hidden={{ protectorId: p.id, status: m.to }}
                     className=""
                   />
-                </li>
-              );
-            })}
+                ))}
+              </li>
+            ))}
           </ul>
         )}
       </Card>
