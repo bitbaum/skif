@@ -7,7 +7,8 @@ import { ASSESSMENT_LIMITS, CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessme
 import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/config/constraints";
 import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
-import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN } from "@/config/ratings";
+import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN, type RatingDimension } from "@/config/ratings";
+import { INCIDENT_SEVERITY_KEYS, OBSERVATION_KEYS, REVIEW_NOTE_MAX } from "@/config/reports";
 import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICE_KEYS } from "@/config/services";
 import { WEEKDAYS } from "@/config/availability";
 import { windowFromClock, type AvailabilityWindow } from "./availability";
@@ -77,20 +78,37 @@ export const protectorApplication = z.object({
 export type ProtectorApplication = z.infer<typeof protectorApplication>;
 
 const ratingValue = z.coerce.number().int().min(RATING_MIN).max(RATING_MAX);
+/** An optional question left unanswered arrives as "" or not at all. */
+const optionalRating = z.preprocess((v) => (v === "" || v === undefined ? null : v), ratingValue.nullable());
 
 export const ratingInput = z.object({
   respect: ratingValue,
   discretion: ratingValue,
   feltSafe: ratingValue,
+  professionalism: ratingValue,
+  communication: ratingValue,
+  punctuality: ratingValue,
+  judgment: optionalRating,
   comment: trimmed(RATING_COMMENT_MAX),
-});
+}) satisfies z.ZodType<Record<RatingDimension, number | null> & { comment: string }>;
 export type RatingInput = z.infer<typeof ratingInput>;
 
-export const reportInput = z.object({
-  kind: z.enum(["REPORT", "INCIDENT"]),
-  summary: required(BOOKING_LIMITS.notesMax),
-  policeInvolved: z.boolean(),
+export const reportInput = z
+  .object({
+    kind: z.enum(["REPORT", "INCIDENT"]),
+    summary: required(BOOKING_LIMITS.notesMax),
+    policeInvolved: z.boolean(),
+    observations: z.array(z.enum(OBSERVATION_KEYS)).min(1, "Say what happened, even if nothing notable"),
+    severity: z.preprocess((v) => (v === "" ? undefined : v), z.enum(INCIDENT_SEVERITY_KEYS).optional()),
+  })
+  .refine((r) => r.kind !== "INCIDENT" || r.severity, { message: "Give the incident a severity", path: ["severity"] })
+  .transform((r) => ({ ...r, severity: r.kind === "INCIDENT" ? (r.severity ?? null) : null }));
+
+export const incidentReviewInput = z.object({
+  review: z.enum(["UNDER_REVIEW", "RESOLVED"]),
+  note: trimmed(REVIEW_NOTE_MAX),
 });
+export type IncidentReviewInput = z.infer<typeof incidentReviewInput>;
 export type ReportInput = z.infer<typeof reportInput>;
 
 export const assessmentInput = z.object({

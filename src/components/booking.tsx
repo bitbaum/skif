@@ -2,7 +2,9 @@ import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { constraintLabel, languageLabel, PRESENCE_STYLES, type HardConstraintKey } from "@/config/constraints";
 import { ratingLabel, RATING_DIMENSIONS } from "@/config/ratings";
 import { STATUS_LABELS, type BookingAction, type BookingStatus } from "@/domain/lifecycle";
+import { REVIEW_LABELS } from "@/domain/incidents";
 import { requirementsFor, type MatchReason } from "@/domain/matching";
+import { observationLabel, severityLabel } from "@/config/reports";
 import type { ServiceKey } from "@/config/services";
 import type { BookingEvent, Rating, Report } from "@/server/bookings";
 import { Badge, Empty, formatWhen, type Tone } from "./ui";
@@ -76,17 +78,21 @@ export function RatingSummary({ rating }: { rating: Rating | null }) {
   if (!rating) return <Empty>Not rated yet.</Empty>;
   return (
     <div className="space-y-2 text-sm">
-      {RATING_DIMENSIONS.map((d) => (
-        <p key={d.key}>
-          <span className="text-muted">{d.question}</span> <strong>{ratingLabel(rating[d.key])}</strong>
-        </p>
-      ))}
+      {RATING_DIMENSIONS.map((d) => {
+        const value = rating[d.key];
+        return value === null ? null : (
+          <p key={d.key}>
+            <span className="text-muted">{d.question}</span> <strong>{ratingLabel(value)}</strong>
+          </p>
+        );
+      })}
       {rating.comment && <p className="italic">“{rating.comment}”</p>}
     </div>
   );
 }
 
-export function ReportList({ reports }: { reports: Report[] }) {
+/** `showReview` adds Operations' review status and note — Ops pages only. */
+export function ReportList({ reports, showReview = false }: { reports: Report[]; showReview?: boolean }) {
   if (reports.length === 0) return <Empty>No reports filed.</Empty>;
   return (
     <ul className="space-y-3">
@@ -97,9 +103,15 @@ export function ReportList({ reports }: { reports: Report[] }) {
               {r.kind === "INCIDENT" ? "Incident" : "Report"}
             </Badge>
             <span className="text-muted">{formatWhen(r.createdAt)}</span>
+            {r.severity && <Badge tone={r.severity === "HIGH" ? "danger" : "warn"}>{severityLabel(r.severity)}</Badge>}
             {r.policeInvolved && <Badge tone="warn">Police involved</Badge>}
+            {showReview && r.review && <Badge tone={r.review === "RESOLVED" ? "accent" : "warn"}>{REVIEW_LABELS[r.review]}</Badge>}
           </p>
+          {r.observations.length > 0 && (
+            <p className="mb-1 text-muted">{r.observations.map(observationLabel).join(" · ")}</p>
+          )}
           <p className="whitespace-pre-wrap">{r.summary}</p>
+          {showReview && r.reviewNote && <p className="mt-1 text-muted">Ops note: {r.reviewNote}</p>}
         </li>
       ))}
     </ul>

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import { createTestDb } from "@/test/db";
-import { application, approvedProtector, OPS, tomorrow } from "@/test/fixtures";
+import { application, approvedProtector, OPS, rating as ratingOf, report, tomorrow } from "@/test/fixtures";
 import { createAssessment } from "./assessments";
 import {
   createBooking,
@@ -78,21 +78,27 @@ describe("booking lifecycle, end to end against Postgres", () => {
     const asCustomer = { role: "CUSTOMER", sub: CUSTOMER } as const;
     expect((await applyBookingAction(db, booking.id, { action: "COMPLETE" }, asCustomer)).success).toBe(false);
 
-    const incident = await fileReport(db, mira.id, booking.id, {
-      kind: "INCIDENT",
-      summary: "A man followed us for two blocks; we crossed and he left.",
-      policeInvolved: false,
-    });
+    const incident = await fileReport(
+      db,
+      mira.id,
+      booking.id,
+      report({
+        kind: "INCIDENT",
+        summary: "A man followed us for two blocks; we crossed and he left.",
+        observations: ["AVOIDED_BY_MOVING"],
+        severity: "LOW",
+      }),
+    );
     expect(incident.success).toBe(true);
-    expect((await rateBooking(db, CUSTOMER, booking.id, { respect: 5, discretion: 5, feltSafe: 5, comment: "" })).success).toBe(false);
+    expect((await rateBooking(db, CUSTOMER, booking.id, ratingOf())).success).toBe(false);
 
     expect((await applyBookingAction(db, booking.id, { action: "COMPLETE" }, asMira)).success).toBe(true);
     expect(
-      (await fileReport(db, mira.id, booking.id, { kind: "REPORT", summary: "Quiet night.", policeInvolved: false }))
+      (await fileReport(db, mira.id, booking.id, report()))
         .success,
     ).toBe(true);
 
-    const rating = { respect: 5, discretion: 4, feltSafe: 5, comment: "Felt calm the whole time." };
+    const rating = ratingOf({ discretion: 4, comment: "Felt calm the whole time." });
     expect(await rateBooking(db, CUSTOMER, booking.id, rating)).toEqual({ success: true, data: undefined });
     expect((await rateBooking(db, CUSTOMER, booking.id, rating)).success).toBe(false);
     expect((await rateBooking(db, "someone-else", booking.id, rating)).success).toBe(false);

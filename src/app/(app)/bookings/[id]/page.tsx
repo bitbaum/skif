@@ -17,6 +17,7 @@ import { cancelBookingAction, rateBookingAction } from "../actions";
 export const metadata: Metadata = { title: "Booking" };
 
 const SCALE_OPTIONS = RATING_SCALE.map((s) => ({ key: String(s.value), label: s.label }));
+const NOT_APPLICABLE = { key: "", label: "Nothing tense happened" };
 
 export default async function BookingPage({ params }: { params: Promise<{ id: string }> }) {
   const viewer = await requireViewer();
@@ -74,7 +75,14 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
           {booking.status === "COMPLETED" && !rating ? (
             <ActionForm action={rateBookingAction} submitLabel="Send" hidden={{ bookingId: booking.id }}>
               {RATING_DIMENSIONS.map((d) => (
-                <RadioGroup key={d.key} legend={d.question} name={d.key} options={SCALE_OPTIONS} inline />
+                <RadioGroup
+                  key={d.key}
+                  legend={d.question}
+                  name={d.key}
+                  options={d.optional ? [NOT_APPLICABLE, ...SCALE_OPTIONS] : SCALE_OPTIONS}
+                  selected={d.optional ? NOT_APPLICABLE.key : undefined}
+                  inline
+                />
               ))}
               <Field label="Anything else (optional)">
                 <TextArea name="comment" maxLength={RATING_COMMENT_MAX} />

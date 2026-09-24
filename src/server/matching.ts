@@ -1,6 +1,7 @@
 import "server-only";
 import { and, avg, count, eq, gt, inArray, lt, ne, sql } from "drizzle-orm";
 import { WORKLOAD_WINDOW_DAYS } from "@/config/matching";
+import { RATING_DIMENSIONS } from "@/config/ratings";
 import { bookings, protectors, ratings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { ACTIVE_STATUSES } from "@/domain/lifecycle";
@@ -23,9 +24,14 @@ export async function matchForBooking(db: Db, booking: BookingSlot): Promise<Mat
   if (approved.length === 0) return { ranked: [], excluded: [] };
   const ids = approved.map((p) => p.id);
 
-  const meanOfThree = sql<number>`(${ratings.respect} + ${ratings.discretion} + ${ratings.feltSafe}) / 3.0`;
+  // Each rating's mean over the questions actually answered (older ratings
+  // and a skipped optional question leave some null).
+  const dims = RATING_DIMENSIONS.map((d) => ratings[d.key]);
+  const answeredSum = sql.join(dims.map((c) => sql`coalesce(${c}, 0)`), sql` + `);
+  const answeredCount = sql.join(dims.map((c) => sql`(${c} IS NOT NULL)::int`), sql` + `);
+  const meanOfAnswered = sql<number>`(${answeredSum})::numeric / nullif(${answeredCount}, 0)`;
   const ratingRows = await db
-    .select({ protectorId: bookings.protectorId, mean: avg(meanOfThree), n: count() })
+    .select({ protectorId: bookings.protectorId, mean: avg(meanOfAnswered), n: count() })
     .from(ratings)
     .innerJoin(bookings, eq(ratings.bookingId, bookings.id))
     .where(inArray(bookings.protectorId, ids))

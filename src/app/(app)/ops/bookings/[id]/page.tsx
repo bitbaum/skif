@@ -26,7 +26,8 @@ import { matchForBooking } from "@/server/matching";
 import { getCustomerProfile } from "@/server/customers";
 import { getPreferences } from "@/server/preferences";
 import { requireOps } from "@/server/viewer";
-import { assignAction, opsCancelAction } from "../../actions";
+import { IncidentReview } from "@/components/incident-review";
+import { assignAction, opsCancelAction, reviewIncidentAction } from "../../actions";
 
 export const metadata: Metadata = { title: "Booking · Operations" };
 
@@ -152,7 +153,15 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
           <RatingSummary rating={rating} />
         </Card>
         <Card title="Reports and incidents">
-          <ReportList reports={reports} />
+          <ReportList reports={reports} showReview />
+          {reports
+            .filter((r) => r.review && r.review !== "RESOLVED")
+            .map((r) => (
+              <div key={r.id} className="mt-4 border-t border-line pt-4">
+                <p className="mb-2 text-sm font-medium">Review incident from {formatWhen(r.createdAt)}</p>
+                <IncidentReview incident={r} action={reviewIncidentAction} />
+              </div>
+            ))}
         </Card>
       </div>
     </>

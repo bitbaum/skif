@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList, ReasonList, RequirementList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
-import { Field, RadioGroup, TextArea } from "@/components/fields";
+import { CheckboxGroup, Field, RadioGroup, Select, TextArea } from "@/components/fields";
+import { INCIDENT_SEVERITIES, OBSERVATIONS } from "@/config/reports";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { BOOKING_LIMITS, serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
@@ -86,7 +87,17 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
             <div className="mt-5 border-t border-line pt-5">
               <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }}>
                 <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />
-                <Field label="What happened">
+                <CheckboxGroup
+                  legend="What happened? Tick all that apply"
+                  name="observations"
+                  options={OBSERVATIONS}
+                  selected={[]}
+                  inline
+                />
+                <Field label="Severity" hint="Incidents only.">
+                  <Select name="severity" options={[{ key: "", label: "—" }, ...INCIDENT_SEVERITIES]} />
+                </Field>
+                <Field label="In your words">
                   <TextArea name="summary" maxLength={BOOKING_LIMITS.notesMax} required />
                 </Field>
                 <label className="flex items-center gap-2 text-sm">

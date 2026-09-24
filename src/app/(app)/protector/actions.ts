@@ -54,7 +54,7 @@ export async function reportAction(_: ActionState, form: FormData): Promise<Acti
   const viewer = await requireApprovedProtector();
   const id = idInput.safeParse(form.get("bookingId"));
   if (!id.success) return { error: "Booking not found" };
-  const parsed = reportInput.safeParse(formFields(form, [], ["policeInvolved"]));
+  const parsed = reportInput.safeParse(formFields(form, ["observations"], ["policeInvolved"]));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await fileReport(getDb(), viewer.protector.id, id.data, parsed.data);
   if (!result.success) return { error: result.error };

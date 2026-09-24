@@ -38,9 +38,9 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] No check-in (arrived) step separate from starting the assignment (§6). — PR #9
 
 ### Feedback / incidents
-- [ ] Rating lacks professionalism, communication and punctuality/reliability dimensions (§10).
-- [ ] Reports are free text only: no structured observations (verbal de-escalation, physical intervention, medical escalation, emergency services) (§6, §10, §29).
-- [ ] No incident lifecycle: Operations cannot mark an incident reviewed or resolved (§22, §11).
+- [x] Rating lacks professionalism, communication and punctuality/reliability dimensions (§10). — PR #10
+- [x] Reports are free text only: no structured observations (verbal de-escalation, physical intervention, medical escalation, emergency services) (§6, §10, §29). — PR #10
+- [x] No incident lifecycle: Operations cannot mark an incident reviewed or resolved (§22, §11). — PR #10
 - [ ] No confidential complaint for customers, and no Ops complaint review (§5, §10, §11).
 - [ ] Complaints cannot be corroborated, appealed or corrected, and nothing keeps an unreviewed complaint from affecting reputation (§10).
 

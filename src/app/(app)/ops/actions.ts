@@ -5,7 +5,8 @@ import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { BOOKING_LIMITS } from "@/config/services";
-import { idInput } from "@/domain/inputs";
+import { describeIssue, formFields, idInput, incidentReviewInput } from "@/domain/inputs";
+import { reviewIncident } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
 import { assessCapability, setProtectorStatus } from "@/server/protectors";
@@ -66,5 +67,18 @@ export async function assessCapabilityAction(_: ActionState, form: FormData): Pr
   const result = await assessCapability(getDb(), id.data, verdict.data, viewer.sub);
   if (!result.success) return { error: result.error };
   revalidatePath(`/ops/protectors/${result.data.protectorId}`);
+  return null;
+}
+
+export async function reviewIncidentAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const id = idInput.safeParse(form.get("reportId"));
+  if (!id.success) return { error: "Incident not found" };
+  const parsed = incidentReviewInput.safeParse(formFields(form));
+  if (!parsed.success) return { error: describeIssue(parsed.error) };
+  const result = await reviewIncident(getDb(), id.data, viewer.sub, parsed.data);
+  if (!result.success) return { error: result.error };
+  revalidatePath(`/ops/bookings/${result.data.bookingId}`);
+  revalidatePath("/ops");
   return null;
 }
