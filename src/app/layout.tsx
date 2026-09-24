@@ -1,20 +1,18 @@
-import Script from "next/script";
 import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Skif",
-  description: "Started from Loki · Skif",
+  title: { default: "Skif", template: "%s · Skif" },
+  description:
+    "Holistic safety for people and the places they live, Zürich first — without trading away privacy or freedom.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// No third-party scripts here: this layout wraps every page, including ones
+// holding preferences, bookings and incidents. See src/app/page.tsx.
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}<Script src={"https://loki.orangecat.ch/widget.js"} data-fc-project={"fcw_53c446f089ca3ec49f01217557ee0a52"} strategy="afterInteractive" /></body>
+      <body className="min-h-screen font-sans antialiased">{children}</body>
     </html>
   );
 }
