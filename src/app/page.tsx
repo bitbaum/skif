@@ -17,7 +17,7 @@ const PRINCIPLES = [
   },
   {
     title: "Only what the job needs",
-    body: "A Protector sees where to meet you once they've accepted, never who you are beyond that. Your data stays in our own database, in Switzerland.",
+    body: "A Protector sees where to meet you once they've accepted, never who you are beyond that. Your data stays in our own database, on a server we run ourselves in Germany (rented from Hetzner, Falkenstein) — never with a camera or alarm vendor.",
   },
 ];
 
