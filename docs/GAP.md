@@ -50,8 +50,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 ## P1 — Safety foundation
 
 - [x] No Environment entity: an assessment names a place in free text and cannot be reused or typed (home, venue, vehicle, journey …) (§12, §18, §21). — PR #14
-- [ ] Safety Preference Profile has no trade-off axes (privacy ↔ observability, autonomy ↔ automation, local ↔ cloud, …) (§3).
-- [ ] Missing hard constraints: local-only processing, no persistent recording (§3).
+- [x] Safety Preference Profile has no trade-off axes (privacy ↔ observability, autonomy ↔ automation, local ↔ cloud, …) (§3). — PR #15
+- [x] Missing hard constraints: local-only processing, no persistent recording (§3). — PR #15
 - [ ] Preferences beyond hard constraints do not affect recommendations (§3 "must affect recommendations").
 - [ ] Assessment does not capture who/what is protected, known threats, routines/exposure, budget, or upcoming events (§12).
 - [ ] No AssessmentFinding: the plan is not built from explicit findings (§12, §21).

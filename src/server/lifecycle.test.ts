@@ -25,6 +25,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
     db = await createTestDb();
     await savePreferences(db, CUSTOMER, {
       hardConstraints: ["NO_AUTO_POLICE_SHARING", "NO_FACIAL_RECOGNITION"],
+      axes: {},
       presenceStyle: "DISCREET",
       languages: ["de"],
       valuesNote: "Calm, not a bouncer.",

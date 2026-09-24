@@ -1,8 +1,8 @@
 /** Customers and Protectors. Identity is the OIDC `sub`; there is no users table. */
 import { sql } from "drizzle-orm";
-import { check, date, integer, pgTable, smallint, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { check, date, integer, jsonb, pgTable, smallint, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import type { CapabilityKey } from "@/config/capabilities";
-import type { HardConstraintKey, LanguageKey, PresenceStyle } from "@/config/constraints";
+import type { AxisLeans, HardConstraintKey, LanguageKey, PresenceStyle } from "@/config/constraints";
 import type { ServiceKey } from "@/config/services";
 import {
   capabilityLevel,
@@ -18,6 +18,8 @@ export const preferenceProfiles = pgTable("preference_profiles", {
   hardConstraints: textArray("hard_constraints").$type<HardConstraintKey[]>(),
   presenceStyle: presenceStyleKind("presence_style").notNull(),
   languages: textArray("languages").$type<LanguageKey[]>(),
+  /** Trade-off leans (SPEC §3). Missing keys mean balanced. */
+  axes: jsonb("axes").$type<AxisLeans>().notNull().default({}),
   valuesNote: text("values_note").notNull().default(""),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

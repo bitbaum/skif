@@ -38,6 +38,7 @@ export async function approvedProtector(db: Db, sub: string, overrides: Partial<
 export async function customerWithPreferences(db: Db, sub: string, overrides: Partial<PreferencesInput> = {}) {
   await savePreferences(db, sub, {
     hardConstraints: [],
+    axes: {},
     presenceStyle: "DISCREET",
     languages: ["de"],
     valuesNote: "",

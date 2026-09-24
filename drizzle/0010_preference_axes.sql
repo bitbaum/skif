@@ -1,0 +1,1 @@
+ALTER TABLE "preference_profiles" ADD COLUMN "axes" jsonb DEFAULT '{}'::jsonb NOT NULL;

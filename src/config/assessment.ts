@@ -159,7 +159,7 @@ export const INTERVENTIONS = [
     intrusiveness: 1,
     cost: "MEDIUM",
     purchase: true,
-    conflictsWith: [],
+    conflictsWith: ["NO_HUMAN_PROTECTOR"],
     tradeoffs: "A paid service each time; a Protector learns your address.",
   },
   {
@@ -179,7 +179,7 @@ export const INTERVENTIONS = [
     intrusiveness: 2,
     cost: "MEDIUM",
     purchase: true,
-    conflictsWith: [],
+    conflictsWith: ["NO_PERSISTENT_RECORDING", "NO_EXTERIOR_CAMERAS"],
     tradeoffs: "Records neighbours and passers-by; Swiss data-protection rules apply to shared areas.",
   },
   {
@@ -189,7 +189,13 @@ export const INTERVENTIONS = [
     intrusiveness: 3,
     cost: "HIGH",
     purchase: true,
-    conflictsWith: ["NO_CLOUD_VIDEO", "NO_FACIAL_RECOGNITION"],
+    conflictsWith: [
+      "NO_CLOUD_VIDEO",
+      "NO_FACIAL_RECOGNITION",
+      "LOCAL_ONLY_PROCESSING",
+      "NO_PERSISTENT_RECORDING",
+      "NO_EXTERIOR_CAMERAS",
+    ],
     tradeoffs: "Video and faces sit with a vendor who can share them without you deciding.",
   },
   {
@@ -199,7 +205,7 @@ export const INTERVENTIONS = [
     intrusiveness: 3,
     cost: "MEDIUM",
     purchase: true,
-    conflictsWith: ["NO_INTERIOR_CAMERAS", "NO_CLOUD_VIDEO"],
+    conflictsWith: ["NO_INTERIOR_CAMERAS", "NO_CLOUD_VIDEO", "NO_PERSISTENT_RECORDING"],
     tradeoffs: "Films your private life and anyone who visits.",
   },
   {
@@ -209,7 +215,7 @@ export const INTERVENTIONS = [
     intrusiveness: 2,
     cost: "HIGH",
     purchase: true,
-    conflictsWith: ["NO_AUTO_POLICE_SHARING"],
+    conflictsWith: ["NO_AUTO_POLICE_SHARING", "LOCAL_ONLY_PROCESSING"],
     tradeoffs: "Subscription; alarms go to the police without you deciding.",
   },
 ] as const satisfies readonly Intervention[];

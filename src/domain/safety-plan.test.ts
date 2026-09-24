@@ -1,13 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { INTERVENTIONS } from "@/config/assessment";
+import { HARD_CONSTRAINT_KEYS } from "@/config/constraints";
 import { buildSafetyPlan } from "./safety-plan";
 
-const ALL_CONSTRAINTS = [
-  "NO_FACIAL_RECOGNITION",
-  "NO_INTERIOR_CAMERAS",
-  "NO_CLOUD_VIDEO",
-  "NO_AUTO_POLICE_SHARING",
-] as const;
+const ALL_CONSTRAINTS = HARD_CONSTRAINT_KEYS;
 
 describe("buildSafetyPlan", () => {
   it("says nothing to buy when there is no concern", () => {
@@ -38,10 +34,12 @@ describe("buildSafetyPlan", () => {
     expect(burglary.excluded.map((e) => e.key).sort()).toEqual([
       "CLOUD_DOORBELL_CAMERA",
       "INDOOR_CAMERA",
+      "LOCAL_DOORBELL_CAMERA",
       "MONITORED_ALARM",
     ]);
     expect(burglary.excluded.find((e) => e.key === "MONITORED_ALARM")!.constraints).toEqual([
       "NO_AUTO_POLICE_SHARING",
+      "LOCAL_ONLY_PROCESSING",
     ]);
   });
 
@@ -68,5 +66,18 @@ describe("buildSafetyPlan", () => {
     const plan = buildSafetyPlan({ concerns: ["ARRIVING_AT_NIGHT"], measures: [], constraints: [] });
     expect(plan.concerns[0]!.recommended).toBe("ENTRANCE_LIGHT");
     expect(plan.nothingToBuy).toBe(false);
+  });
+
+  it("keeps a Protector out of the plan for someone who wants no one with them", () => {
+    const plan = buildSafetyPlan({ concerns: ["ARRIVING_AT_NIGHT"], measures: [], constraints: ["NO_HUMAN_PROTECTOR"] });
+    expect(plan.concerns[0]!.excluded).toEqual([{ key: "ACCOMPANIED_HOME", constraints: ["NO_HUMAN_PROTECTOR"] }]);
+    expect(plan.concerns[0]!.alternatives).not.toContain("ACCOMPANIED_HOME");
+  });
+
+  it("rules out even a local camera for no persistent recording or no exterior cameras", () => {
+    for (const c of ["NO_PERSISTENT_RECORDING", "NO_EXTERIOR_CAMERAS"] as const) {
+      const plan = buildSafetyPlan({ concerns: ["UNWANTED_VISITORS"], measures: [], constraints: [c] });
+      expect(plan.concerns[0]!.excluded.map((e) => e.key)).toContain("LOCAL_DOORBELL_CAMERA");
+    }
   });
 });
