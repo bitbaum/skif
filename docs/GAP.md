@@ -10,8 +10,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 ## P0 — Real commercial loop
 
 ### Customer booking
-- [ ] Services are not the spec's: Personal Protection, Protector + Driver and Specialist Support are missing (§5).
-- [ ] A booking cannot state requirements (e.g. first aid, a driver, a must-have language) — no BookingRequirement (§9, §21).
+- [x] Services are not the spec's: Personal Protection, Protector + Driver and Specialist Support are missing (§5). — PR #7
+- [x] A booking cannot state requirements (e.g. first aid, a driver, a must-have language) — no BookingRequirement (§9, §21). — PR #7
 - [ ] No EXPIRED state: a request never assigned before its start time stays "Requested" forever (§22, §4 "do not fake instant availability").
 - [ ] Customer cannot keep a profile (the name a Protector should use) — step 2 of the definition of done (§5, §32.2).
 
@@ -27,7 +27,7 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] Protectors cannot set availability, and Operations cannot see it (§6, §11). — PR #6
 
 ### Matching
-- [ ] Hard filters missing: required capability/qualification, driving requirement, certification validity (§9). (Availability filter: PR #6.)
+- [x] Hard filters missing: required capability/qualification, driving requirement, certification validity (§9). (Availability filter: PR #6.) — PR #7
 - [x] Unverified and verified capabilities count the same; expired certifications still count (§7, §9). — PR #5
 - [ ] No relevant-experience signal (completed deployments of this service) (§9).
 - [ ] Raw points shown with no fit band; spec asks for EXCELLENT / STRONG / GOOD FIT until scores justify more (§9).

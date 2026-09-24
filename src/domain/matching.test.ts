@@ -28,6 +28,7 @@ const request = {
   presenceStyle: "DISCREET",
   startsAt: zonedLocalToDate("2026-10-01T20:00")!,
   hours: 4,
+  required: [],
 } as const;
 const rank = (candidates: MatchCandidate[]) => rankProtectors(request, candidates);
 
@@ -137,5 +138,26 @@ describe("rankProtectors", () => {
       { ...base, id: "a", displayName: "Zoe", capabilities: [held({ level: "ADVANCED" })] },
     ]);
     expect(ranked.map((r) => r.id)).toEqual(["a", "b"]);
+  });
+
+  it("requires the service's and the customer's capabilities, verified and valid on the day", () => {
+    const driver = { ...request, service: "PROTECTOR_DRIVER", required: ["FIRST_AID"] } as const;
+    const services = ["PROTECTOR_DRIVER"] as const;
+    const driving = held({ key: "PROFESSIONAL_DRIVING", expiresOn: "2030-01-01" });
+    const aid = held({ key: "FIRST_AID" });
+    const { ranked, excluded } = rankProtectors(driver, [
+      { ...base, id: "ok", displayName: "Ok", services, capabilities: [driving, aid] },
+      { ...base, id: "none", displayName: "No licence", services, capabilities: [aid] },
+      { ...base, id: "self", displayName: "Self", services, capabilities: [aid, { ...driving, verification: "SELF_DECLARED" }] },
+      { ...base, id: "old", displayName: "Old", services, capabilities: [aid, { ...driving, expiresOn: "2026-01-01" }] },
+      { ...base, id: "noaid", displayName: "No aid", services, capabilities: [driving] },
+    ]);
+    expect(ranked.map((r) => r.id)).toEqual(["ok"]);
+    expect(Object.fromEntries(excluded.map((e) => [e.id, e.reason]))).toEqual({
+      none: "Professional driving required — not held",
+      self: "Professional driving required — not yet verified",
+      old: "Professional driving required — certificate expired",
+      noaid: "First aid required — not held",
+    });
   });
 });

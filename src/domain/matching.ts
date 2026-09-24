@@ -12,7 +12,8 @@ import {
   WORKLOAD_WINDOW_DAYS,
 } from "@/config/matching";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
-import { serviceLabel, type ServiceKey } from "@/config/services";
+import { serviceLabel, serviceRequires, type ServiceKey } from "@/config/services";
+import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { isAvailable, type AvailabilityWindow } from "./availability";
 import { describeHeld, standing, type HeldCapability } from "./capabilities";
 import { zonedIsoDay } from "./time";
@@ -23,7 +24,27 @@ export type MatchRequest = {
   presenceStyle: PresenceStyle;
   startsAt: Date;
   hours: number;
+  /** Capabilities the customer insisted on, on top of the service's own. */
+  required: readonly CapabilityKey[];
 };
+
+/** Everything a Protector must hold, verified and valid, to be matched. */
+export function requirementsFor(service: ServiceKey, extra: readonly CapabilityKey[]): CapabilityKey[] {
+  return [...new Set([...serviceRequires(service), ...extra])];
+}
+
+const UNMET = { rejected: "not accepted", expired: "certificate expired" } as const;
+
+function unmetRequirement(req: MatchRequest, c: MatchCandidate, onDay: string): string | null {
+  for (const key of requirementsFor(req.service, req.required)) {
+    const held = c.capabilities.find((h) => h.key === key);
+    if (!held) return `${capabilityLabel(key)} required — not held`;
+    const s = standing(held, onDay);
+    if (s.kind === "SELF_DECLARED") return `${capabilityLabel(key)} required — not yet verified`;
+    if (s.kind === "UNUSABLE") return `${capabilityLabel(key)} required — ${UNMET[s.reason]}`;
+  }
+  return null;
+}
 
 export type MatchCandidate = {
   id: string;
@@ -46,10 +67,12 @@ export type RankedProtector = { id: string; displayName: string; score: number; 
 export type ExcludedProtector = { id: string; displayName: string; reason: string };
 export type MatchResult = { ranked: RankedProtector[]; excluded: ExcludedProtector[] };
 
-function exclusionReason(req: MatchRequest, c: MatchCandidate): string | null {
+function exclusionReason(req: MatchRequest, c: MatchCandidate, onDay: string): string | null {
   if (!c.services.includes(req.service)) return `Does not offer ${serviceLabel(req.service)}`;
   if (c.availability.length === 0) return "Has not set availability";
   if (!isAvailable(c.availability, req.startsAt, req.hours)) return "Not available at that time";
+  const unmet = unmetRequirement(req, c, onDay);
+  if (unmet) return unmet;
   if (c.busy) return "Already committed to an overlapping booking";
   if (req.languages.length > 0 && !req.languages.some((l) => c.languages.includes(l))) {
     return "Shares no language with the customer";
@@ -113,7 +136,7 @@ export function rankProtectors(req: MatchRequest, candidates: readonly MatchCand
   const excluded: ExcludedProtector[] = [];
 
   for (const c of candidates) {
-    const reason = exclusionReason(req, c);
+    const reason = exclusionReason(req, c, onDay);
     if (reason) {
       excluded.push({ id: c.id, displayName: c.displayName, reason });
       continue;

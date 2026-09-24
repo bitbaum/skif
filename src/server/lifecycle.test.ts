@@ -68,6 +68,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
       area: "Kreis 4",
       meetingPoint: "Langstrasse 100",
       notes: "Please meet me outside.",
+      requiredCapabilities: [],
     });
     if (!created.success) throw new Error(created.error);
     const booking = created.data;
@@ -149,6 +150,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
         area: "Kreis 1",
         meetingPoint: "Bellevue",
         notes: "",
+        requiredCapabilities: [],
       });
       if (!r.success) throw new Error(r.error);
       return r.data;
@@ -178,6 +180,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
       area: "Kreis 5",
       meetingPoint: "Hardbrücke",
       notes: "",
+      requiredCapabilities: [],
     });
     expect(r.success).toBe(false);
   });

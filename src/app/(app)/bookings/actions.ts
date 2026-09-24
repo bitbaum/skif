@@ -12,7 +12,7 @@ import { requireViewer } from "@/server/viewer";
 
 export async function createBookingAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireViewer();
-  const parsed = bookingInput.safeParse(formFields(form));
+  const parsed = bookingInput.safeParse(formFields(form, ["requiredCapabilities"]));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await createBooking(getDb(), viewer.sub, parsed.data);
   if (!result.success) return { error: result.error };

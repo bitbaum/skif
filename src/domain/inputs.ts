@@ -8,7 +8,7 @@ import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/conf
 import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN } from "@/config/ratings";
-import { AREAS, BOOKING_LIMITS, SERVICE_KEYS } from "@/config/services";
+import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICE_KEYS } from "@/config/services";
 import { WEEKDAYS } from "@/config/availability";
 import { windowFromClock, type AvailabilityWindow } from "./availability";
 import { fail, ok, type Result } from "./result";
@@ -43,6 +43,7 @@ export const bookingInput = z.object({
   area: z.enum(AREAS),
   meetingPoint: required(BOOKING_LIMITS.meetingPointMax),
   notes: trimmed(BOOKING_LIMITS.notesMax),
+  requiredCapabilities: z.array(z.enum(REQUIRABLE_CAPABILITIES)).default([]),
 });
 export type BookingInput = z.infer<typeof bookingInput>;
 

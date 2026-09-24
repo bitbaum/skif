@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import {
   ConstraintList,
+  RequirementList,
   languagesText,
   presenceText,
   RatingSummary,
@@ -111,6 +112,7 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
               ["Notes", booking.notes || "—"],
               ["Presence", presenceText(booking.presenceStyle)],
               ["Languages", languagesText(booking.languages)],
+              ["Requirements", <RequirementList key="r" service={booking.service} extra={booking.requiredCapabilities} />],
               ["Hard limits", <ConstraintList key="c" constraints={booking.hardConstraints} />],
               ["What matters to them", prefs?.valuesNote || "—"],
               ["Protector", protector?.displayName ?? "Not assigned"],
