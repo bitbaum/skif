@@ -89,7 +89,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ id:
 
   return (
     <>
-      <PageHeader title={`Safety Plan: ${assessment.placeName}`} lead={formatWhen(assessment.createdAt)} />
+      <PageHeader title={`Safety Plan: ${assessment.environment.name}`} lead={formatWhen(assessment.createdAt)} />
       {plan.nothingToBuy && (
         <p className="mb-6 rounded-card border border-accent bg-accent-soft p-4 text-accent">
           <strong>You don&apos;t need to buy anything.</strong>{" "}

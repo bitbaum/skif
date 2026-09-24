@@ -236,4 +236,3 @@ export function intrusivenessLabel(level: number): string {
   return INTRUSIVENESS.find((i) => i.level === level)?.label ?? String(level);
 }
 
-export const ASSESSMENT_LIMITS = { placeNameMax: 80 } as const;

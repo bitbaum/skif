@@ -12,6 +12,7 @@ import { INCIDENT_SEVERITY_KEYS } from "@/config/reports";
 import { COMPLAINT_CATEGORY_KEYS } from "@/config/complaints";
 import { COMPLAINT_STATUSES } from "@/domain/complaints";
 import { AUDIT_ACTIONS, AUDIT_SUBJECTS } from "@/domain/audit";
+import { ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
 
 export const bookingStatus = pgEnum("booking_status", BOOKING_STATUSES);
 export const paymentStatus = pgEnum("payment_status", PAYMENT_STATUSES);
@@ -30,3 +31,4 @@ export const complaintStatus = pgEnum("complaint_status", COMPLAINT_STATUSES);
 export const complaintCategory = pgEnum("complaint_category", COMPLAINT_CATEGORY_KEYS);
 export const auditAction = pgEnum("audit_action", AUDIT_ACTIONS);
 export const auditSubject = pgEnum("audit_subject", AUDIT_SUBJECTS);
+export const environmentType = pgEnum("environment_type", ENVIRONMENT_TYPE_KEYS);
