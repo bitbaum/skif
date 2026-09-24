@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ActionForm } from "@/components/action-form";
+import { AxisFields } from "@/components/axis-fields";
 import { CheckboxGroup, Field, RadioGroup, TextArea, TextInput } from "@/components/fields";
 import { Card, PageHeader } from "@/components/ui";
 import { HARD_CONSTRAINTS, LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
@@ -59,8 +60,9 @@ export default async function PreferencesPage({
             options={HARD_CONSTRAINTS}
             selected={prefs?.hardConstraints ?? []}
           />
+          <AxisFields leans={prefs?.axes ?? {}} />
           <RadioGroup
-            legend="How visible should a Protector be?"
+            legend="Discretion or visible deterrence: how visible should a Protector be?"
             name="presenceStyle"
             options={PRESENCE_STYLES}
             selected={prefs?.presenceStyle ?? "DISCREET"}

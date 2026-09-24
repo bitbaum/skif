@@ -5,7 +5,13 @@
 import { z } from "zod";
 import { CONCERN_KEYS, MEASURE_KEYS } from "@/config/assessment";
 import { ENVIRONMENT_LIMITS, ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
-import { HARD_CONSTRAINT_KEYS, LANGUAGE_KEYS, PRESENCE_STYLE_KEYS } from "@/config/constraints";
+import {
+  AXIS_KEYS,
+  AXIS_LEANS,
+  HARD_CONSTRAINT_KEYS,
+  LANGUAGE_KEYS,
+  PRESENCE_STYLE_KEYS,
+} from "@/config/constraints";
 import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN, type RatingDimension } from "@/config/ratings";
@@ -21,8 +27,11 @@ import { clockToMinute, zonedLocalToDate } from "./time";
 const trimmed = (max: number) => z.string().trim().max(max);
 const required = (max: number) => trimmed(max).min(1, "Required");
 
+const axisLean = z.coerce.number().pipe(z.literal(AXIS_LEANS));
+
 export const preferencesInput = z.object({
   hardConstraints: z.array(z.enum(HARD_CONSTRAINT_KEYS)),
+  axes: z.partialRecord(z.enum(AXIS_KEYS), axisLean),
   presenceStyle: z.enum(PRESENCE_STYLE_KEYS),
   languages: z.array(z.enum(LANGUAGE_KEYS)),
   valuesNote: trimmed(BOOKING_LIMITS.notesMax),
@@ -197,6 +206,18 @@ export function parseAvailability(form: FormData): Result<AvailabilityWindow[]> 
     windows.push(windowFromClock(day, start, end));
   }
   return ok(windows);
+}
+
+export const axisField = (key: string) => `axis.${key}`;
+
+/** Collect the axis answers a form sent; an unanswered axis is balanced. */
+export function axisFields(form: FormData): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const key of AXIS_KEYS) {
+    const v = form.get(axisField(key));
+    if (typeof v === "string" && v !== "") out[key] = v;
+  }
+  return out;
 }
 
 /** First zod issue as a readable sentence. */
