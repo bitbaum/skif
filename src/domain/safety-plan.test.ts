@@ -15,6 +15,7 @@ const input = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   measures: [],
   constraints: [],
   budget: "HIGH",
+  leans: {},
   ...overrides,
 });
 const plan = (overrides: Partial<PlanInput> = {}) => buildSafetyPlan(input(overrides));
