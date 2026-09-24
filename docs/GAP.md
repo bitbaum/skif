@@ -55,8 +55,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [ ] Preferences beyond hard constraints do not affect recommendations (§3 "must affect recommendations").
 - [ ] Assessment does not capture who/what is protected, known threats, routines/exposure, budget, or upcoming events (§12).
 - [ ] No AssessmentFinding: the plan is not built from explicit findings (§12, §21).
-- [ ] Interventions lack expected benefit, evidence confidence and autonomy impact as separate dimensions (§2, §12).
-- [ ] Interventions don't say whether they need a product, a professional service, a Protector, or are simply behavioural/environmental (§12).
+- [x] Interventions lack expected benefit, evidence confidence and autonomy impact as separate dimensions (§2, §12). — PR #16
+- [x] Interventions don't say whether they need a product, a professional service, a Protector, or are simply behavioural/environmental (§12). — PR #16
 - [ ] Safety Plan items don't say why they are recommended or which finding they address (§12).
 - [ ] Budget is not taken into account (§12).
 

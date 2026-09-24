@@ -5,13 +5,8 @@
  * person already does addresses it. "Nothing to buy" is a first-class outcome, not a fallback.
  */
 import type { HardConstraintKey } from "@/config/constraints";
-import {
-  costRank,
-  INTERVENTIONS,
-  type ConcernKey,
-  type Intervention,
-  type MeasureKey,
-} from "@/config/assessment";
+import { costRank, type ConcernKey, type MeasureKey } from "@/config/assessment";
+import { findIntervention, INTERVENTIONS, needsPurchase, type Intervention } from "@/config/interventions";
 
 export type PlanInput = {
   concerns: readonly ConcernKey[];
@@ -43,7 +38,7 @@ export type SafetyPlan = {
 
 function proportionality(a: Intervention, b: Intervention): number {
   return (
-    a.intrusiveness - b.intrusiveness ||
+    a.privacyImpact - b.privacyImpact ||
     costRank(a.cost) - costRank(b.cost) ||
     a.key.localeCompare(b.key)
   );
@@ -82,7 +77,8 @@ export function buildSafetyPlan(input: PlanInput): SafetyPlan {
   const concerns = [...new Set(input.concerns)].map((c) => planForConcern(c, input));
   const nothingToBuy = concerns.every((c) => {
     if (c.recommended === null) return true;
-    return !INTERVENTIONS.find((i) => i.key === c.recommended)?.purchase;
+    const i = findIntervention(c.recommended);
+    return i ? !needsPurchase(i.kind) : false;
   });
   return { constraints: [...input.constraints], concerns, nothingToBuy };
 }

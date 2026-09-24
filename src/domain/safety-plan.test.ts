@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { INTERVENTIONS } from "@/config/assessment";
+import { INTERVENTIONS } from "@/config/interventions";
 import { HARD_CONSTRAINT_KEYS } from "@/config/constraints";
 import { buildSafetyPlan } from "./safety-plan";
 
