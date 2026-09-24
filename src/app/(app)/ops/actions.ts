@@ -47,11 +47,11 @@ export async function opsCancelAction(_: ActionState, form: FormData): Promise<A
 const PROTECTOR_STATUS = z.enum(PROTECTOR_STATUSES);
 
 export async function protectorStatusAction(_: ActionState, form: FormData): Promise<ActionState> {
-  await requireOps();
+  const viewer = await requireOps();
   const id = idInput.safeParse(form.get("protectorId"));
   const status = PROTECTOR_STATUS.safeParse(form.get("status"));
   if (!id.success || !status.success) return { error: "Invalid request" };
-  const result = await setProtectorStatus(getDb(), id.data, status.data);
+  const result = await setProtectorStatus(getDb(), id.data, status.data, viewer.sub);
   if (!result.success) return { error: result.error };
   revalidatePath("/ops");
   revalidatePath(`/ops/protectors/${id.data}`);

@@ -45,7 +45,7 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [x] Complaints cannot be corroborated, appealed or corrected, and nothing keeps an unreviewed complaint from affecting reputation (§10). — PR #12
 
 ### Permissions
-- [ ] Sensitive Operations access (booking detail, incidents, complaints) is not audited — no AuditEvent (§14, §21).
+- [x] Sensitive Operations access (booking detail, incidents, complaints) is not audited — no AuditEvent (§14, §21). — PR #13
 
 ## P1 — Safety foundation
 

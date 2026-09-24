@@ -30,7 +30,7 @@ export const tomorrow = () => new Date(Date.now() + 24 * 60 * 60 * 1000);
 /** Applied, approved and available all week. */
 export async function approvedProtector(db: Db, sub: string, overrides: Partial<ProtectorApplication> = {}) {
   const p = await applyAsProtector(db, sub, { ...application, ...overrides });
-  await setProtectorStatus(db, p.id, "APPROVED");
+  await setProtectorStatus(db, p.id, "APPROVED", "oc-ops");
   await saveAvailability(db, p.id, ALWAYS);
   return p;
 }

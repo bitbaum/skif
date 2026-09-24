@@ -4,6 +4,7 @@
  * to a person.
  */
 export * from "./assessments";
+export * from "./audit";
 export * from "./bookings";
 export * from "./complaints";
 export * from "./people";

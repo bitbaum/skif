@@ -5,6 +5,7 @@ import { and, eq, inArray, lte } from "drizzle-orm";
 import { EXPIRABLE_STATUSES, isOverdue, nextStatus, type ActorRole, type BookingAction } from "@/domain/lifecycle";
 import type { MatchReason } from "@/domain/matching";
 import { fail, ok, type Result } from "@/domain/result";
+import { audit } from "./audit";
 import type { Booking } from "./bookings";
 import { matchForBooking } from "./matching";
 
@@ -88,6 +89,9 @@ export async function applyBookingAction(
       if (!checked.success) return checked;
       assignment = checked.data;
       protectorId = assignment.protectorId;
+      if (assignment.note) {
+        await audit(tx, actor.sub, "OVERRIDE_MATCH", { type: "BOOKING", id: bookingId }, { protectorId });
+      }
     }
     if (request.action === "DECLINE") protectorId = null;
 

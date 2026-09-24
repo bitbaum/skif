@@ -29,6 +29,7 @@ import { complaintCategoryLabel } from "@/config/complaints";
 import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import Link from "next/link";
 import { getPreferences } from "@/server/preferences";
+import { audit } from "@/server/audit";
 import { requireOps } from "@/server/viewer";
 import { IncidentReview } from "@/components/incident-review";
 import { assignAction, opsCancelAction, reviewIncidentAction } from "../../actions";
@@ -95,12 +96,13 @@ function Matches({ bookingId, match }: { bookingId: string; match: MatchResult }
 }
 
 export default async function OpsBookingPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireOps();
+  const viewer = await requireOps();
   const id = idInput.safeParse((await params).id);
   if (!id.success) notFound();
   const db = getDb();
   const detail = await getBookingForOps(db, id.data);
   if (!detail) notFound();
+  await audit(db, viewer.sub, "VIEW_BOOKING", { type: "BOOKING", id: id.data });
   const { booking, protector, events, rating, reports } = detail;
   const canAssign = availableActions(booking.status, "OPS").includes("ASSIGN");
   const canCancel = availableActions(booking.status, "OPS").includes("CANCEL");
