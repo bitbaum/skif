@@ -1,8 +1,15 @@
 /** Environments and the assessments made of them. */
 import { index, jsonb, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import type { ConcernKey, MeasureKey } from "@/config/assessment";
+import type {
+  ConcernKey,
+  CostTier,
+  ExposureKey,
+  MeasureKey,
+  ProtectedKey,
+  ThreatKey,
+} from "@/config/assessment";
 import type { Area } from "@/config/services";
-import type { SafetyPlan } from "@/domain/safety-plan";
+import type { StoredPlan } from "@/domain/plan-versions";
 import { createdAt, environmentType, textArray } from "./shared";
 
 export const environments = pgTable(
@@ -30,9 +37,15 @@ export const assessments = pgTable(
     /** Deprecated: the place's name now lives on `environments` (0009 moved
      * it). Kept because the box's schema step refuses DROP COLUMN. */
     placeName: text("place_name").notNull().default(""),
+    protecting: textArray("protecting").$type<ProtectedKey[]>(),
     concerns: textArray("concerns").$type<ConcernKey[]>(),
+    exposures: textArray("exposures").$type<ExposureKey[]>(),
+    threats: textArray("threats").$type<ThreatKey[]>(),
     measures: textArray("measures").$type<MeasureKey[]>(),
-    plan: jsonb("plan").$type<SafetyPlan>().notNull(),
+    /** Null on assessments made before budgets were asked. */
+    budget: text("budget").$type<CostTier>(),
+    upcoming: text("upcoming").notNull().default(""),
+    plan: jsonb("plan").$type<StoredPlan>().notNull(),
     createdAt: createdAt(),
   },
   (t) => [index("assessments_customer_idx").on(t.customerSub)],

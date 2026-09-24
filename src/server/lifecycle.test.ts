@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import { createTestDb } from "@/test/db";
-import { application, approvedProtector, OPS, rating as ratingOf, report, tomorrow } from "@/test/fixtures";
+import { answers, application, approvedProtector, OPS, rating as ratingOf, report, tomorrow } from "@/test/fixtures";
+import { readPlan } from "@/domain/plan-versions";
 import { createAssessment } from "./assessments";
 import { createEnvironment } from "./environments";
 import {
@@ -169,16 +170,17 @@ describe("booking lifecycle, end to end against Postgres", () => {
   });
 
   it("saves a Safety Plan that respects hard constraints", async () => {
-    const r = await createAssessment(db, CUSTOMER, {
-      environmentId: (await createEnvironment(db, CUSTOMER, { type: "HOME", name: "My flat", area: null })).id,
-      concerns: ["BURGLARY", "UNWANTED_VISITORS"],
-      measures: ["NEIGHBOUR_CONTACT"],
-    });
+    const flat = await createEnvironment(db, CUSTOMER, { type: "HOME", name: "My flat", area: null });
+    const r = await createAssessment(
+      db,
+      CUSTOMER,
+      answers(flat.id, { concerns: ["BURGLARY", "UNWANTED_VISITORS"], measures: ["NEIGHBOUR_CONTACT"] }),
+    );
     if (!r.success) throw new Error(r.error);
     const plan = r.data.plan;
     expect(plan.constraints).toEqual(["NO_AUTO_POLICE_SHARING", "NO_FACIAL_RECOGNITION"]);
     expect(plan.nothingToBuy).toBe(true);
-    const burglary = plan.concerns.find((c) => c.concern === "BURGLARY")!;
+    const burglary = readPlan(plan).findings.find((c) => c.concern === "BURGLARY")!;
     expect(burglary.excluded.map((e) => e.key)).toContain("MONITORED_ALARM");
     expect(burglary.alternatives).not.toContain("MONITORED_ALARM");
   });
