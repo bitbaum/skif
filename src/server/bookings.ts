@@ -1,8 +1,9 @@
 import "server-only";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { bookingEvents, bookings, protectors, ratings, reports } from "@/db/schema";
 import type { Db } from "@/db/types";
 import type { BookingInput } from "@/domain/inputs";
+import type { MatchReason } from "@/domain/matching";
 import { protectorHasAccepted } from "@/domain/lifecycle";
 import { manualPayments, type PaymentProvider } from "@/domain/payment";
 import { fail, ok, type Result } from "@/domain/result";
@@ -136,15 +137,26 @@ export type ProtectorJob = Omit<Booking, "customerSub" | "meetingPoint" | "notes
   meetingPoint: string | null;
   notes: string | null;
   reports: Report[];
+  /** Why they were matched, as Operations saw it when assigning them. */
+  whyMatched: MatchReason[];
 };
 
 export async function getJobForProtector(db: Db, protectorId: string, id: string): Promise<ProtectorJob | null> {
   const booking = await findBooking(db, id);
   if (!booking || booking.protectorId !== protectorId) return null;
-  return redactForProtector(booking, await db.select().from(reports).where(eq(reports.bookingId, id)));
+  const jobReports = await db.select().from(reports).where(eq(reports.bookingId, id));
+  const [assigned] = await db
+    .select({ matchReasons: bookingEvents.matchReasons })
+    .from(bookingEvents)
+    .where(
+      and(eq(bookingEvents.bookingId, id), eq(bookingEvents.action, "ASSIGN"), eq(bookingEvents.protectorId, protectorId)),
+    )
+    .orderBy(desc(bookingEvents.at))
+    .limit(1);
+  return redactForProtector(booking, jobReports, assigned?.matchReasons ?? []);
 }
 
-export function redactForProtector(booking: Booking, jobReports: Report[]): ProtectorJob {
+export function redactForProtector(booking: Booking, jobReports: Report[], whyMatched: MatchReason[]): ProtectorJob {
   const { customerSub: _customer, meetingPoint, notes, ...rest } = booking;
   const visible = protectorHasAccepted(booking.status);
   return {
@@ -152,5 +164,6 @@ export function redactForProtector(booking: Booking, jobReports: Report[]): Prot
     meetingPoint: visible ? meetingPoint : null,
     notes: visible ? notes : null,
     reports: jobReports,
+    whyMatched,
   };
 }

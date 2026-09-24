@@ -3,7 +3,7 @@ import { LEVEL_FACTOR, MATCH_WEIGHTS, VERIFICATION_FACTOR } from "@/config/match
 import { windowFromClock } from "./availability";
 import type { HeldCapability } from "./capabilities";
 import { zonedLocalToDate } from "./time";
-import { rankProtectors, type MatchCandidate } from "./matching";
+import { fitBand, maxScore, rankProtectors, type MatchCandidate } from "./matching";
 
 const EVERY_DAY = [1, 2, 3, 4, 5, 6, 7].map((weekday) => windowFromClock(weekday, 0, 0));
 
@@ -18,6 +18,7 @@ const base: MatchCandidate = {
   ratingScore: null,
   ratingCount: 0,
   completedRecently: 0,
+  relevantJobs: 0,
   busy: false,
 };
 
@@ -159,5 +160,33 @@ describe("rankProtectors", () => {
       old: "Professional driving required — certificate expired",
       noaid: "First aid required — not held",
     });
+  });
+
+  it("bands the fit against the points this booking makes possible", () => {
+    const max = maxScore(request);
+    expect(fitBand(Math.ceil(max * 0.7), max)).toBe("EXCELLENT");
+    expect(fitBand(Math.ceil(max * 0.45), max)).toBe("STRONG");
+    expect(fitBand(0, max)).toBe("GOOD");
+    const { ranked } = rank([{ ...base, capabilities: [held(), held({ key: "NIGHTLIFE" }), held({ key: "FIRST_AID" })], ratingScore: 1, ratingCount: 4 }]);
+    expect(ranked[0]!.band).toBe("EXCELLENT");
+  });
+
+  it("credits completed jobs of the same service, up to a cap", () => {
+    const { ranked } = rank([{ ...base, relevantJobs: 40 }]);
+    expect(ranked[0]!.reasons).toContainEqual({
+      label: "40 completed Night Out job(s)",
+      points: MATCH_WEIGHTS.relevantJobsCap * MATCH_WEIGHTS.relevantJob,
+    });
+  });
+
+  it("never lets a double booking be overridden", () => {
+    const { excluded } = rank([
+      { ...base, id: "busy", displayName: "Anna", busy: true },
+      { ...base, id: "fr", displayName: "Ben", languages: ["fr"] },
+    ]);
+    expect(excluded.map((e) => [e.id, e.overridable])).toEqual([
+      ["busy", false],
+      ["fr", true],
+    ]);
   });
 });

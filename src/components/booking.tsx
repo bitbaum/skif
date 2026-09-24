@@ -2,7 +2,7 @@ import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { constraintLabel, languageLabel, PRESENCE_STYLES, type HardConstraintKey } from "@/config/constraints";
 import { ratingLabel, RATING_DIMENSIONS } from "@/config/ratings";
 import { STATUS_LABELS, type BookingStatus } from "@/domain/lifecycle";
-import { requirementsFor } from "@/domain/matching";
+import { requirementsFor, type MatchReason } from "@/domain/matching";
 import type { ServiceKey } from "@/config/services";
 import type { BookingEvent, Rating, Report } from "@/server/bookings";
 import { Badge, Empty, formatWhen, type Tone } from "./ui";
@@ -30,7 +30,8 @@ const ACTION_LABELS: Record<string, string> = {
   CANCEL: "Cancelled",
 };
 
-export function Timeline({ events }: { events: BookingEvent[] }) {
+/** `showNotes` reveals Operations' override notes — pass it on Ops pages only. */
+export function Timeline({ events, showNotes = false }: { events: BookingEvent[]; showNotes?: boolean }) {
   return (
     <ol className="space-y-3 border-l border-line pl-4">
       {events.map((e) => (
@@ -39,6 +40,7 @@ export function Timeline({ events }: { events: BookingEvent[] }) {
           <p className="text-muted">
             {formatWhen(e.at)} · by {e.actorRole.toLowerCase()}
           </p>
+          {showNotes && e.note && <p className="text-warn">Override: {e.note}</p>}
         </li>
       ))}
     </ol>
@@ -110,5 +112,21 @@ export function RequirementList({ service, extra }: { service: ServiceKey; extra
         <Badge key={k}>{capabilityLabel(k)}</Badge>
       ))}
     </span>
+  );
+}
+
+export function ReasonList({ reasons }: { reasons: readonly MatchReason[] }) {
+  return (
+    <ul className="space-y-0.5 text-sm">
+      {reasons.map((reason) => (
+        <li key={reason.label} className="flex justify-between gap-4">
+          <span>{reason.label}</span>
+          <span className="tabular-nums text-muted">
+            {reason.points > 0 ? "+" : ""}
+            {reason.points}
+          </span>
+        </li>
+      ))}
+    </ul>
   );
 }

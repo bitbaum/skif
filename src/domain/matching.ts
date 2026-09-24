@@ -5,11 +5,13 @@
  */
 import { languageLabel, PRESENCE_STYLES, type PresenceStyle } from "@/config/constraints";
 import {
+  FIT_BANDS,
   LEVEL_FACTOR,
   MATCH_WEIGHTS,
   SERVICE_CAPABILITIES,
   VERIFICATION_FACTOR,
   WORKLOAD_WINDOW_DAYS,
+  type FitBand,
 } from "@/config/matching";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
 import { serviceLabel, serviceRequires, type ServiceKey } from "@/config/services";
@@ -58,13 +60,23 @@ export type MatchCandidate = {
   ratingScore: number | null;
   ratingCount: number;
   completedRecently: number;
+  /** Completed jobs of the requested service, ever. */
+  relevantJobs: number;
   /** Already committed to another booking overlapping this one. */
   busy: boolean;
 };
 
 export type MatchReason = { label: string; points: number };
-export type RankedProtector = { id: string; displayName: string; score: number; reasons: MatchReason[] };
-export type ExcludedProtector = { id: string; displayName: string; reason: string };
+export type RankedProtector = {
+  id: string;
+  displayName: string;
+  score: number;
+  band: FitBand;
+  reasons: MatchReason[];
+};
+/** `overridable` is false only where assigning would be physically impossible
+ * (a double booking); everything else Operations may override with a reason. */
+export type ExcludedProtector = { id: string; displayName: string; reason: string; overridable: boolean };
 export type MatchResult = { ranked: RankedProtector[]; excluded: ExcludedProtector[] };
 
 function exclusionReason(req: MatchRequest, c: MatchCandidate, onDay: string): string | null {
@@ -119,6 +131,14 @@ function reasonsFor(req: MatchRequest, c: MatchCandidate, today: string): MatchR
     });
   }
 
+  if (c.relevantJobs > 0) {
+    const counted = Math.min(c.relevantJobs, MATCH_WEIGHTS.relevantJobsCap);
+    reasons.push({
+      label: `${c.relevantJobs} completed ${serviceLabel(req.service)} job(s)`,
+      points: counted * MATCH_WEIGHTS.relevantJob,
+    });
+  }
+
   if (c.completedRecently > 0) {
     reasons.push({
       label: `${c.completedRecently} job(s) in the last ${WORKLOAD_WINDOW_DAYS} days — spreading work fairly`,
@@ -138,12 +158,12 @@ export function rankProtectors(req: MatchRequest, candidates: readonly MatchCand
   for (const c of candidates) {
     const reason = exclusionReason(req, c, onDay);
     if (reason) {
-      excluded.push({ id: c.id, displayName: c.displayName, reason });
+      excluded.push({ id: c.id, displayName: c.displayName, reason, overridable: !c.busy });
       continue;
     }
     const reasons = reasonsFor(req, c, onDay);
     const score = reasons.reduce((sum, r) => sum + r.points, 0);
-    ranked.push({ id: c.id, displayName: c.displayName, score, reasons });
+    ranked.push({ id: c.id, displayName: c.displayName, score, band: fitBand(score, maxScore(req)), reasons });
   }
 
   const byName = (a: { displayName: string; id: string }, b: { displayName: string; id: string }) =>
@@ -151,6 +171,26 @@ export function rankProtectors(req: MatchRequest, candidates: readonly MatchCand
   ranked.sort((a, b) => b.score - a.score || byName(a, b));
   excluded.sort(byName);
   return { ranked, excluded };
+}
+
+/** The most points any Protector could earn for this request. */
+export function maxScore(req: MatchRequest): number {
+  return (
+    req.languages.length * MATCH_WEIGHTS.sharedLanguage +
+    SERVICE_CAPABILITIES[req.service].length * MATCH_WEIGHTS.relevantCapability +
+    MATCH_WEIGHTS.presenceStyle +
+    MATCH_WEIGHTS.pastRatings +
+    MATCH_WEIGHTS.relevantJobsCap * MATCH_WEIGHTS.relevantJob
+  );
+}
+
+export function fitBand(score: number, max: number): FitBand {
+  const share = max > 0 ? score / max : 0;
+  return (FIT_BANDS.find((b) => share >= b.minShare) ?? FIT_BANDS[FIT_BANDS.length - 1]).key;
+}
+
+export function fitLabel(band: FitBand): string {
+  return FIT_BANDS.find((b) => b.key === band)?.label ?? band;
 }
 
 /** Normalise a mean rating on the configured scale to 0..1 for the ranking. */

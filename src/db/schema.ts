@@ -21,6 +21,7 @@ import {
 import { BOOKING_STATUSES } from "@/domain/lifecycle";
 import { PAYMENT_STATUSES } from "@/domain/payment";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
+import type { MatchReason } from "@/domain/matching";
 import type { SafetyPlan } from "@/domain/safety-plan";
 import { RATING_MAX, RATING_MIN } from "@/config/ratings";
 import {
@@ -159,6 +160,10 @@ export const bookingEvents = pgTable(
     actorRole: text("actor_role").notNull(),
     actorSub: text("actor_sub").notNull(),
     protectorId: uuid("protector_id").references(() => protectors.id),
+    /** On ASSIGN: why this Protector was matched, as shown to Operations then. */
+    matchReasons: jsonb("match_reasons").$type<MatchReason[]>(),
+    /** On an override: the reason Operations gave. Operations-only. */
+    note: text("note"),
     at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("booking_events_booking_idx").on(t.bookingId)],

@@ -29,12 +29,12 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 ### Matching
 - [x] Hard filters missing: required capability/qualification, driving requirement, certification validity (§9). (Availability filter: PR #6.) — PR #7
 - [x] Unverified and verified capabilities count the same; expired certifications still count (§7, §9). — PR #5
-- [ ] No relevant-experience signal (completed deployments of this service) (§9).
-- [ ] Raw points shown with no fit band; spec asks for EXCELLENT / STRONG / GOOD FIT until scores justify more (§9).
-- [ ] Operations cannot override the ranking to assign an ineligible Protector with a recorded reason (§9).
+- [x] No relevant-experience signal (completed deployments of this service) (§9). — PR #8
+- [x] Raw points shown with no fit band; spec asks for EXCELLENT / STRONG / GOOD FIT until scores justify more (§9). — PR #8
+- [x] Operations cannot override the ranking to assign an ineligible Protector with a recorded reason (§9). — PR #8
 
 ### Protector acceptance / start / end
-- [ ] Protector cannot see why they were matched to a job (§6).
+- [x] Protector cannot see why they were matched to a job (§6). — PR #8
 - [ ] No check-in (arrived) step separate from starting the assignment (§6).
 
 ### Feedback / incidents

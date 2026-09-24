@@ -3,7 +3,9 @@ import { eq } from "drizzle-orm";
 import { bookingEvents, bookings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { nextStatus, type ActorRole, type BookingAction } from "@/domain/lifecycle";
+import type { MatchReason } from "@/domain/matching";
 import { fail, ok, type Result } from "@/domain/result";
+import type { Booking } from "./bookings";
 import { matchForBooking } from "./matching";
 
 export type Actor =
@@ -12,10 +14,36 @@ export type Actor =
   | { role: "OPS"; sub: string };
 
 type ActionRequest =
-  | { action: "ASSIGN"; protectorId: string }
+  /** `overrideReason` lets Operations assign someone the matcher excluded. */
+  | { action: "ASSIGN"; protectorId: string; overrideReason?: string }
   | { action: Exclude<BookingAction, "ASSIGN"> };
 
-function mayAct(actor: Actor, booking: typeof bookings.$inferSelect): boolean {
+type Assignment = { protectorId: string; matchReasons: MatchReason[]; note: string | null };
+
+/** Assign the ranked Protector with the reasons Ops saw, or — only with a
+ * stated reason — one the matcher excluded, unless that would double-book them. */
+async function checkAssignment(
+  db: Db,
+  booking: Booking,
+  request: { protectorId: string; overrideReason?: string },
+): Promise<Result<Assignment>> {
+  const match = await matchForBooking(db, booking);
+  const ranked = match.ranked.find((r) => r.id === request.protectorId);
+  if (ranked) return ok({ protectorId: ranked.id, matchReasons: ranked.reasons, note: null });
+
+  const excluded = match.excluded.find((e) => e.id === request.protectorId);
+  if (!excluded) return fail("Only an approved Protector can be assigned");
+  if (!excluded.overridable) return fail(`${excluded.displayName}: ${excluded.reason}`);
+  const reason = request.overrideReason?.trim();
+  if (!reason) return fail(`${excluded.displayName}: ${excluded.reason} — give a reason to assign anyway`);
+  return ok({
+    protectorId: excluded.id,
+    matchReasons: [{ label: `Assigned by Operations despite: ${excluded.reason}`, points: 0 }],
+    note: reason,
+  });
+}
+
+function mayAct(actor: Actor, booking: Booking): boolean {
   switch (actor.role) {
     case "OPS":
       return true;
@@ -44,14 +72,12 @@ export async function applyBookingAction(
     if (!next.success) return next;
 
     let protectorId = booking.protectorId;
+    let assignment: Assignment | null = null;
     if (request.action === "ASSIGN") {
-      const match = await matchForBooking(tx, booking);
-      const excluded = match.excluded.find((e) => e.id === request.protectorId);
-      if (excluded) return fail(`${excluded.displayName}: ${excluded.reason}`);
-      if (!match.ranked.some((r) => r.id === request.protectorId)) {
-        return fail("Only an approved Protector can be assigned");
-      }
-      protectorId = request.protectorId;
+      const checked = await checkAssignment(tx, booking, request);
+      if (!checked.success) return checked;
+      assignment = checked.data;
+      protectorId = assignment.protectorId;
     }
     if (request.action === "DECLINE") protectorId = null;
 
@@ -65,6 +91,8 @@ export async function applyBookingAction(
       actorSub: actor.sub,
       // Record whose job it was when a Protector declines, too.
       protectorId: protectorId ?? booking.protectorId,
+      matchReasons: assignment?.matchReasons ?? null,
+      note: assignment?.note ?? null,
     });
     return ok(undefined);
   });

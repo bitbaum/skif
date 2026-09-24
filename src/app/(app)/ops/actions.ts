@@ -4,11 +4,17 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
+import { BOOKING_LIMITS } from "@/config/services";
 import { idInput } from "@/domain/inputs";
 import { applyBookingAction } from "@/server/lifecycle";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
 import { assessCapability, setProtectorStatus } from "@/server/protectors";
 import { requireOps } from "@/server/viewer";
+
+function overrideReason(form: FormData): string | undefined {
+  const v = form.get("overrideReason");
+  return typeof v === "string" ? v.slice(0, BOOKING_LIMITS.notesMax) : undefined;
+}
 
 export async function assignAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireOps();
@@ -18,7 +24,7 @@ export async function assignAction(_: ActionState, form: FormData): Promise<Acti
   const result = await applyBookingAction(
     getDb(),
     bookingId.data,
-    { action: "ASSIGN", protectorId: protectorId.data },
+    { action: "ASSIGN", protectorId: protectorId.data, overrideReason: overrideReason(form) },
     { role: "OPS", sub: viewer.sub },
   );
   if (!result.success) return { error: result.error };
