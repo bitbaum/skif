@@ -14,21 +14,29 @@
 
 export const STAGE = "Beta";
 
+/** An illustration from public/art. Self-made SVG scenes: calm people and
+ * ordinary places, never cameras, locks or muscle (DOCTRINE.md). */
+export type Art = { src: `/art/${string}.svg`; alt: string; width: number; height: number };
+
 export const HERO = {
   eyebrow: "Holistic safety · Zürich",
   title: "Safety that makes room for your life.",
   lede: "Skif looks at the whole of it — you, the people you love, your home, your accounts, your privacy and your good name — and suggests the most proportionate step. Sometimes that is a calm person beside you. Often it is a small change. Sometimes it is nothing at all.",
   question: "What matters to you, and what are you worried about?",
   questionNote: "That is where every conversation with Skif starts.",
+  art: {
+    src: "/art/walk-home.svg",
+    alt: "Two people walk home along the Limmat at dusk, past a street lamp, the Grossmünster towers behind them.",
+    width: 800,
+    height: 600,
+  } satisfies Art,
 } as const;
-
-export type DoorIcon = "companion" | "life" | "venue";
 
 export type Door = {
   key: string;
-  icon: DoorIcon;
   title: string;
   body: string;
+  art: Art;
   cta: { href: string; label: string };
   secondary?: { href: string; label: string };
 };
@@ -37,21 +45,21 @@ export type Door = {
 export const DOORS: readonly Door[] = [
   {
     key: "WITH_ME",
-    icon: "companion",
+    art: { src: "/art/tram-stop.svg", alt: "A Protector sits beside someone at a night tram stop, both at ease, waiting for the 4.", width: 480, height: 320 },
     title: "I need someone with me",
     body: "A calm, qualified Protector for a night out, the way home or a difficult occasion — chosen for judgment and de-escalation, not size. When we match someone to you, we show why.",
     cta: { href: "/bookings/new", label: "Book a Protector" },
   },
   {
     key: "CONCERNED",
-    icon: "life",
+    art: { src: "/art/kitchen-table.svg", alt: "Someone at their kitchen table in morning light, ticking off a short list, a cup of tea beside them.", width: 480, height: 320 },
     title: "I'm concerned about my safety",
     body: "Tell us what matters to you and what worries you. You get a Safety Plan across every part of life below, with the trade-offs of each step — and an honest “nothing needed” where that is the answer.",
     cta: { href: "/assessments", label: "Start an assessment" },
   },
   {
     key: "VENUE",
-    icon: "venue",
+    art: { src: "/art/venue-door.svg", alt: "Outside a bar’s warm doorway, a member of staff offers a guest a glass of water and listens.", width: 480, height: 320 },
     title: "I run a venue or event",
     body: "For bars, clubs, shops and one-off occasions: an assessment of the place, and staff who defuse rather than confront.",
     cta: { href: "/assessments", label: "Assess your venue" },

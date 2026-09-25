@@ -40,7 +40,7 @@ function CapabilityRow({ c, today }: { c: ProtectorCapability; today: string }) 
             {c.expiresOn && ` · valid until ${c.expiresOn}`}
           </p>
         )}
-        {c.assessedAt && <p className="text-xs text-muted">Assessed {formatWhen(c.assessedAt)}</p>}
+        {c.assessedAt && <p className="text-sm text-muted">Assessed {formatWhen(c.assessedAt)}</p>}
       </div>
       {c.verification !== "VERIFIED" && (
         <ActionForm

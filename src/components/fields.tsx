@@ -3,14 +3,14 @@ import type { ReactNode } from "react";
 type Option = { key: string; label: string; description?: string };
 
 const inputClass =
-  "w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm focus:border-accent focus:outline-none";
+  "w-full rounded-lg border border-line bg-surface px-3 py-2 text-base focus:border-accent focus:outline-none";
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <label className="block space-y-1">
       <span className="text-sm font-medium">{label}</span>
       {children}
-      {hint && <span className="block text-xs text-muted">{hint}</span>}
+      {hint && <span className="block text-sm text-muted">{hint}</span>}
     </label>
   );
 }
@@ -59,7 +59,7 @@ function ChoiceGroup({
   return (
     <fieldset className="space-y-2">
       <legend className="text-sm font-medium">{legend}</legend>
-      {hint && <p className="text-xs text-muted">{hint}</p>}
+      {hint && <p className="text-sm text-muted">{hint}</p>}
       <div className={inline ? "flex flex-wrap gap-2" : "space-y-2"}>
         {options.map((o) => (
           <label key={o.key} className="flex items-start gap-3 rounded-lg border border-line bg-surface p-3">
@@ -73,7 +73,7 @@ function ChoiceGroup({
             />
             <span>
               <span className="block text-sm">{o.label}</span>
-              {o.description && <span className="block text-xs text-muted">{o.description}</span>}
+              {o.description && <span className="block text-sm text-muted">{o.description}</span>}
             </span>
           </label>
         ))}

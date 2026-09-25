@@ -1,25 +1,25 @@
 import Link from "next/link";
 import { buttonClass } from "@/components/ui";
 import { DOORS, DOORS_SECTION, type Door } from "@/config/landing";
-import { LandingIcon } from "./icons";
+import { Illustration } from "./illustration";
 
 function DoorCard({ door }: { door: Door }) {
   return (
-    <li className="flex flex-col rounded-card border border-line bg-surface p-6 sm:p-7">
-      <span className="mb-5 inline-flex size-11 items-center justify-center rounded-full bg-accent-soft text-accent">
-        <LandingIcon name={door.icon} />
-      </span>
-      <h3 className="mb-3 text-xl font-semibold text-ink">{door.title}</h3>
-      <p className="mb-6 text-muted">{door.body}</p>
-      <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
-        <Link href={door.cta.href} className={buttonClass.primary}>
-          {door.cta.label}
-        </Link>
-        {door.secondary && (
-          <Link href={door.secondary.href} className="text-sm font-medium text-accent underline-offset-4 hover:underline">
-            {door.secondary.label}
+    <li className="flex flex-col overflow-hidden rounded-card border border-line bg-surface">
+      <Illustration art={door.art} sizes="(min-width: 768px) 33vw, 100vw" />
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <h3 className="mb-3 text-xl font-semibold text-ink">{door.title}</h3>
+        <p className="mb-6 text-muted">{door.body}</p>
+        <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
+          <Link href={door.cta.href} className={buttonClass.primary}>
+            {door.cta.label}
           </Link>
-        )}
+          {door.secondary && (
+            <Link href={door.secondary.href} className={buttonClass.link}>
+              {door.secondary.label}
+            </Link>
+          )}
+        </div>
       </div>
     </li>
   );

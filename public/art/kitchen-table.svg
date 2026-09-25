@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img">
+  <rect width="480" height="320" fill="#efe6da"/>
+  <!-- window with morning light -->
+  <rect x="270" y="30" width="170" height="150" rx="4" fill="#cfe0e6"/>
+  <path d="M270 150 C320 130 360 140 440 120 V180 H270 Z" fill="#b7cfb9"/>
+  <rect x="270" y="30" width="170" height="150" rx="4" fill="none" stroke="#fdfaf5" stroke-width="10"/>
+  <path d="M355 30 V180 M270 105 H440" stroke="#fdfaf5" stroke-width="6"/>
+  <path d="M260 180 H450" stroke="#d9cbb8" stroke-width="10" stroke-linecap="round"/>
+  <!-- a plant on the sill -->
+  <rect x="400" y="148" width="26" height="28" rx="3" fill="#b86b4b"/>
+  <path d="M413 150 C404 126 392 120 386 116 M413 150 C416 124 426 112 434 108 M413 150 C412 134 414 120 412 104" stroke="#3f6b5c" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <!-- shelf and a framed photo of people they love -->
+  <rect x="40" y="70" width="150" height="8" rx="2" fill="#c7b39b"/>
+  <rect x="60" y="30" width="44" height="40" rx="2" fill="#fdfaf5" stroke="#c7b39b" stroke-width="3"/>
+  <circle cx="75" cy="48" r="6" fill="#c68b67"/><circle cx="90" cy="50" r="5" fill="#8a5a3c"/>
+  <path d="M66 66 C68 58 82 58 84 66 M82 66 C84 60 96 60 98 66" fill="#b45a4a"/>
+  <rect x="120" y="44" width="16" height="26" fill="#2f5d50"/><rect x="138" y="50" width="14" height="20" fill="#e8c77d"/><rect x="154" y="40" width="14" height="30" fill="#b45a4a"/>
+  <!-- table -->
+  <rect x="0" y="240" width="480" height="80" fill="#d8c3a5"/>
+  <path d="M0 240 H480" stroke="#c4ab8a" stroke-width="6"/>
+  <!-- person at the table, writing in a notebook -->
+  <path d="M130 244 C126 188 140 160 172 156 C204 160 218 188 214 244 Z" fill="#4d6e8a"/>
+  <circle cx="172" cy="130" r="24" fill="#b07a5a"/>
+  <path d="M148 128 C146 100 198 98 196 126 C190 110 168 106 148 128 Z" fill="#2c2320"/>
+  <circle cx="196" cy="112" r="10" fill="#2c2320"/>
+  <path d="M196 196 C214 214 232 232 246 244" stroke="#4d6e8a" stroke-width="16" stroke-linecap="round" fill="none"/>
+  <circle cx="248" cy="246" r="8" fill="#b07a5a"/>
+  <!-- notebook with a short list and a tick -->
+  <path d="M240 252 L330 246 L336 290 L246 296 Z" fill="#fdfaf5"/>
+  <path d="M258 262 L312 258 M260 274 L300 271 M262 286 L318 282" stroke="#b9ab98" stroke-width="3" stroke-linecap="round"/>
+  <path d="M316 268 L322 274 L332 262" stroke="#2f5d50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- tea -->
+  <rect x="370" y="236" width="30" height="30" rx="5" fill="#fdfaf5"/>
+  <path d="M400 244 C412 244 412 258 400 258" stroke="#fdfaf5" stroke-width="5" fill="none"/>
+  <path d="M378 226 C374 218 384 214 380 206 M390 226 C386 218 396 214 392 206" stroke="#bfb2a2" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

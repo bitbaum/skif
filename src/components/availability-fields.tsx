@@ -10,7 +10,7 @@ export function AvailabilityFields({ windows }: { windows: readonly Availability
   return (
     <fieldset className="space-y-2">
       <legend className="text-sm font-medium">When can you work?</legend>
-      <p className="text-xs text-muted">
+      <p className="text-sm text-muted">
         Zürich time. Leave a day empty if you&apos;re not available. An end earlier than the start runs past midnight.
       </p>
       {WEEKDAYS.map(({ day, label }) => {

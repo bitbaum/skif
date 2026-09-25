@@ -54,7 +54,7 @@ export default async function OpsComplaintPage({ params }: { params: Promise<{ i
               ["Decided", complaint.decidedAt ? formatWhen(complaint.decidedAt) : "—"],
             ]}
           />
-          <p className="my-4 text-xs text-muted">
+          <p className="my-4 text-sm text-muted">
             A complaint never changes a Protector&apos;s ranking by itself. Decide on the facts; suspend from the
             Protector&apos;s page if needed.
           </p>

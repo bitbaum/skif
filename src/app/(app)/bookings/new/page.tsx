@@ -83,7 +83,7 @@ export default async function NewBookingPage() {
               Change preferences
             </Link>
           </p>
-          <p className="mt-4 text-xs text-muted">{PAYMENT_LABELS.PAYMENT_PENDING}.</p>
+          <p className="mt-4 text-sm text-muted">{PAYMENT_LABELS.PAYMENT_PENDING}.</p>
         </Card>
       </div>
     </>

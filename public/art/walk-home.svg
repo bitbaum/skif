@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f3346"/>
+      <stop offset="0.55" stop-color="#4b5d78"/>
+      <stop offset="1" stop-color="#c9a48c"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a4d63"/>
+      <stop offset="1" stop-color="#22324a"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd99a" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#ffd99a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="moonGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff4dc" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#fff4dc" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#sky)"/>
+  <circle cx="610" cy="120" r="90" fill="url(#moonGlow)"/>
+  <circle cx="610" cy="120" r="30" fill="#f6ead2"/>
+  <!-- Uetliberg ridge -->
+  <path d="M0 330 C120 290 220 300 330 280 C450 258 560 290 800 270 V380 H0 Z" fill="#35465d"/>
+  <!-- Old town skyline with the twin towers of the Grossmünster -->
+  <g fill="#27374c">
+    <rect x="40" y="320" width="60" height="70"/>
+    <path d="M100 390 V300 L130 280 L160 300 V390 Z"/>
+    <rect x="160" y="330" width="50" height="60"/>
+    <rect x="228" y="250" width="30" height="140"/>
+    <path d="M226 252 L243 212 L260 252 Z"/>
+    <rect x="276" y="250" width="30" height="140"/>
+    <path d="M274 252 L291 212 L308 252 Z"/>
+    <rect x="252" y="300" width="30" height="90"/>
+    <rect x="320" y="315" width="70" height="75"/>
+    <path d="M400 390 V310 L430 290 L460 310 V390 Z"/>
+    <rect x="470" y="300" width="14" height="90"/>
+    <path d="M466 302 L477 256 L488 302 Z"/>
+    <rect x="495" y="325" width="80" height="65"/>
+    <rect x="590" y="335" width="60" height="55"/>
+    <rect x="660" y="320" width="80" height="70"/>
+    <rect x="740" y="340" width="60" height="50"/>
+  </g>
+  <!-- windows, warm and few -->
+  <g fill="#f3c98b">
+    <rect x="55" y="340" width="8" height="10"/><rect x="175" y="345" width="8" height="10"/>
+    <rect x="335" y="330" width="8" height="10"/><rect x="360" y="352" width="8" height="10"/>
+    <rect x="512" y="340" width="8" height="10"/><rect x="545" y="360" width="8" height="10"/>
+    <rect x="605" y="350" width="8" height="10"/><rect x="690" y="338" width="8" height="10"/>
+    <rect x="120" y="320" width="8" height="10"/><rect x="424" y="325" width="8" height="10"/>
+  </g>
+  <!-- the Limmat -->
+  <rect y="390" width="800" height="90" fill="url(#lake)"/>
+  <g stroke="#f3c98b" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <path d="M52 410 H70"/><path d="M170 420 H196"/><path d="M332 412 H350"/>
+    <path d="M505 428 H530"/><path d="M600 414 H616"/><path d="M688 432 H710"/>
+  </g>
+  <g stroke="#f6ead2" stroke-width="3" stroke-linecap="round" opacity="0.5">
+    <path d="M595 440 H625"/><path d="M602 456 H618"/>
+  </g>
+  <!-- promenade -->
+  <path d="M0 480 H800 V600 H0 Z" fill="#6b5f5a"/>
+  <path d="M0 480 H800" stroke="#8b7d73" stroke-width="6"/>
+  <path d="M0 540 C200 530 600 530 800 545 V600 H0 Z" fill="#5a504c"/>
+  <!-- street lamp -->
+  <circle cx="160" cy="330" r="110" fill="url(#lamp)"/>
+  <rect x="156" y="330" width="8" height="160" fill="#2a2a2e"/>
+  <path d="M146 332 H174 L168 318 H152 Z" fill="#2a2a2e"/>
+  <circle cx="160" cy="336" r="7" fill="#ffe2ad"/>
+  <ellipse cx="160" cy="520" rx="90" ry="14" fill="#ffd99a" opacity="0.18"/>
+  <!-- two people walking home, unhurried -->
+  <g>
+    <ellipse cx="455" cy="552" rx="95" ry="10" fill="#000" opacity="0.18"/>
+    <!-- the person being walked home: long coat, scarf -->
+    <g>
+      <path d="M404 548 L412 486 L424 486 L420 548 Z" fill="#2b2d3a"/>
+      <path d="M430 548 L428 486 L440 486 L446 548 Z" fill="#2b2d3a"/>
+      <path d="M396 500 C396 440 404 400 426 396 C448 400 458 440 458 500 Z" fill="#b45a4a"/>
+      <path d="M410 404 C418 414 436 414 444 404 L446 418 C434 426 420 426 408 418 Z" fill="#e8c77d"/>
+      <path d="M436 416 L442 450 L432 448 Z" fill="#e8c77d"/>
+      <circle cx="427" cy="378" r="21" fill="#c68b67"/>
+      <path d="M406 376 C404 352 450 348 450 376 C448 364 430 360 416 366 C412 370 410 376 406 376 Z" fill="#3b2a24"/>
+      <path d="M406 376 C402 392 404 404 410 410 L414 384 Z" fill="#3b2a24"/>
+      <path d="M455 430 C466 450 470 470 466 488" stroke="#b45a4a" stroke-width="14" stroke-linecap="round" fill="none"/>
+    </g>
+    <!-- the Protector: calm, open posture, a sage jacket -->
+    <g>
+      <path d="M476 548 L486 482 L500 482 L494 548 Z" fill="#23282e"/>
+      <path d="M506 548 L504 482 L518 482 L524 548 Z" fill="#23282e"/>
+      <path d="M470 496 C470 434 478 398 502 392 C528 398 536 434 536 496 Z" fill="#3f6b5c"/>
+      <path d="M492 396 L502 418 L512 396" stroke="#2f5d50" stroke-width="4" fill="none"/>
+      <path d="M474 430 C462 452 460 470 464 488" stroke="#3f6b5c" stroke-width="15" stroke-linecap="round" fill="none"/>
+      <circle cx="503" cy="370" r="22" fill="#8a5a3c"/>
+      <path d="M481 366 C480 342 526 338 526 364 C518 354 496 352 481 366 Z" fill="#1d1a19"/>
+    </g>
+  </g>
+</svg>

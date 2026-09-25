@@ -12,10 +12,10 @@ export function SiteFooter() {
             {FOOTER.place} · {STAGE}
           </p>
         </div>
-        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <ul className="flex flex-wrap gap-x-6 text-sm">
           {FOOTER_LINKS.map((l) => (
             <li key={l.href}>
-              <Link href={l.href} className="text-muted hover:text-ink">
+              <Link href={l.href} className="inline-flex min-h-11 items-center text-muted hover:text-ink">
                 {l.label}
               </Link>
             </li>

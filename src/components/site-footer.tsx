@@ -7,10 +7,10 @@ export function SiteFooter() {
     <footer className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-5 gap-y-2 px-6 py-6 text-sm text-muted">
       <span>Beta — running, not released</span>
       <nav aria-label="Development" className="flex gap-x-5">
-        <Link href="/roadmap" className="underline hover:text-ink">
+        <Link href="/roadmap" className="inline-flex min-h-11 items-center underline hover:text-ink">
           Roadmap
         </Link>
-        <Link href="/changelog" className="underline hover:text-ink">
+        <Link href="/changelog" className="inline-flex min-h-11 items-center underline hover:text-ink">
           Changelog
         </Link>
       </nav>

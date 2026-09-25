@@ -44,7 +44,7 @@ export default async function AuditPage() {
                   return (
                     <tr key={e.id}>
                       <td className="py-2 pr-4 whitespace-nowrap">{formatWhen(e.at)}</td>
-                      <td className="py-2 pr-4 font-mono text-xs">{e.actorSub}</td>
+                      <td className="py-2 pr-4 font-mono text-sm">{e.actorSub}</td>
                       <td className="py-2 pr-4">
                         {href ? (
                           <Link href={href} className="text-accent underline">
