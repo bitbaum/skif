@@ -106,3 +106,11 @@ body {
   --bp-danger: var(--danger);
   --bp-danger-bg: var(--danger-soft);
 }
+
+/* bip-kit's header links (back, roadmap, changelog, principles) are tap
+   targets: 44px tall like every other control. */
+.bp-development > header a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+}
