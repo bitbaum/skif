@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth, signIn } from "@/auth";
 import { Field, TextInput } from "@/components/fields";
 import { buttonClass, Card } from "@/components/ui";
+import { FeedbackWidget } from "@/components/feedback-widget";
 import { authConfig } from "@/config/auth";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -55,6 +56,7 @@ export default async function SignInPage() {
           </form>
         </Card>
       )}
+      <FeedbackWidget />
     </main>
   );
 }

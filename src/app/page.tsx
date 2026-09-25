@@ -1,4 +1,4 @@
-import Script from "next/script";
+import { FeedbackWidget } from "@/components/feedback-widget";
 import { buttonClass } from "@/components/ui";
 import Link from "next/link";
 
@@ -48,11 +48,7 @@ export default function Home() {
       </div>
       {/* The fleet's feedback widget runs on this public page only — never on
           pages that show preferences, bookings or incidents. */}
-      <Script
-        src="https://loki.orangecat.ch/widget.js"
-        data-fc-project="fcw_53c446f089ca3ec49f01217557ee0a52"
-        strategy="afterInteractive"
-      />
+      <FeedbackWidget />
     </main>
   );
 }

@@ -8,7 +8,8 @@ export const metadata: Metadata = {
 };
 
 // No third-party scripts here: this layout wraps every page, including ones
-// holding preferences, bookings and incidents. See src/app/page.tsx.
+// holding preferences, bookings and incidents. Public pages add the feedback
+// widget themselves (src/components/feedback-widget.tsx).
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
