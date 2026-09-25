@@ -71,5 +71,7 @@ the committed migrations applied.
 Required env on the box: `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`,
 `AUTH_TRUST_HOST=true`, `ORANGECAT_OAUTH_CLIENT_ID`,
 `ORANGECAT_OAUTH_CLIENT_SECRET`, `SKIF_OPS_SUBS`. The landing page needs none
-of them. Migrations in `drizzle/` are applied by the deploy pipeline's schema
+of them. Optional: `SKIF_OPS_EMAIL`, `RESEND_API_KEY` (and `RESEND_FROM`) turn on
+Operations alerts by email — new bookings to assign, incidents filed — which
+carry no personal or location data; `/api/health` reports `mail`. Migrations in `drizzle/` are applied by the deploy pipeline's schema
 step once the app has a database declared in its deploy manifest.
