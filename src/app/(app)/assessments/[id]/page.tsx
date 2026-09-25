@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ConstraintList } from "@/components/booking";
-import { FindingSection, PlanSummary } from "@/components/safety-plan";
+import { FindingsByFamily, PlanSummary } from "@/components/safety-plan";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { budgetLabel, exposureLabel, protectedLabel, threatLabel } from "@/config/assessment";
 import { environmentTypeLabel } from "@/config/environments";
@@ -52,11 +52,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ id:
           </p>
         </Card>
       </div>
-      <div className="space-y-6">
-        {plan.findings.map((f) => (
-          <FindingSection key={f.concern} finding={f} />
-        ))}
-      </div>
+      <FindingsByFamily plan={plan} wholeLife={assessment.environment.type === "PERSON"} />
     </>
   );
 }

@@ -4,8 +4,10 @@ import { redirect } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList } from "@/components/booking";
 import { Field, Select, TextInput, toOptions } from "@/components/fields";
-import { Badge, ButtonLink, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
-import { ENVIRONMENT_LIMITS, ENVIRONMENT_TYPES, environmentTypeLabel } from "@/config/environments";
+import { VerdictBadge } from "@/components/safety-plan";
+import { buttonClass, ButtonLink, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
+import { ENVIRONMENT_LIMITS, environmentTypeLabel, PLACE_TYPES } from "@/config/environments";
+import { HARM_FAMILIES } from "@/config/harm-families";
 import { AREAS } from "@/config/services";
 import { getDb } from "@/db/client";
 import { readPlan } from "@/domain/plan-versions";
@@ -13,7 +15,7 @@ import { listAssessments } from "@/server/assessments";
 import { listEnvironments } from "@/server/environments";
 import { getPreferences } from "@/server/preferences";
 import { requireViewer } from "@/server/viewer";
-import { createEnvironmentAction } from "./actions";
+import { assessLifeAction, createEnvironmentAction } from "./actions";
 
 export const metadata: Metadata = { title: "Safety assessment" };
 
@@ -24,19 +26,38 @@ export default async function AssessmentsPage() {
   const db = getDb();
   const prefs = await getPreferences(db, viewer.sub);
   if (!prefs) redirect("/preferences?next=/assessments");
-  const [past, places] = await Promise.all([listAssessments(db, viewer.sub), listEnvironments(db, viewer.sub)]);
+  const [past, environments] = await Promise.all([listAssessments(db, viewer.sub), listEnvironments(db, viewer.sub)]);
+  const places = environments.filter((e) => e.type !== "PERSON");
 
   return (
     <>
       <PageHeader
         title="Safety assessment"
-        lead="Pick a place or situation, tell us what worries you and what you already do. You get the most proportionate plan within your limits and budget — and if the answer is to buy nothing, we say so."
+        lead="Tell us what matters to you and what worries you, and what you already do. You get the most proportionate plan within your limits and budget — and if the answer is to buy nothing, we say so."
       />
+      <Card title="Your life as a whole" className="mb-6">
+        <p className="text-sm">
+          Start here. Safety is more than locks and doors: we look at every part of your life, and never ask you to list
+          who might attack you.
+        </p>
+        <ul className="mt-3 flex flex-wrap gap-2 text-sm text-muted" aria-label="What we look at">
+          {HARM_FAMILIES.map((f) => (
+            <li key={f.key} className="rounded-full border border-line px-3 py-1" title={f.description}>
+              {f.label}
+            </li>
+          ))}
+        </ul>
+        <form action={assessLifeAction} className="mt-4">
+          <button type="submit" className={buttonClass.primary}>
+            What matters to you, and what are you worried about?
+          </button>
+        </form>
+      </Card>
       <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
           <Card title="Your places">
             {places.length === 0 ? (
-              <Empty>Add a place or situation to assess.</Empty>
+              <Empty>Add a home, venue, route or occasion to assess it on its own.</Empty>
             ) : (
               <ul className="divide-y divide-line">
                 {places.map((p) => (
@@ -67,7 +88,7 @@ export default async function AssessmentsPage() {
                       {a.environment.name}
                     </Link>
                     <span className="text-muted">{formatWhen(a.createdAt)}</span>
-                    {readPlan(a.plan).nothingToBuy && <Badge tone="accent">Nothing to buy</Badge>}
+                    <VerdictBadge plan={readPlan(a.plan)} />
                   </li>
                 ))}
               </ul>
@@ -81,7 +102,7 @@ export default async function AssessmentsPage() {
                 <TextInput name="name" placeholder="My flat" maxLength={ENVIRONMENT_LIMITS.nameMax} required />
               </Field>
               <Field label="What is it?">
-                <Select name="type" options={ENVIRONMENT_TYPES} />
+                <Select name="type" options={PLACE_TYPES} />
               </Field>
               <Field label="Area" hint="A district at most — never an address.">
                 <Select name="area" options={AREA_OPTIONS} />

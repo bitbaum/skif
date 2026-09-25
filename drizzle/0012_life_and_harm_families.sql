@@ -1,0 +1,1 @@
+ALTER TYPE "public"."environment_type" ADD VALUE 'PERSON' BEFORE 'HOME';

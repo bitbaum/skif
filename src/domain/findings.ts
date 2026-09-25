@@ -31,6 +31,9 @@ export type FindingInput = {
   upcoming: string;
 };
 
+/** "A specific person…" reads as "a specific person…" mid-sentence; "I…" stays. */
+const midSentence = (label: string) => (/^I\b/.test(label) ? label : label.charAt(0).toLowerCase() + label.slice(1));
+
 /** Two independent exposures pointing at the same concern make it as
  * pressing as one the person named themselves. */
 const EXPOSURES_FOR_MEDIUM = 2;
@@ -61,8 +64,8 @@ export function deriveFindings(input: FindingInput): Finding[] {
     const because = [
       ...(concern === "UPCOMING_EVENT" ? [`You mentioned: “${input.upcoming.trim()}”`] : []),
       ...(e.stated && concern !== "UPCOMING_EVENT" ? ["You said this worries you"] : []),
-      ...e.threats.map((t) => `Known threat: ${t.toLowerCase()}`),
-      ...e.exposures.map((x) => `Exposure: ${x.toLowerCase()}`),
+      ...e.threats.map((t) => `Known threat: ${midSentence(t)}`),
+      ...e.exposures.map((x) => `Exposure: ${midSentence(x)}`),
     ];
     const priority: Priority =
       e.threats.length > 0 ? "HIGH" : e.stated || e.exposures.length >= EXPOSURES_FOR_MEDIUM ? "MEDIUM" : "LOW";

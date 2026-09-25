@@ -1,4 +1,6 @@
-import { budgetLabel, concernLabel, costLabel } from "@/config/assessment";
+import { budgetLabel, concernFamily, concernLabel, costLabel } from "@/config/assessment";
+import { HARM_FAMILIES } from "@/config/harm-families";
+import { providerLabel } from "@/config/providers";
 import { constraintLabel } from "@/config/constraints";
 import {
   autonomyLabel,
@@ -8,9 +10,11 @@ import {
   levelText,
   needsPurchase,
   privacyLabel,
+  providerOf,
+  type Intervention,
 } from "@/config/interventions";
 import { PRIORITY_LABELS } from "@/domain/findings";
-import type { FindingPlan, SafetyPlan } from "@/domain/safety-plan";
+import { planVerdict, type FindingPlan, type PlanVerdict, type SafetyPlan } from "@/domain/safety-plan";
 import { Badge, Card } from "./ui";
 
 export function InterventionCard({ id, why, emphasis = false }: { id: string; why?: string[]; emphasis?: boolean }) {
@@ -23,6 +27,7 @@ export function InterventionCard({ id, why, emphasis = false }: { id: string; wh
         <Badge>{kindLabel(i.kind)}</Badge>
         {!needsPurchase(i.kind) && <Badge tone="accent">Nothing to buy</Badge>}
       </p>
+      {providerOf(i) && <p className="mt-1 text-muted">From: {providerLabel(providerOf(i)!)}</p>}
       {why && why.length > 0 && (
         <ul className="mt-2 list-disc pl-5">
           {why.map((w) => (
@@ -53,16 +58,33 @@ const OUTCOME_NOTE: Record<Exclude<FindingPlan["outcome"], "RECOMMENDED">, strin
   NOTHING_FITS: "Nothing within your limits and budget addresses this. Options over budget are listed below.",
 };
 
-function KeyList({ title, keys, mark }: { title: string; keys: string[]; mark: string }) {
+/** Benefit never appears without what it costs in privacy and freedom
+ * (docs/DOCTRINE.md: the Safety Graph). */
+function ImpactLine({ i }: { i: Intervention }) {
+  return (
+    <span className="block text-muted">
+      Benefit {levelText(i.benefit).toLowerCase()} · Privacy: {privacyLabel(i.privacyImpact).toLowerCase()} · Freedom:{" "}
+      {autonomyLabel(i.autonomyImpact).toLowerCase()} · {costLabel(i.cost)}
+    </span>
+  );
+}
+
+function KeyList({ title, keys, mark, note }: { title: string; keys: string[]; mark: string; note?: (key: string) => string }) {
   if (keys.length === 0) return null;
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <h3 className="text-sm font-semibold">{title}</h3>
-      {keys.map((k) => (
-        <p key={k} className="text-sm text-muted">
-          {mark} {findIntervention(k)?.title}
-        </p>
-      ))}
+      {keys.map((k) => {
+        const i = findIntervention(k);
+        if (!i) return null;
+        return (
+          <p key={k} className="text-sm">
+            {mark} {i.title}
+            {note && <span className="text-muted"> — {note(k)}</span>}
+            <ImpactLine i={i} />
+          </p>
+        );
+      })}
     </div>
   );
 }
@@ -105,30 +127,75 @@ export function FindingSection({ finding }: { finding: FindingPlan }) {
           </details>
         )}
         <KeyList title="Over your budget" keys={finding.overBudget} mark="·" />
-        {finding.excluded.length > 0 && (
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold">Ruled out by your limits</h3>
-            {finding.excluded.map((e) => (
-              <p key={e.key} className="text-sm text-muted">
-                ✕ {findIntervention(e.key)?.title} — {e.constraints.map(constraintLabel).join(", ")}
-              </p>
-            ))}
-          </div>
-        )}
+        <KeyList
+          title="Ruled out by your limits"
+          keys={finding.excluded.map((e) => e.key)}
+          mark="✕"
+          note={(k) => (finding.excluded.find((e) => e.key === k)?.constraints ?? []).map(constraintLabel).join(", ")}
+        />
       </div>
     </Card>
   );
 }
 
+const VERDICT: Record<PlanVerdict, { badge: string; headline: string; detail: string }> = {
+  ADEQUATE: {
+    badge: "Adequate as it is",
+    headline: "Your current measures are adequate.",
+    detail: "Nothing you told us needs anything new. That is a real answer, not an empty one.",
+  },
+  NOTHING_TO_BUY: {
+    badge: "Nothing to buy",
+    headline: "You don't need to buy anything.",
+    detail: "Everything recommended below is something you can do, or already do, without spending money.",
+  },
+  SOME_SPENDING: {
+    badge: "Some steps cost money",
+    headline: "Some steps below cost money.",
+    detail: "Each one says why it beat the free options, and what it costs you in privacy and freedom.",
+  },
+};
+
+export function VerdictBadge({ plan }: { plan: SafetyPlan }) {
+  const verdict = planVerdict(plan);
+  return <Badge tone={verdict === "SOME_SPENDING" ? "neutral" : "accent"}>{VERDICT[verdict].badge}</Badge>;
+}
+
 export function PlanSummary({ plan }: { plan: SafetyPlan }) {
-  if (!plan.nothingToBuy) return null;
+  const verdict = VERDICT[planVerdict(plan)];
   return (
     <p className="mb-6 rounded-card border border-accent bg-accent-soft p-4 text-accent">
-      <strong>You don&apos;t need to buy anything.</strong>{" "}
-      {plan.findings.length === 0
-        ? "Nothing you told us about this place needs addressing. That's a fine answer."
-        : "Everything recommended below is something you can do, or already do, without spending money."}
+      <strong>{verdict.headline}</strong> {verdict.detail}
       {plan.budget && ` Budget you gave: ${budgetLabel(plan.budget).toLowerCase()}.`}
     </p>
+  );
+}
+
+/** Findings under their harm family, in the doctrine's order; for a whole-life
+ * assessment, the families nothing was raised in are named too. */
+export function FindingsByFamily({ plan, wholeLife }: { plan: SafetyPlan; wholeLife: boolean }) {
+  const groups = HARM_FAMILIES.map((f) => ({
+    ...f,
+    findings: plan.findings.filter((x) => concernFamily(x.concern) === f.key),
+  }));
+  const quiet = groups.filter((g) => g.findings.length === 0);
+  return (
+    <div className="space-y-8">
+      {groups
+        .filter((g) => g.findings.length > 0)
+        .map((g) => (
+          <section key={g.key} className="space-y-4">
+            <h2 className="text-xl font-semibold">{g.label}</h2>
+            {g.findings.map((f) => (
+              <FindingSection key={f.concern} finding={f} />
+            ))}
+          </section>
+        ))}
+      {wholeLife && quiet.length > 0 && (
+        <p className="text-sm text-muted">
+          Nothing raised about: {quiet.map((g) => g.label.toLowerCase()).join(", ")}.
+        </p>
+      )}
+    </div>
   );
 }

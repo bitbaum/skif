@@ -32,7 +32,7 @@ export const PERSONAL_INTERVENTIONS = [
     coveredBy: "ADDRESS_BLOCKED",
     tradeoffs: "Some paperwork; legitimate senders may find you harder to reach.",
     leans: { PRIVACY: -1, AUTONOMY: -1 },
-    environments: ["HOME"],
+    environments: ["PERSON", "HOME"],
   },
   {
     key: "ACCOMPANIED_HOME",
@@ -65,7 +65,7 @@ export const PERSONAL_INTERVENTIONS = [
   {
     key: "HOLDINGS_DISCRETION",
     title: "Keep holdings out of view: don't tie wallets or amounts to your name, in public or online",
-    addresses: ["ONLINE_EXPOSURE"],
+    addresses: ["ONLINE_EXPOSURE", "COERCION"],
     privacyImpact: 0,
     autonomyImpact: 1,
     cost: "FREE",
@@ -84,6 +84,7 @@ export const PERSONAL_INTERVENTIONS = [
     autonomyImpact: 0,
     cost: "MEDIUM",
     kind: "PROFESSIONAL_SERVICE",
+    provider: "PRIVACY_SPECIALIST",
     benefit: "HIGH",
     evidence: { confidence: "LOW", basis: "SKIF_JUDGMENT" },
     conflictsWith: [],
@@ -112,6 +113,7 @@ export const PERSONAL_INTERVENTIONS = [
     autonomyImpact: 0,
     cost: "LOW",
     kind: "PRODUCT",
+    provider: "RETAILER",
     benefit: "LOW",
     evidence: { confidence: "LOW", basis: "SKIF_JUDGMENT" },
     conflictsWith: [],

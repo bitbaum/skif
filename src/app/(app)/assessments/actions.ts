@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { assessmentInput, describeIssue, environmentInput, formFields } from "@/domain/inputs";
-import { createEnvironment } from "@/server/environments";
+import { createEnvironment, ensureLifeEnvironment } from "@/server/environments";
 import { createAssessment } from "@/server/assessments";
 import { requireViewer } from "@/server/viewer";
 
@@ -25,4 +25,10 @@ export async function createEnvironmentAction(_: ActionState, form: FormData): P
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const env = await createEnvironment(getDb(), viewer.sub, parsed.data);
   redirect(`/assessments/new?place=${env.id}`);
+}
+
+export async function assessLifeAction(): Promise<void> {
+  const viewer = await requireViewer();
+  const life = await ensureLifeEnvironment(getDb(), viewer.sub);
+  redirect(`/assessments/new?place=${life.id}`);
 }

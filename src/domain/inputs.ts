@@ -12,7 +12,7 @@ import {
   PROTECTED_KEYS,
   THREAT_KEYS,
 } from "@/config/assessment";
-import { ENVIRONMENT_LIMITS, ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
+import { ENVIRONMENT_LIMITS, PLACE_TYPE_KEYS } from "@/config/environments";
 import {
   AXIS_KEYS,
   AXIS_LEANS,
@@ -143,8 +143,9 @@ export const incidentReviewInput = z.object({
 export type IncidentReviewInput = z.infer<typeof incidentReviewInput>;
 export type ReportInput = z.infer<typeof reportInput>;
 
+/** A place someone adds; their life as a whole is created for them, once. */
 export const environmentInput = z.object({
-  type: z.enum(ENVIRONMENT_TYPE_KEYS),
+  type: z.enum(PLACE_TYPE_KEYS),
   name: required(ENVIRONMENT_LIMITS.nameMax),
   area: z.preprocess((v) => (v === "" ? null : v), z.enum(AREAS).nullable()),
 });
