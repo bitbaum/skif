@@ -9,10 +9,13 @@ import { fileComplaint } from "@/server/complaints";
 import { createBooking } from "@/server/bookings";
 import { rateBooking } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
+import { checkRateLimit } from "@/server/rate-limit";
 import { requireViewer } from "@/server/viewer";
 
 export async function createBookingAction(_: ActionState, form: FormData): Promise<ActionState> {
   const viewer = await requireViewer();
+  const limited = await checkRateLimit("BOOKING", viewer.sub);
+  if (!limited.success) return { error: limited.error };
   const parsed = bookingInput.safeParse(formFields(form, ["requiredCapabilities"]));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await createBooking(getDb(), viewer.sub, parsed.data);
@@ -48,6 +51,8 @@ export async function fileComplaintAction(_: ActionState, form: FormData): Promi
   if (!id.success) return { error: "Booking not found" };
   const parsed = complaintInput.safeParse(formFields(form));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
+  const limited = await checkRateLimit("COMPLAINT", viewer.sub);
+  if (!limited.success) return { error: limited.error };
   const result = await fileComplaint(getDb(), viewer.sub, id.data, parsed.data);
   if (!result.success) return { error: result.error };
   revalidatePath(`/bookings/${id.data}`);

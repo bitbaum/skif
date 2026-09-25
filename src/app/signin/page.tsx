@@ -5,23 +5,37 @@ import { Field, TextInput } from "@/components/fields";
 import { buttonClass, Card } from "@/components/ui";
 import { FeedbackWidget } from "@/components/feedback-widget";
 import { authConfig } from "@/config/auth";
+import { refusalMessage, retryAfter } from "@/server/rate-limit";
 
 export const metadata: Metadata = { title: "Sign in" };
 
 const AFTER_SIGN_IN = "/bookings";
 
-export default async function SignInPage() {
+/** Counts the attempt; a refusal comes back to this page with the reason. */
+async function limitSignIn(): Promise<void> {
+  const minutes = await retryAfter("SIGN_IN");
+  if (minutes > 0) redirect(`/signin?wait=${minutes}`);
+}
+
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ wait?: string }> }) {
+  const wait = Number.parseInt((await searchParams).wait ?? "", 10);
   const session = await auth();
   if (session?.user?.id) redirect(AFTER_SIGN_IN);
 
   return (
     <main className="mx-auto max-w-md px-6 py-16">
       <h1 className="mb-6 text-2xl font-semibold">Sign in to Skif</h1>
+      {wait > 0 && (
+        <p role="alert" className="mb-4 rounded-card border border-warn bg-warn-soft p-3 text-sm text-warn">
+          {refusalMessage(wait)}
+        </p>
+      )}
       <Card>
         {authConfig.orangecat ? (
           <form
             action={async () => {
               "use server";
+              await limitSignIn();
               await signIn("orangecat", { redirectTo: AFTER_SIGN_IN });
             }}
           >
@@ -44,6 +58,7 @@ export default async function SignInPage() {
             className="space-y-4"
             action={async (form: FormData) => {
               "use server";
+              await limitSignIn();
               await signIn("dev", { sub: form.get("sub"), redirectTo: AFTER_SIGN_IN });
             }}
           >
