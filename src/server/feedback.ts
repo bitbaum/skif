@@ -30,14 +30,15 @@ export async function fileReport(
   protectorId: string,
   bookingId: string,
   input: ReportInput,
-): Promise<Result> {
+): Promise<Result<{ id: string }>> {
   const [booking] = await db.select().from(bookings).where(eq(bookings.id, bookingId));
   if (!booking || booking.protectorId !== protectorId) return fail("Booking not found");
   if (!protectorHasAccepted(booking.status)) return fail("Accept the job before filing a report");
-  await db
+  const [row] = await db
     .insert(reports)
-    .values({ bookingId, protectorId, ...input, review: input.kind === "INCIDENT" ? "OPEN" : null });
-  return ok(undefined);
+    .values({ bookingId, protectorId, ...input, review: input.kind === "INCIDENT" ? "OPEN" : null })
+    .returning({ id: reports.id });
+  return ok({ id: row!.id });
 }
 
 /** Operations moves an incident along, recording who and why. */

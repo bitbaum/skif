@@ -2,13 +2,16 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { bookingInput, complaintInput, describeIssue, formFields, idInput, ratingInput } from "@/domain/inputs";
+import { bookingAlert } from "@/domain/ops-alerts";
 import { fileComplaint } from "@/server/complaints";
 import { createBooking } from "@/server/bookings";
 import { rateBooking } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
+import { alertOps } from "@/server/ops-alerts";
 import { checkRateLimit } from "@/server/rate-limit";
 import { requireViewer } from "@/server/viewer";
 
@@ -20,7 +23,10 @@ export async function createBookingAction(_: ActionState, form: FormData): Promi
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await createBooking(getDb(), viewer.sub, parsed.data);
   if (!result.success) return { error: result.error };
-  redirect(`/bookings/${result.data.id}`);
+  // After the response: the customer never waits on, or sees, the Ops email.
+  const booking = result.data;
+  after(() => alertOps(bookingAlert(booking)));
+  redirect(`/bookings/${booking.id}`);
 }
 
 export async function cancelBookingAction(_: ActionState, form: FormData): Promise<ActionState> {

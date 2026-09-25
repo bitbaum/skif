@@ -11,6 +11,9 @@ importers:
       '@bitbaum/design-tokens':
         specifier: 1.1.0
         version: 1.1.0
+      '@bitbaum/mail-kit':
+        specifier: ^0.1.1
+        version: 0.1.1
       bip-kit:
         specifier: ^0.3.1
         version: 0.3.1(react@19.3.0)
@@ -174,6 +177,10 @@ packages:
 
   '@bitbaum/design-tokens@1.1.0':
     resolution: {integrity: sha512-sDVplKP4jKe0WHCOnW7xk75RC46JsAYqUngcVlctyAs9f1TQqZqbYTfbmyYipYCOaCIHMflnzAneQTbqrQbtBw==}
+    engines: {node: '>=20'}
+
+  '@bitbaum/mail-kit@0.1.1':
+    resolution: {integrity: sha512-3JfaeuwkI+8TVGeSDrr8/esaWkv2d7UAcNg1Xu5HHu6k3cBzuSaLGhuzHp0KlAJgGa2QEQIqtE7W1+PosKFOjw==}
     engines: {node: '>=20'}
 
   '@drizzle-team/brocli@0.10.2':
@@ -3275,6 +3282,8 @@ snapshots:
       '@babel/helper-validator-identifier': 7.29.7
 
   '@bitbaum/design-tokens@1.1.0': {}
+
+  '@bitbaum/mail-kit@0.1.1': {}
 
   '@drizzle-team/brocli@0.10.2': {}
 

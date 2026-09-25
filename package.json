@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@bitbaum/design-tokens": "1.1.0",
+    "@bitbaum/mail-kit": "^0.1.1",
     "bip-kit": "^0.3.1",
     "drizzle-orm": "^0.45.3",
     "limitkit": "^0.2.0",
