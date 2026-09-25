@@ -16,12 +16,12 @@ export function CapabilityFields({ held }: { held: readonly ProtectorCapability[
   return (
     <fieldset className="space-y-5">
       <legend className="text-sm font-medium">Capabilities</legend>
-      <p className="text-xs text-muted">
+      <p className="text-sm text-muted">
         Declare only what you can show. Operations verifies each one; a changed entry needs verifying again.
       </p>
       {CAPABILITY_CATEGORIES.map((cat) => (
         <div key={cat.key} className="space-y-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{cat.label}</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">{cat.label}</h3>
           {CAPABILITIES.filter((c) => c.category === cat.key).map((c) => {
             const row = held.find((h) => h.capability === c.key);
             return (
@@ -71,7 +71,7 @@ export function CapabilityFields({ held }: { held: readonly ProtectorCapability[
                         aria-label={`${c.label} certificate`}
                         className={inputClass}
                       />
-                      <label className="text-xs text-muted sm:col-span-2">
+                      <label className="text-sm text-muted sm:col-span-2">
                         Valid until{" "}
                         <input
                           type="date"

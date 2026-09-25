@@ -34,19 +34,21 @@ export type Tone = keyof typeof TONES;
 
 export function Badge({ tone = "neutral", children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-medium ${TONES[tone]}`}>
+    <span className={`inline-block rounded-full border px-2 py-0.5 text-sm font-medium ${TONES[tone]}`}>
       {children}
     </span>
   );
 }
 
+/** Every control is at least 44px tall (min-h-11), the smallest reliable tap target. */
 export const buttonClass = {
   primary:
-    "inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-50",
+    "inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-50",
   secondary:
-    "inline-flex items-center justify-center rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium hover:bg-bg disabled:opacity-50",
+    "inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium hover:bg-bg disabled:opacity-50",
   danger:
-    "inline-flex items-center justify-center rounded-lg border border-danger px-4 py-2 text-sm font-medium text-danger hover:bg-danger-soft disabled:opacity-50",
+    "inline-flex min-h-11 items-center justify-center rounded-lg border border-danger px-4 py-2 text-sm font-medium text-danger hover:bg-danger-soft disabled:opacity-50",
+  link: "inline-flex min-h-11 items-center text-sm font-medium text-accent underline-offset-4 hover:underline",
 } as const;
 
 export function ButtonLink({ variant = "primary", ...props }: ComponentProps<typeof Link> & { variant?: keyof typeof buttonClass }) {

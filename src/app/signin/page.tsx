@@ -48,7 +48,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             Sign-in is not configured on this server yet (OrangeCat OIDC client missing).
           </p>
         )}
-        <p className="mt-4 text-xs text-muted">
+        <p className="mt-4 text-sm text-muted">
           Skif keeps no account of its own: your OrangeCat identity is all we store to know it&apos;s you.
         </p>
       </Card>

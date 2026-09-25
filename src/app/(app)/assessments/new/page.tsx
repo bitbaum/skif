@@ -51,7 +51,7 @@ export default async function NewAssessmentPage({ searchParams }: { searchParams
           <CheckboxGroup legend="Who or what are you protecting?" name="protecting" options={PROTECTED} selected={[]} inline />
           <fieldset className="space-y-4">
             <legend className="text-sm font-medium">What worries you?</legend>
-            <p className="text-xs text-muted">Tick none if nothing does.</p>
+            <p className="text-sm text-muted">Tick none if nothing does.</p>
             {families.map((f) => (
               <CheckboxGroup key={f.key} legend={f.label} hint={f.description} name="concerns" options={f.concerns} selected={[]} />
             ))}

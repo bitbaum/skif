@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img">
+  <defs>
+    <linearGradient id="n" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26364a"/><stop offset="1" stop-color="#4a5670"/>
+    </linearGradient>
+    <radialGradient id="g" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe0a8" stop-opacity="0.7"/><stop offset="1" stop-color="#ffe0a8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="480" height="320" fill="url(#n)"/>
+  <g fill="#1f2c3d">
+    <rect x="0" y="120" width="90" height="140"/><rect x="330" y="100" width="150" height="160"/>
+  </g>
+  <g fill="#f3c98b" opacity="0.9">
+    <rect x="20" y="140" width="10" height="14"/><rect x="55" y="170" width="10" height="14"/>
+    <rect x="350" y="125" width="10" height="14"/><rect x="400" y="160" width="10" height="14"/><rect x="445" y="130" width="10" height="14"/>
+  </g>
+  <!-- road and tram rails -->
+  <rect y="260" width="480" height="60" fill="#3b3d45"/>
+  <path d="M0 292 H480 M0 304 H480" stroke="#6f727c" stroke-width="2"/>
+  <!-- shelter -->
+  <ellipse cx="220" cy="150" rx="170" ry="120" fill="url(#g)"/>
+  <rect x="110" y="84" width="220" height="12" rx="3" fill="#2d3a36"/>
+  <rect x="118" y="96" width="6" height="164" fill="#2d3a36"/>
+  <rect x="316" y="96" width="6" height="164" fill="#2d3a36"/>
+  <rect x="124" y="96" width="192" height="120" fill="#a9c1d6" opacity="0.18"/>
+  <rect x="332" y="110" width="40" height="28" rx="4" fill="#2f5d50"/>
+  <text x="352" y="130" font-family="sans-serif" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <rect x="350" y="138" width="4" height="122" fill="#2d3a36"/>
+  <!-- bench -->
+  <rect x="150" y="222" width="150" height="8" rx="2" fill="#6b4f3a"/>
+  <rect x="160" y="230" width="6" height="30" fill="#2d3a36"/><rect x="284" y="230" width="6" height="30" fill="#2d3a36"/>
+  <!-- person waiting, seated, relaxed -->
+  <path d="M186 222 C184 186 190 166 206 164 C222 166 228 186 226 222 Z" fill="#6a5a8c"/>
+  <path d="M192 222 L180 226 L178 258 L188 258 L192 232 L214 232 Z" fill="#2b2d3a"/>
+  <circle cx="206" cy="148" r="15" fill="#e0b18f"/>
+  <path d="M190 148 C188 128 224 126 222 146 C216 138 200 136 190 148 Z" fill="#c9a56a"/>
+  <path d="M190 146 C188 160 190 168 194 172 L196 150 Z" fill="#c9a56a"/>
+  <!-- Protector seated beside, turned slightly towards them -->
+  <path d="M236 222 C234 184 240 164 258 162 C276 164 282 184 280 222 Z" fill="#3f6b5c"/>
+  <path d="M244 222 L232 226 L230 258 L240 258 L244 232 L268 232 Z" fill="#23282e"/>
+  <circle cx="256" cy="145" r="15" fill="#6e4a33"/>
+  <path d="M241 142 C240 126 272 124 271 142 C264 134 250 134 241 142 Z" fill="#1d1a19"/>
+  <path d="M238 186 C228 196 224 206 226 214" stroke="#3f6b5c" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- two cups, something ordinary -->
+  <rect x="160" y="210" width="10" height="12" rx="2" fill="#e8dcc6"/>
+</svg>

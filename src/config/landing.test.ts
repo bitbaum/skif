@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DOORS, FOOTER_LINKS, HEADER_LINKS, PROTECTOR_INVITE, SIGN_IN } from "./landing";
+import { DOORS, FOOTER_LINKS, HEADER_LINKS, HERO, PROTECTOR_INVITE, SIGN_IN } from "./landing";
 
 /** Every link on the landing page must reach a page that exists. */
 function pageExists(href: string): boolean {
@@ -27,5 +27,16 @@ describe("landing config", () => {
       SIGN_IN.href,
     ];
     for (const href of hrefs) expect(pageExists(href), href).toBe(true);
+  });
+});
+
+describe("landing art", () => {
+  const arts = [HERO.art, ...DOORS.map((d) => d.art)];
+
+  it("points at illustrations that exist, each described", () => {
+    for (const art of arts) {
+      expect(existsSync(join(__dirname, "..", "..", "public", art.src)), art.src).toBe(true);
+      expect(art.alt.length, art.src).toBeGreaterThan(20);
+    }
   });
 });

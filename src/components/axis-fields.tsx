@@ -6,7 +6,7 @@ export function AxisFields({ leans }: { leans: AxisLeans }) {
   return (
     <fieldset className="space-y-3">
       <legend className="text-sm font-medium">Where do you lean?</legend>
-      <p className="text-xs text-muted">
+      <p className="text-sm text-muted">
         These never rule anything out — your hard limits do that. They decide which acceptable option we suggest
         first.
       </p>

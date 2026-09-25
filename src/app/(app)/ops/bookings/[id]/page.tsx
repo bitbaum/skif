@@ -72,7 +72,7 @@ function Matches({ bookingId, match }: { bookingId: string; match: MatchResult }
                 </p>
                 {e.overridable && (
                   <details>
-                    <summary className="cursor-pointer text-xs text-muted underline">Assign anyway…</summary>
+                    <summary className="cursor-pointer text-sm text-muted underline">Assign anyway…</summary>
                     <ActionForm
                       action={assignAction}
                       submitLabel="Assign anyway"
