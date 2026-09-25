@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { isNarrowed } from "listkit";
 import { ActionForm } from "@/components/action-form";
-import { languagesText, StatusBadge } from "@/components/booking";
+import { languagesText } from "@/components/booking";
+import { QueueControls, QueuePager, QueueTable } from "@/components/ops-queue";
 import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
-import { listAllBookings } from "@/server/bookings";
+import { canonicalQueueHref, clearHref, pageHref, parseQueueQuery } from "@/domain/ops-queue";
+import { listOpsQueue } from "@/server/ops-queue";
 import { PROTECTOR_MOVES, PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { listOpenIncidents } from "@/server/feedback";
 import { listOpenComplaints } from "@/server/complaints";
@@ -19,21 +23,31 @@ import { protectorStatusAction } from "./actions";
 
 export const metadata: Metadata = { title: "Operations" };
 
-export default async function OpsPage() {
+type SearchParams = Record<string, string | string[] | undefined>;
+
+export default async function OpsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  // Authorisation first and unchanged: the queue's "no filter" is every
+  // booking, which is only ever Operations' to see.
   await requireOps();
+  const params = await searchParams;
+  const query = parseQueueQuery(params);
+  const canonical = canonicalQueueHref(params, query);
+  if (canonical) redirect(canonical);
+
   const db = getDb();
-  const [bookings, protectors, incidents, openComplaints] = await Promise.all([
-    listAllBookings(db),
+  const [queue, protectors, incidents, openComplaints] = await Promise.all([
+    listOpsQueue(db, query),
     listProtectors(db),
     listOpenIncidents(db),
     listOpenComplaints(db),
   ]);
-  const waiting = bookings.filter((b) => b.status === "REQUESTED").length;
+  if (queue.page.clamped) redirect(pageHref(params, query, queue.page.page));
+  const { waiting } = queue;
 
   return (
     <>
       <PageHeader title="Operations" lead={`${waiting} booking(s) waiting for a Protector.`}>
-        <Link href="/ops/audit" className="text-sm text-accent underline">
+        <Link href="/ops/audit" className="inline-flex min-h-11 items-center text-sm text-accent underline">
           Audit log
         </Link>
       </PageHeader>
@@ -70,40 +84,9 @@ export default async function OpsPage() {
         </Card>
       )}
       <Card title="Bookings" className="mb-6">
-        {bookings.length === 0 ? (
-          <Empty>No bookings yet.</Empty>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="text-muted">
-                <tr>
-                  <th className="py-2 pr-4 font-medium">When</th>
-                  <th className="py-2 pr-4 font-medium">Service</th>
-                  <th className="py-2 pr-4 font-medium">Area</th>
-                  <th className="py-2 pr-4 font-medium">Protector</th>
-                  <th className="py-2 pr-4 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-line">
-                {bookings.map((b) => (
-                  <tr key={b.id}>
-                    <td className="py-2 pr-4">
-                      <Link href={`/ops/bookings/${b.id}`} className="text-accent underline">
-                        {formatWhen(b.startsAt)}
-                      </Link>
-                    </td>
-                    <td className="py-2 pr-4">{serviceLabel(b.service)}</td>
-                    <td className="py-2 pr-4">{b.area}</td>
-                    <td className="py-2 pr-4">{b.protectorName ?? "—"}</td>
-                    <td className="py-2 pr-4">
-                      <StatusBadge status={b.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <QueueControls params={params} query={query} counts={queue.counts} />
+        <QueueTable rows={queue.rows} narrowed={isNarrowed(query)} clear={clearHref(params, query)} />
+        <QueuePager params={params} query={query} page={queue.page} />
       </Card>
       <Card title="Protectors">
         {protectors.length === 0 ? (
