@@ -12,6 +12,8 @@ export const RATE_LIMITS = {
   BOOKING: { limit: 10, windowMs: HOUR, per: "person" },
   COMPLAINT: { limit: 5, windowMs: HOUR, per: "person" },
   APPLY: { limit: 5, windowMs: 24 * HOUR, per: "person" },
+  // Each call spends a share of a free model tier the whole app lives on.
+  FORM_ASSIST: { limit: 20, windowMs: HOUR, per: "person" },
 } as const satisfies Record<string, { limit: number; windowMs: number; per: "ip" | "person" }>;
 
 export type RateLimited = keyof typeof RATE_LIMITS;

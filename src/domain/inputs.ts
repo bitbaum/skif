@@ -20,7 +20,7 @@ import {
   LANGUAGE_KEYS,
   PRESENCE_STYLE_KEYS,
 } from "@/config/constraints";
-import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS } from "@/config/capabilities";
+import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS, capabilityFieldName } from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN, type RatingDimension } from "@/config/ratings";
 import { COMPLAINT_CATEGORY_KEYS, COMPLAINT_TEXT_MAX } from "@/config/complaints";
@@ -182,7 +182,8 @@ export function formFields(
 }
 
 /** Form field name for one part of a capability row. */
-export const capabilityField = (key: string, part: keyof Omit<CapabilityDeclaration, "key">) => `cap.${key}.${part}`;
+export const capabilityField = (key: string, part: keyof Omit<CapabilityDeclaration, "key">) =>
+  capabilityFieldName(key, part);
 
 /** Collect the capability rows a form declared; a row with no level is not held. */
 export function capabilityFields(form: FormData): Record<string, unknown>[] {

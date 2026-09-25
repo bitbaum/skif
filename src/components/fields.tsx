@@ -46,6 +46,7 @@ function ChoiceGroup({
   selected,
   hint,
   inline = false,
+  onChange,
 }: {
   type: "checkbox" | "radio";
   legend: string;
@@ -55,7 +56,12 @@ function ChoiceGroup({
   hint?: string;
   /** Lay short options (a rating scale) out in a row. */
   inline?: boolean;
+  /** Controlled: `selected` is the live value and every change is reported.
+   * Without it the group is uncontrolled and `selected` is only the default. */
+  onChange?: (next: string[]) => void;
 }) {
+  const toggle = (key: string, on: boolean) =>
+    onChange?.(type === "radio" ? [key] : on ? [...selected, key] : selected.filter((k) => k !== key));
   return (
     <fieldset className="space-y-2">
       <legend className="text-sm font-medium">{legend}</legend>
@@ -67,7 +73,9 @@ function ChoiceGroup({
               type={type}
               name={name}
               value={o.key}
-              defaultChecked={selected.includes(o.key)}
+              {...(onChange
+                ? { checked: selected.includes(o.key), onChange: (e: React.ChangeEvent<HTMLInputElement>) => toggle(o.key, e.target.checked) }
+                : { defaultChecked: selected.includes(o.key) })}
               required={type === "radio"}
               className="mt-1 accent-accent"
             />

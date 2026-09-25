@@ -11,8 +11,23 @@ import { Badge } from "./ui";
 
 const inputClass = "w-full rounded-lg border border-line bg-surface px-2 py-1.5 text-sm";
 
+/** Live values for a row's level and evidence, when a parent owns the form's
+ * state (the AI-assisted application form). Certificate and expiry stay
+ * plain inputs either way: nothing but the person types those. */
+export type CapabilityBinding = {
+  value: (name: string) => string;
+  set: (name: string, value: string) => void;
+};
+
 /** One row per capability, grouped by category. A row left at "—" is not held. */
-export function CapabilityFields({ held }: { held: readonly ProtectorCapability[] }) {
+export function CapabilityFields({ held, bind }: { held: readonly ProtectorCapability[]; bind?: CapabilityBinding }) {
+  const bound = (name: string, fallback: string) =>
+    bind
+      ? {
+          value: bind.value(name),
+          onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => bind.set(name, e.target.value),
+        }
+      : { defaultValue: fallback };
   return (
     <fieldset className="space-y-5">
       <legend className="text-sm font-medium">Capabilities</legend>
@@ -41,7 +56,7 @@ export function CapabilityFields({ held }: { held: readonly ProtectorCapability[
                 </div>
                 <select
                   name={capabilityField(c.key, "level")}
-                  defaultValue={row?.level ?? ""}
+                  {...bound(capabilityField(c.key, "level"), row?.level ?? "")}
                   aria-label={`${c.label} level`}
                   className={inputClass}
                 >
@@ -55,7 +70,7 @@ export function CapabilityFields({ held }: { held: readonly ProtectorCapability[
                 <div className="grid gap-2 sm:grid-cols-2">
                   <input
                     name={capabilityField(c.key, "evidence")}
-                    defaultValue={row?.evidence ?? ""}
+                    {...bound(capabilityField(c.key, "evidence"), row?.evidence ?? "")}
                     maxLength={CAPABILITY_LIMITS.evidenceMax}
                     placeholder="Where you gained it"
                     aria-label={`${c.label} evidence`}

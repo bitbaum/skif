@@ -3,17 +3,16 @@ import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
 import { StatusBadge } from "@/components/booking";
 import { AvailabilityFields } from "@/components/availability-fields";
-import { CapabilityFields } from "@/components/capability-fields";
-import { CheckboxGroup, Field, TextArea, TextInput } from "@/components/fields";
+import { ProtectorApplication } from "@/components/protector-application";
 import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
-import { LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
-import { PROTECTOR_LIMITS } from "@/config/protectors";
-import { SERVICES, serviceLabel } from "@/config/services";
+import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { listAvailability } from "@/server/availability";
 import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
+import { applicationValues } from "@/domain/protector-form";
+import { aiStatus } from "@/server/ai";
 import { listProtectorJobs } from "@/server/bookings";
-import { listCapabilities, type Protector, type ProtectorCapability } from "@/server/protectors";
+import { listCapabilities, type Protector } from "@/server/protectors";
 import { requireViewer } from "@/server/viewer";
 import { applyAction, availabilityAction, protectorComplaintAction } from "./actions";
 import { ComplaintActions } from "@/components/complaints";
@@ -29,43 +28,6 @@ const STATUS_NOTE: Record<Protector["status"], string> = {
   SUSPENDED: "Your profile is paused. Contact Operations.",
   REJECTED: "Operations did not accept your application. You can update it and it will be reviewed again.",
 };
-
-function ApplicationForm({ protector, held }: { protector: Protector | null; held: ProtectorCapability[] }) {
-  return (
-    <ActionForm action={applyAction} submitLabel={protector ? "Save profile" : "Apply"}>
-      <Field label="Name shown to customers">
-        <TextInput
-          name="displayName"
-          maxLength={PROTECTOR_LIMITS.displayNameMax}
-          defaultValue={protector?.displayName}
-          required
-        />
-      </Field>
-      <Field label="About you" hint="How you keep situations calm. Customers read this.">
-        <TextArea name="bio" maxLength={PROTECTOR_LIMITS.bioMax} defaultValue={protector?.bio} required />
-      </Field>
-      <CheckboxGroup legend="Services you offer" name="services" options={SERVICES} selected={protector?.services ?? []} />
-      <CheckboxGroup legend="Languages" name="languages" options={LANGUAGES} selected={protector?.languages ?? []} />
-      <Field label="Years of relevant experience">
-        <TextInput
-          type="number"
-          name="experienceYears"
-          min={0}
-          max={PROTECTOR_LIMITS.experienceYearsMax}
-          defaultValue={protector?.experienceYears ?? 0}
-          required
-        />
-      </Field>
-      <CapabilityFields held={held} />
-      <CheckboxGroup
-        legend="Styles you work in"
-        name="presenceStyles"
-        options={PRESENCE_STYLES}
-        selected={protector?.presenceStyles ?? []}
-      />
-    </ActionForm>
-  );
-}
 
 export default async function ProtectorPage({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
   const viewer = await requireViewer();
@@ -145,7 +107,13 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
         </Card>
       )}
       <Card title={protector ? "Profile" : "Application"}>
-        <ApplicationForm protector={protector} held={held} />
+        <ProtectorApplication
+          action={applyAction}
+          submitLabel={protector ? "Save profile" : "Apply"}
+          initial={applicationValues(protector, held)}
+          held={held}
+          aiConfigured={aiStatus() === "configured"}
+        />
       </Card>
     </>
   );

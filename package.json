@@ -16,6 +16,7 @@
     "db:local": "pglite-server --db=.data/pglite --port=5433"
   },
   "dependencies": {
+    "@bitbaum/ai-kit": "^1.11.0",
     "@bitbaum/design-tokens": "1.1.0",
     "@bitbaum/mail-kit": "^0.1.1",
     "bip-kit": "^0.3.1",
