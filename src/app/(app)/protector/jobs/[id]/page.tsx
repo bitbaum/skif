@@ -11,6 +11,8 @@ import { idInput } from "@/domain/inputs";
 import { availableActions, protectorHasAccepted, type BookingAction } from "@/domain/lifecycle";
 import { getJobForProtector } from "@/server/bookings";
 import { requireApprovedProtector } from "@/server/viewer";
+import { BookingThread } from "@/components/booking-thread";
+import { findBookingFor, openThreadFor } from "@/server/booking-thread";
 import { protectorJobAction, reportAction } from "../../actions";
 
 export const metadata: Metadata = { title: "Job" };
@@ -32,8 +34,21 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   const viewer = await requireApprovedProtector();
   const id = idInput.safeParse((await params).id);
   if (!id.success) notFound();
-  const job = await getJobForProtector(getDb(), viewer.protector.id, id.data);
-  if (!job) notFound();
+  const db = getDb();
+  const job = await getJobForProtector(db, viewer.protector.id, id.data);
+  const booking = await findBookingFor(db, id.data);
+  const thread = booking ? await openThreadFor(db, booking, viewer, "PROTECTOR") : null;
+  if (!job) {
+    // Taken off this job: nothing of it remains theirs but the part of the
+    // thread they already saw (threadkit's leftAt).
+    if (!booking || !thread) notFound();
+    return (
+      <>
+        <PageHeader title={serviceLabel(booking.service)} lead={formatWhen(booking.startsAt)} />
+        <BookingThread bookingId={booking.id} seat="PROTECTOR" view={thread} />
+      </>
+    );
+  }
   const actions = availableActions(job.status, "PROTECTOR");
   const accepted = protectorHasAccepted(job.status);
 
@@ -76,6 +91,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
             })}
           </div>
         </Card>
+        {thread && <BookingThread bookingId={job.id} seat="PROTECTOR" view={thread} className="md:col-span-2" />}
         {job.whyMatched.length > 0 && (
           <Card title="Why you were matched">
             <ReasonList reasons={job.whyMatched} />

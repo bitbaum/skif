@@ -37,6 +37,41 @@
   color-scheme: dark;
 }
 
+/* The booking thread is @bitbaum/chatkit; its --ck-* variables are mapped onto
+   Skif's tokens here, once, so it follows Skif's colours and both themes.
+   Secondary text uses Skif's muted ink (AA), not the fleet's lighter grey. */
+:root {
+  --ck-bg: var(--surface);
+  --ck-fg: var(--ink);
+  --ck-fg-2: var(--muted);
+  --ck-fg-3: var(--muted);
+  --ck-muted: var(--muted);
+  --ck-line: var(--line);
+  --ck-line-2: var(--line);
+  --ck-accent: var(--accent);
+  --ck-on-accent: var(--accent-ink);
+  --ck-accent-soft: var(--accent-soft);
+  --ck-danger: var(--danger);
+  --ck-danger-soft: var(--danger-soft);
+  --ck-on-danger: var(--surface);
+  --ck-warning: var(--warn);
+  --ck-radius: var(--radius-surface);
+}
+
+/* chatkit's own sizes, lifted to Skif's floor: text 14px or more, every
+   control 44px (--ck-target) tall. `:root` outranks chatkit's stylesheet,
+   which loads after this one. */
+:root .ck-speaker,
+:root .ck-hint,
+:root .ck-note {
+  font-size: 0.875rem;
+}
+:root .ck-action,
+:root .ck-stop,
+:root .ck-input {
+  min-height: var(--ck-target);
+}
+
 @theme inline {
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
