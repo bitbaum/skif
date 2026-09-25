@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import { createTestDb } from "@/test/db";
 import { answers, application, approvedProtector, OPS, rating as ratingOf, report, tomorrow } from "@/test/fixtures";
+import { parseQueueQuery } from "@/domain/ops-queue";
 import { readPlan } from "@/domain/plan-versions";
 import { createAssessment } from "./assessments";
 import { createEnvironment } from "./environments";
@@ -10,11 +11,11 @@ import {
   getBookingForCustomer,
   getBookingForOps,
   getJobForProtector,
-  listAllBookings,
 } from "./bookings";
 import { fileReport, rateBooking } from "./feedback";
 import { applyBookingAction } from "./lifecycle";
 import { matchForBooking } from "./matching";
+import { listOpsQueue } from "./ops-queue";
 import { savePreferences } from "./preferences";
 import { applyAsProtector } from "./protectors";
 
@@ -118,7 +119,7 @@ describe("booking lifecycle, end to end against Postgres", () => {
     ]);
     expect(detail?.reports.map((r) => r.kind)).toEqual(["INCIDENT", "REPORT"]);
     expect(detail?.rating?.feltSafe).toBe(5);
-    expect((await listAllBookings(db))[0]?.protectorName).toBe("Mira");
+    expect((await listOpsQueue(db, parseQueueQuery({}))).rows[0]?.protectorName).toBe("Mira");
 
     // Another customer cannot read it.
     expect(await getBookingForCustomer(db, "someone-else", booking.id)).toBeNull();
