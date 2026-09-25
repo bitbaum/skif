@@ -74,18 +74,6 @@ export async function listProtectorJobs(db: Db, protectorId: string): Promise<Bo
     .orderBy(asc(bookings.startsAt));
 }
 
-export type OpsBookingRow = Booking & { protectorName: string | null };
-
-export async function listAllBookings(db: Db): Promise<OpsBookingRow[]> {
-  await expireOverdue(db);
-  const rows = await db
-    .select({ booking: bookings, protectorName: protectors.displayName })
-    .from(bookings)
-    .leftJoin(protectors, eq(bookings.protectorId, protectors.id))
-    .orderBy(desc(bookings.createdAt));
-  return rows.map((r) => ({ ...r.booking, protectorName: r.protectorName }));
-}
-
 export type BookingDetail = {
   booking: Booking;
   protector: Pick<typeof protectors.$inferSelect, "id" | "displayName" | "bio" | "languages"> | null;
