@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
 /* Design tokens. Components use the semantic classes these generate
-   (bg-surface, text-muted, border-line, bg-accent …), never raw colours. */
+   (bg-surface, text-muted, border-line, bg-accent …), never raw colours.
+
+   Faces, neutrals, radii and the display scale come from
+   @bitbaum/design-tokens (imported before this file in layout.tsx), so Skif
+   looks like the company's other products. The action colour and the status
+   colours stay Skif's own: a calm green, not the fleet's orange, because this
+   is a safety product; each pair below is checked to AA against its surface. */
 :root {
-  --bg: #f7f6f2;
-  --surface: #ffffff;
-  --ink: #1d2320;
-  --muted: #5d6661;
-  --line: #dcdcd4;
+  --bg: hsl(var(--surface-page));
+  --surface: hsl(var(--surface-base));
+  --ink: hsl(var(--text-primary));
+  --muted: hsl(var(--text-secondary));
+  --line: hsl(var(--border-default));
   --accent: #2f5d50;
   --accent-ink: #ffffff;
   --accent-soft: #e3ece8;
@@ -18,26 +24,22 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #131715;
-    --surface: #1b201e;
-    --ink: #e8ebe9;
-    --muted: #a1aaa5;
-    --line: #2f3633;
-    --accent: #7fb8a6;
-    --accent-ink: #0e1512;
-    --accent-soft: #22322d;
-    --warn: #e0b56a;
-    --warn-soft: #2f2719;
-    --danger: #ef9a9a;
-    --danger-soft: #3a2222;
-    color-scheme: dark;
-  }
+/* The shared ramp flips on `.dark` (set from the OS preference in layout.tsx);
+   Skif's own colours flip with it. */
+.dark {
+  --accent: #7fb8a6;
+  --accent-ink: #0e1512;
+  --accent-soft: #22322d;
+  --warn: #e0b56a;
+  --warn-soft: #2f2719;
+  --danger: #ef9a9a;
+  --danger-soft: #3a2222;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -50,7 +52,7 @@
   --color-warn-soft: var(--warn-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
-  --radius-card: 0.75rem;
+  --radius-card: var(--radius-surface);
 }
 
 body {
