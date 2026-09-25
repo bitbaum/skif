@@ -20,6 +20,7 @@ import { applyBookingAction } from "@/server/lifecycle";
 import { saveAvailability } from "@/server/availability";
 import { actOnComplaint } from "@/server/complaints";
 import { applyAsProtector } from "@/server/protectors";
+import { checkRateLimit } from "@/server/rate-limit";
 import { requireApprovedProtector, requireViewer } from "@/server/viewer";
 
 export async function applyAction(_: ActionState, form: FormData): Promise<ActionState> {
@@ -29,6 +30,8 @@ export async function applyAction(_: ActionState, form: FormData): Promise<Actio
     capabilities: capabilityFields(form),
   });
   if (!parsed.success) return { error: describeIssue(parsed.error) };
+  const limited = await checkRateLimit("APPLY", viewer.sub);
+  if (!limited.success) return { error: limited.error };
   await applyAsProtector(getDb(), viewer.sub, parsed.data);
   redirect("/protector?saved=1");
 }
