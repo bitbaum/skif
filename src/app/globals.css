@@ -59,3 +59,30 @@ body {
   background: var(--bg);
   color: var(--ink);
 }
+
+/* bip-kit's roadmap/changelog renderer (src/components/development-records.tsx)
+   themes itself through --bp-* variables. Set on its own root element, they
+   follow Skif's tokens — including the `.dark` flip — instead of bip-kit's
+   neutral defaults and its own OS-preference dark block. */
+.bp-development {
+  --bp-font-sans: var(--font-sans);
+  --bp-font-mono: var(--font-mono);
+  --bp-radius: var(--radius-surface);
+  --bp-radius-sm: var(--radius-control);
+  --bp-bg: var(--bg);
+  --bp-surface: var(--surface);
+  --bp-fg: var(--ink);
+  --bp-fg-muted: var(--muted);
+  --bp-fg-faint: var(--muted);
+  --bp-border: var(--line);
+  --bp-accent: var(--accent);
+  --bp-accent-contrast: var(--accent-ink);
+  --bp-note: var(--accent);
+  --bp-note-bg: var(--accent-soft);
+  --bp-tip: var(--accent);
+  --bp-tip-bg: var(--accent-soft);
+  --bp-warn: var(--warn);
+  --bp-warn-bg: var(--warn-soft);
+  --bp-danger: var(--danger);
+  --bp-danger-bg: var(--danger-soft);
+}
