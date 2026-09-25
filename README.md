@@ -73,5 +73,9 @@ Required env on the box: `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`,
 `ORANGECAT_OAUTH_CLIENT_SECRET`, `SKIF_OPS_SUBS`. The landing page needs none
 of them. Optional: `SKIF_OPS_EMAIL`, `RESEND_API_KEY` (and `RESEND_FROM`) turn on
 Operations alerts by email — new bookings to assign, incidents filed — which
-carry no personal or location data; `/api/health` reports `mail`. Migrations in `drizzle/` are applied by the deploy pipeline's schema
-step once the app has a database declared in its deploy manifest.
+carry no personal or location data; `/api/health` reports `mail`.
+Optional: `GROQ_API_KEY` (and/or `GEMINI_API_KEY`, `OPENROUTER_API_KEY`)
+switches on AI form assistance — only on the Protector application, where a
+Protector describes their own experience; it fills fields they review, and
+never touches location, incident or matching data (see `src/config/ai-forms.ts`).
+Migrations in `drizzle/` are applied by the deploy pipeline's schema step once the app has a database declared in its deploy manifest.

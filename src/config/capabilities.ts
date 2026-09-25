@@ -91,3 +91,8 @@ export function verificationLabel(key: string): string {
 }
 
 export const CAPABILITY_LIMITS = { evidenceMax: 300, certificationMax: 120 } as const;
+
+/** Form field name for one part of a capability row — shared by the form, the
+ * parser (src/domain/inputs.ts) and the AI form registry. */
+export const capabilityFieldName = (key: string, part: "level" | "certification" | "evidence" | "expiresOn") =>
+  `cap.${key}.${part}`;
