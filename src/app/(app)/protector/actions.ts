@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
@@ -15,8 +16,10 @@ import {
   protectorApplication,
   reportInput,
 } from "@/domain/inputs";
+import { reportAlert } from "@/domain/ops-alerts";
 import { fileReport } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
+import { alertOps } from "@/server/ops-alerts";
 import { saveAvailability } from "@/server/availability";
 import { actOnComplaint } from "@/server/complaints";
 import { applyAsProtector } from "@/server/protectors";
@@ -63,6 +66,9 @@ export async function reportAction(_: ActionState, form: FormData): Promise<Acti
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   const result = await fileReport(getDb(), viewer.protector.id, id.data, parsed.data);
   if (!result.success) return { error: result.error };
+  // After the response: filing the report never waits on, or fails with, the Ops email.
+  const report = { id: result.data.id, bookingId: id.data, kind: parsed.data.kind };
+  after(() => alertOps(reportAlert(report)));
   revalidatePath(`/protector/jobs/${id.data}`);
   return null;
 }
