@@ -53,6 +53,26 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --radius-card: var(--radius-surface);
+
+  /* Public pages: the shared display scale, measures and a raised band. */
+  --color-raised: hsl(var(--surface-raised));
+  --text-hero: var(--text-display-1);
+  --text-hero--line-height: 1.05;
+  --text-section: var(--text-display-2);
+  --text-section--line-height: 1.1;
+  --text-subsection: var(--text-display-3);
+  --text-subsection--line-height: 1.2;
+  --container-lede: var(--measure-lede);
+  --container-copy: var(--measure-copy);
+  --container-shell: var(--shell-max);
+}
+
+/* The shared vertical rhythm for full-bleed sections on public pages. */
+.section-y {
+  padding-block: var(--section-py);
+}
+.section-y-tight {
+  padding-block: var(--section-py-tight);
 }
 
 body {
