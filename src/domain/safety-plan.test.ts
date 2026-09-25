@@ -4,7 +4,7 @@ import { HARD_CONSTRAINT_KEYS } from "@/config/constraints";
 import { ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
 import { findIntervention, needsPurchase } from "@/config/interventions";
 import { deriveFindings } from "./findings";
-import { buildSafetyPlan, type PlanInput } from "./safety-plan";
+import { buildSafetyPlan, planVerdict, type PlanInput } from "./safety-plan";
 
 const input = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   environment: "HOME",
@@ -162,5 +162,42 @@ describe("buildSafetyPlan", () => {
     const f = only({ environment: "VENUE", concerns: ["GUEST_CONFLICT"] });
     expect(f.recommended?.key).toBe("HOUSE_RULES_BRIEFING");
     expect(f.alternatives.indexOf("VENUE_CCTV")).toBe(f.alternatives.length - 1);
+  });
+});
+
+describe("a whole life, not only a place (DOCTRINE)", () => {
+  it("turns a crypto founder's exposure into cyber, money and privacy findings", () => {
+    const p = plan({ environment: "PERSON", exposures: ["HOLDS_CRYPTO", "PUBLIC_PROFILE"], budget: "FREE" });
+    expect(p.findings.map((f) => f.concern).sort()).toEqual(
+      ["ACCOUNT_TAKEOVER", "BEING_FOUND", "COERCION", "CRYPTO_KEYS", "FRAUD", "ONLINE_EXPOSURE"].sort(),
+    );
+    expect(p.nothingToBuy).toBe(true);
+  });
+
+  it("recommends a specialist only when it is the most effective answer to a known threat", () => {
+    const f = plan({ environment: "PERSON", threats: ["ACCOUNT_BREACHED"] }).findings.find(
+      (x) => x.concern === "DEVICE_COMPROMISE",
+    )!;
+    expect(f.priority).toBe("HIGH");
+    expect(findIntervention(f.recommended!.key)!.benefit).toBe("HIGH");
+    const calm = plan({ environment: "PERSON", concerns: ["DEVICE_COMPROMISE"] }).findings[0]!;
+    expect(needsPurchase(findIntervention(calm.recommended!.key)!.kind)).toBe(false);
+  });
+});
+
+describe("planVerdict", () => {
+  it("calls a plan with nothing raised adequate", () => {
+    expect(planVerdict(plan({ environment: "PERSON" }))).toBe("ADEQUATE");
+  });
+
+  it("calls it adequate when what the person already does covers everything", () => {
+    expect(
+      planVerdict(plan({ environment: "PERSON", concerns: ["ACCOUNT_TAKEOVER"], measures: ["PASSWORD_MANAGER"] })),
+    ).toBe("ADEQUATE");
+  });
+
+  it("says nothing to buy when every step is free, and spending otherwise", () => {
+    expect(planVerdict(plan({ environment: "PERSON", concerns: ["FRAUD"] }))).toBe("NOTHING_TO_BUY");
+    expect(planVerdict(plan({ environment: "PERSON", threats: ["ACCOUNT_BREACHED"] }))).toBe("SOME_SPENDING");
   });
 });

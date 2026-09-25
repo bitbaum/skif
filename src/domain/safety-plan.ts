@@ -151,3 +151,16 @@ export function buildSafetyPlan(input: PlanInput): SafetyPlan {
     nothingToBuy,
   };
 }
+
+/**
+ * The plan's answer in one line (docs/DOCTRINE.md principle 3). ADEQUATE —
+ * nothing raised, or what the person already does covers all of it — is a
+ * first-class answer, not an empty state; NOTHING_TO_BUY means every step is
+ * something they do themselves.
+ */
+export type PlanVerdict = "ADEQUATE" | "NOTHING_TO_BUY" | "SOME_SPENDING";
+
+export function planVerdict(plan: Pick<SafetyPlan, "findings" | "nothingToBuy">): PlanVerdict {
+  if (plan.findings.every((f) => f.outcome === "COVERED")) return "ADEQUATE";
+  return plan.nothingToBuy ? "NOTHING_TO_BUY" : "SOME_SPENDING";
+}

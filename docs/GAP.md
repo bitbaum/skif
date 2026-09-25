@@ -7,6 +7,17 @@ users table, Drizzle, Vitest, manual payments) are not gaps.
 
 Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 
+## Doctrine — a whole life, not only physical safety (docs/DOCTRINE.md, which overrides SPEC.md)
+
+- [x] The Protected Life is not the root: every assessment is of a place, so a life's accounts, reputation, family and money have nowhere to go (DOCTRINE "The root entity"). — PR #20
+- [x] The assessment knows one harm family of ten: no intake questions for cyber, privacy, reputational, family, health, financial, environmental, institutional or resilience harm (DOCTRINE "Families of harm"). — PR #20
+- [x] No findings or interventions for those families, and no free step for each (DOCTRINE "What this means for the build"). — PR #20
+- [x] The catalogue has no non-physical providers: cyber, privacy cleanup, reputation response, preparedness, legal referral (DOCTRINE "The Safety Graph and the marketplace"). — PR #20
+- [x] "Your current measures are adequate" is not an answer the plan can give; only "nothing to buy" is (DOCTRINE principle 3). — PR #20
+- [x] Options over budget or ruled out by a limit show no benefit, privacy or freedom cost; every recommendation must (DOCTRINE "The Safety Graph"). — PR #20
+- [ ] Assessments are per person; households and organisations (Person → Home → … → City) come with P4.
+- [ ] Named, vetted providers and listings scored on evidence and fit are the marketplace (P2 below).
+
 ## P0 — Real commercial loop
 
 ### Customer booking

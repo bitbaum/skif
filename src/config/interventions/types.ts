@@ -1,6 +1,7 @@
 import type { ConcernKey, CostTier, MeasureKey } from "../assessment";
 import type { AxisKey, HardConstraintKey } from "../constraints";
 import type { EnvironmentType } from "../environments";
+import type { ProviderType } from "../providers";
 
 /**
  * SSOT for the intervention catalogue (SPEC §2, §12). Every intervention keeps
@@ -92,6 +93,9 @@ export type Intervention = {
   autonomyImpact: Impact;
   cost: CostTier;
   kind: InterventionKind;
+  /** Who delivers a product or professional service; a PROTECTOR kind is
+   * always a Skif Protector, and something you do yourself has no provider. */
+  provider?: ProviderType;
   benefit: Level;
   evidence: { confidence: Level; basis: EvidenceBasis };
   /** Hard constraints this intervention would break; any overlap with the
@@ -104,6 +108,10 @@ export type Intervention = {
   /** The kinds of place it makes sense for; everywhere when absent. */
   environments?: readonly EnvironmentType[];
 };
+
+export function providerOf(i: Intervention): ProviderType | undefined {
+  return i.kind === "PROTECTOR" ? "PROTECTOR" : i.provider;
+}
 
 export function suits(i: Intervention, env: EnvironmentType): boolean {
   return !i.environments || i.environments.includes(env);
