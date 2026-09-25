@@ -29,6 +29,7 @@ const ACTION_LABELS: Record<BookingAction | "REQUEST", string> = {
   ASSIGN: "Protector assigned by Operations",
   ACCEPT: "Accepted by the Protector",
   DECLINE: "Declined by the Protector — back to Operations",
+  UNASSIGN: "Protector taken off the job by Operations",
   CHECK_IN: "Protector checked in at the meeting point",
   START: "Started",
   COMPLETE: "Completed",

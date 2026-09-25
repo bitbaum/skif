@@ -2,7 +2,7 @@ import "server-only";
 import { bookingEvents, bookings } from "@/db/schema";
 import type { Db } from "@/db/types";
 import { and, eq, inArray, lte } from "drizzle-orm";
-import { EXPIRABLE_STATUSES, isOverdue, nextStatus, type ActorRole, type BookingAction } from "@/domain/lifecycle";
+import { EXPIRABLE_STATUSES, isOverdue, nextStatus, releasesProtector, type ActorRole, type BookingAction } from "@/domain/lifecycle";
 import type { MatchReason } from "@/domain/matching";
 import { fail, ok, type Result } from "@/domain/result";
 import { audit } from "./audit";
@@ -93,7 +93,7 @@ export async function applyBookingAction(
         await audit(tx, actor.sub, "OVERRIDE_MATCH", { type: "BOOKING", id: bookingId }, { protectorId });
       }
     }
-    if (request.action === "DECLINE") protectorId = null;
+    if (releasesProtector(request.action)) protectorId = null;
 
     await tx.update(bookings).set({ status: next.data, protectorId }).where(eq(bookings.id, bookingId));
     await tx.insert(bookingEvents).values({
@@ -103,7 +103,7 @@ export async function applyBookingAction(
       toStatus: next.data,
       actorRole: role,
       actorSub: actor.sub,
-      // Record whose job it was when a Protector declines, too.
+      // Record whose job it was when a Protector declines or is unassigned, too.
       protectorId: protectorId ?? booking.protectorId,
       matchReasons: assignment?.matchReasons ?? null,
       note: assignment?.note ?? null,

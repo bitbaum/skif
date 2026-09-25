@@ -44,6 +44,16 @@ export async function opsCancelAction(_: ActionState, form: FormData): Promise<A
   return null;
 }
 
+export async function unassignAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const bookingId = idInput.safeParse(form.get("bookingId"));
+  if (!bookingId.success) return { error: "Invalid request" };
+  const result = await applyBookingAction(getDb(), bookingId.data, { action: "UNASSIGN" }, { role: "OPS", sub: viewer.sub });
+  if (!result.success) return { error: result.error };
+  revalidatePath(`/ops/bookings/${bookingId.data}`);
+  return null;
+}
+
 const PROTECTOR_STATUS = z.enum(PROTECTOR_STATUSES);
 
 export async function protectorStatusAction(_: ActionState, form: FormData): Promise<ActionState> {

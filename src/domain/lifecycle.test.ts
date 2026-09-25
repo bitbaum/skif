@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableActions, isOverdue, nextStatus, protectorHasAccepted } from "./lifecycle";
+import { availableActions, isOverdue, nextStatus, protectorHasAccepted, releasesProtector } from "./lifecycle";
 
 describe("nextStatus", () => {
   it("walks the happy path", () => {
@@ -12,6 +12,16 @@ describe("nextStatus", () => {
 
   it("returns a declined job to Operations", () => {
     expect(nextStatus("ASSIGNED", "DECLINE", "PROTECTOR")).toEqual({ success: true, data: "REQUESTED" });
+  });
+
+  it("lets only Operations take a job off a Protector, and only before it starts", () => {
+    expect(nextStatus("ACCEPTED", "UNASSIGN", "OPS")).toEqual({ success: true, data: "REQUESTED" });
+    expect(nextStatus("CHECKED_IN", "UNASSIGN", "OPS")).toEqual({ success: true, data: "REQUESTED" });
+    expect(nextStatus("ACCEPTED", "UNASSIGN", "CUSTOMER").success).toBe(false);
+    expect(nextStatus("IN_PROGRESS", "UNASSIGN", "OPS").success).toBe(false);
+    expect(releasesProtector("UNASSIGN")).toBe(true);
+    expect(releasesProtector("DECLINE")).toBe(true);
+    expect(releasesProtector("CANCEL")).toBe(false);
   });
 
   it("refuses the wrong role", () => {

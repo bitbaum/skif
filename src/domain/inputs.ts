@@ -28,6 +28,7 @@ import { COMPLAINT_ACTIONS } from "./complaints";
 import { INCIDENT_SEVERITY_KEYS, OBSERVATION_KEYS, REVIEW_NOTE_MAX } from "@/config/reports";
 import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICE_KEYS } from "@/config/services";
 import { WEEKDAYS } from "@/config/availability";
+import { THREAD_LIMITS, THREAD_SEATS } from "@/config/thread";
 import { windowFromClock, type AvailabilityWindow } from "./availability";
 import { fail, ok, type Result } from "./result";
 import { clockToMinute, zonedLocalToDate } from "./time";
@@ -164,6 +165,13 @@ export const assessmentInput = z.object({
 export type AssessmentInput = z.infer<typeof assessmentInput>;
 
 export const idInput = z.uuid();
+
+export const threadMessageInput = z.object({
+  bookingId: idInput,
+  seat: z.enum(THREAD_SEATS),
+  body: z.string().trim().min(1, "Write a message first").max(THREAD_LIMITS.messageMax),
+});
+export type ThreadMessageInput = z.infer<typeof threadMessageInput>;
 
 /** Turn FormData into a plain object; `arrays` names the multi-value fields
  * (checkbox groups) and `booleans` the single checkboxes. */

@@ -22,6 +22,7 @@ export const BOOKING_ACTIONS = [
   "ASSIGN",
   "ACCEPT",
   "DECLINE",
+  "UNASSIGN",
   "CHECK_IN",
   "START",
   "COMPLETE",
@@ -41,6 +42,9 @@ const RULES: Record<BookingAction, Rule> = {
   ACCEPT: { from: ["ASSIGNED"], to: "ACCEPTED", by: ["PROTECTOR"] },
   // Declining hands the job back to Operations to assign someone else.
   DECLINE: { from: ["ASSIGNED"], to: "REQUESTED", by: ["PROTECTOR"] },
+  // Operations takes the job off a Protector (unwell, a conduct concern) before
+  // it starts, and hands it back to be assigned again.
+  UNASSIGN: { from: ["ASSIGNED", "ACCEPTED", "CHECKED_IN"], to: "REQUESTED", by: ["OPS"] },
   // Arrived at the meeting point; the assignment itself starts separately.
   CHECK_IN: { from: ["ACCEPTED"], to: "CHECKED_IN", by: ["PROTECTOR"] },
   START: { from: ["CHECKED_IN"], to: "IN_PROGRESS", by: ["PROTECTOR"] },
@@ -83,6 +87,22 @@ export function availableActions(current: BookingStatus, role: ActorRole): Booki
 
 /** Statuses in which a Protector is committed to the booking's time slot. */
 export const ACTIVE_STATUSES: readonly BookingStatus[] = ["ASSIGNED", "ACCEPTED", "CHECKED_IN", "IN_PROGRESS"];
+
+/** Actions after which the booking no longer has the Protector it had. Their
+ * event records whose job it was (`protectorId`), so who left, and when, can
+ * be read back from the lifecycle alone. */
+const RELEASING_ACTIONS: readonly BookingAction[] = ["DECLINE", "UNASSIGN"];
+
+export function releasesProtector(action: string): boolean {
+  return (RELEASING_ACTIONS as readonly string[]).includes(action);
+}
+
+/** Nothing happens to a booking in these statuses any more. */
+const TERMINAL_STATUSES: readonly BookingStatus[] = ["COMPLETED", "CANCELLED", "EXPIRED"];
+
+export function isTerminal(status: BookingStatus): boolean {
+  return TERMINAL_STATUSES.includes(status);
+}
 
 /** Statuses in which the assigned Protector has accepted the job: only then
  * do they see the meeting point and notes, and only then can they report. */

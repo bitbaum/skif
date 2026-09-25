@@ -32,7 +32,9 @@ import { getPreferences } from "@/server/preferences";
 import { audit } from "@/server/audit";
 import { requireOps } from "@/server/viewer";
 import { IncidentReview } from "@/components/incident-review";
-import { assignAction, opsCancelAction, reviewIncidentAction } from "../../actions";
+import { BookingThread } from "@/components/booking-thread";
+import { openThreadFor } from "@/server/booking-thread";
+import { assignAction, opsCancelAction, reviewIncidentAction, unassignAction } from "../../actions";
 
 export const metadata: Metadata = { title: "Booking · Operations" };
 
@@ -106,11 +108,13 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
   const { booking, protector, events, rating, reports } = detail;
   const canAssign = availableActions(booking.status, "OPS").includes("ASSIGN");
   const canCancel = availableActions(booking.status, "OPS").includes("CANCEL");
-  const [match, prefs, profile, bookingComplaints] = await Promise.all([
+  const canUnassign = availableActions(booking.status, "OPS").includes("UNASSIGN");
+  const [match, prefs, profile, bookingComplaints, thread] = await Promise.all([
     canAssign ? matchForBooking(db, booking) : null,
     getPreferences(db, booking.customerSub),
     getCustomerProfile(db, booking.customerSub),
     listComplaintsForBooking(db, booking.id),
+    openThreadFor(db, booking, viewer, "OPS"),
   ]);
 
   return (
@@ -142,17 +146,28 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
               ["Payment", PAYMENT_LABELS[booking.paymentStatus]],
             ]}
           />
-          {canCancel && (
-            <div className="mt-5">
+          <div className="mt-5 flex flex-wrap gap-3">
+            {canUnassign && (
+              <ActionForm
+                action={unassignAction}
+                submitLabel="Take the Protector off this job"
+                variant="secondary"
+                hidden={{ bookingId: booking.id }}
+                className=""
+              />
+            )}
+            {canCancel && (
               <ActionForm
                 action={opsCancelAction}
                 submitLabel="Cancel booking"
                 variant="danger"
                 hidden={{ bookingId: booking.id }}
+                className=""
               />
-            </div>
-          )}
+            )}
+          </div>
         </Card>
+        {thread && <BookingThread bookingId={booking.id} seat="OPS" view={thread} className="md:col-span-2" />}
         <Card title="Lifecycle">
           <Timeline events={events} showNotes />
         </Card>

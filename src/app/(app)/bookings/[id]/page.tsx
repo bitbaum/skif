@@ -15,6 +15,8 @@ import { requireViewer } from "@/server/viewer";
 import { cancelBookingAction, fileComplaintAction, rateBookingAction } from "../actions";
 import { COMPLAINT_CATEGORIES, COMPLAINT_TEXT_MAX, complaintCategoryLabel } from "@/config/complaints";
 import { listCustomerComplaints } from "@/server/complaints";
+import { BookingThread } from "@/components/booking-thread";
+import { openThreadFor } from "@/server/booking-thread";
 
 export const metadata: Metadata = { title: "Booking" };
 
@@ -30,6 +32,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
   if (!detail) notFound();
   const myComplaints = await listCustomerComplaints(db, viewer.sub, id.data);
   const { booking, protector, events, rating, reports } = detail;
+  const thread = await openThreadFor(db, booking, viewer, "CUSTOMER");
   const canCancel = availableActions(booking.status, "CUSTOMER").includes("CANCEL");
 
   return (
@@ -72,6 +75,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
             <p className="text-sm text-muted">Operations is choosing someone for you.</p>
           )}
         </Card>
+        {thread && <BookingThread bookingId={booking.id} seat="CUSTOMER" view={thread} className="md:col-span-2" />}
         <Card title="What happened">
           <Timeline events={events} />
         </Card>
