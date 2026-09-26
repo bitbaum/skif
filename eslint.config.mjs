@@ -9,7 +9,9 @@ const config = [
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     },
   },
-  { ignores: [".next/**", "node_modules/**", "drizzle/**", "next-env.d.ts"] },
+  // .claude/ holds agent worktrees (whole checkouts with their own node_modules
+  // and .next); .data/ is local database state. Neither is source.
+  { ignores: [".next/**", "node_modules/**", "drizzle/**", "next-env.d.ts", ".claude/**", ".data/**"] },
 ];
 
 export default config;

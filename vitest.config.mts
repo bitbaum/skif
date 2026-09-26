@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
@@ -12,6 +12,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // .claude/ holds agent worktrees: whole checkouts whose tests resolve `@/`
+    // against this tree, so they fail or double-count. Not this suite.
+    exclude: [...configDefaults.exclude, ".claude/**"],
     testTimeout: 30_000,
     // Setup hooks boot an in-process Postgres (PGlite, WASM) and apply the
     // migration once per test. That is seconds when the machine is quiet and
