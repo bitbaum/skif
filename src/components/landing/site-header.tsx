@@ -6,7 +6,7 @@ export function SiteHeader() {
   return (
     <header className="border-b border-line bg-surface">
       <nav aria-label="Main" className="section-shell flex items-center gap-4 py-3">
-        <Link href="/" className="wordmark inline-flex min-h-11 items-center text-lg text-ink">
+        <Link href="/" className="wordmark inline-flex min-h-11 min-w-11 items-center text-lg text-ink">
           Skif
         </Link>
         <span className="rounded-full border border-line px-2 py-0.5 text-sm font-medium text-muted">{STAGE}</span>
