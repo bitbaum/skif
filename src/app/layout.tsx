@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@bitbaum/design-tokens/tokens.css";
+import "@bitbaum/accountkit/styles.css";
 import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 
