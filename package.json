@@ -16,6 +16,7 @@
     "db:local": "pglite-server --db=.data/pglite --port=5433"
   },
   "dependencies": {
+    "@bitbaum/accountkit": "github:bitbaum/accountkit#v0.2.0",
     "@bitbaum/ai-kit": "^1.11.0",
     "@bitbaum/chatkit": "github:bitbaum/chatkit#v0.1.0",
     "@bitbaum/design-tokens": "1.1.0",

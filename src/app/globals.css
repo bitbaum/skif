@@ -37,6 +37,14 @@
   color-scheme: dark;
 }
 
+/* The sign-in error screen is @bitbaum/accountkit's SignInError; faces and
+   neutrals already come from the shared tokens, the action is Skif's green. */
+:root {
+  --acct-action: var(--accent);
+  --acct-on-action: var(--accent-ink);
+  --acct-focus: var(--accent);
+}
+
 /* The booking thread is @bitbaum/chatkit; its --ck-* variables are mapped onto
    Skif's tokens here, once, so it follows Skif's colours and both themes.
    Secondary text uses Skif's muted ink (AA), not the fleet's lighter grey. */
