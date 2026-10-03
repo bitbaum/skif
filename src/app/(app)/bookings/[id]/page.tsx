@@ -8,13 +8,14 @@ import { RATING_COMMENT_MAX, RATING_DIMENSIONS, RATING_SCALE } from "@/config/ra
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
-import { availableActions } from "@/domain/lifecycle";
+import { availableActions, isTerminal } from "@/domain/lifecycle";
 import { PAYMENT_LABELS } from "@/domain/payment";
 import { getBookingForCustomer } from "@/server/bookings";
 import { requireViewer } from "@/server/viewer";
 import { cancelBookingAction, fileComplaintAction, rateBookingAction } from "../actions";
 import { COMPLAINT_CATEGORIES, COMPLAINT_TEXT_MAX, complaintCategoryLabel } from "@/config/complaints";
 import { listCustomerComplaints } from "@/server/complaints";
+import { EmergencyNotice } from "@/components/emergency-notice";
 import { BookingThread } from "@/components/booking-thread";
 import { openThreadFor } from "@/server/booking-thread";
 
@@ -41,6 +42,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
         <StatusBadge status={booking.status} />
       </PageHeader>
       <div className="grid gap-6 md:grid-cols-2">
+        {!isTerminal(booking.status) && <EmergencyNotice className="md:col-span-2" />}
         <Card title="Details">
           <DefinitionList
             items={[

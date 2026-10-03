@@ -84,8 +84,8 @@ Status markers: `[ ]` open · `[x]` closed (with the PR that closed it).
 - [ ] No advanced recommendation engine, robotics or community/municipal modules (§31, §40).
 
 ## Outside §31
-- [ ] Customer ↔ Operations / Protector messaging (§5).
-- [ ] Emergency UX copy that states Skif is not an emergency service (117 / 144 / 112) (§24).
+- [x] Customer ↔ Operations / Protector messaging (§5). — PR #31
+- [x] Emergency UX copy that states Skif is not an emergency service (117 / 144 / 112) (§24). — PR #36
 - [ ] Nothing states that physical security services may need cantonal authorisation (§38).
 - [ ] Data retention/deletion policies not modelled (§14).
 - [ ] No development seed data (§33).
