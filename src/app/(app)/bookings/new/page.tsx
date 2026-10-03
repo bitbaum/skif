@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
+import { EmergencyNotice } from "@/components/emergency-notice";
 import { ConstraintList, languagesText, presenceText } from "@/components/booking";
 import { CheckboxGroup, Field, RadioGroup, Select, TextArea, TextInput, toOptions } from "@/components/fields";
 import { Card, DefinitionList, PageHeader } from "@/components/ui";
@@ -85,6 +86,7 @@ export default async function NewBookingPage() {
           </p>
           <p className="mt-4 text-sm text-muted">{PAYMENT_LABELS.PAYMENT_PENDING}.</p>
         </Card>
+        <EmergencyNotice className="md:col-span-2" />
       </div>
     </>
   );

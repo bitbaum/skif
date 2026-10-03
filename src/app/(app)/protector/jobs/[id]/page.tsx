@@ -8,9 +8,10 @@ import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
 import { BOOKING_LIMITS, serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
-import { availableActions, protectorHasAccepted, type BookingAction } from "@/domain/lifecycle";
+import { availableActions, isTerminal, protectorHasAccepted, type BookingAction } from "@/domain/lifecycle";
 import { getJobForProtector } from "@/server/bookings";
 import { requireApprovedProtector } from "@/server/viewer";
+import { EmergencyNotice } from "@/components/emergency-notice";
 import { BookingThread } from "@/components/booking-thread";
 import { findBookingFor, openThreadFor } from "@/server/booking-thread";
 import { protectorJobAction, reportAction } from "../../actions";
@@ -58,6 +59,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         <StatusBadge status={job.status} />
       </PageHeader>
       <div className="grid gap-6 md:grid-cols-2">
+        {!isTerminal(job.status) && <EmergencyNotice className="md:col-span-2" />}
         <Card title="What the job needs">
           <DefinitionList
             items={[

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { emergencyNumbersText } from "@/config/emergency";
 import { notFound, redirect } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { CheckboxGroup, Field, RadioGroup, TextInput } from "@/components/fields";
@@ -65,7 +66,7 @@ export default async function NewAssessmentPage({ searchParams }: { searchParams
           />
           <CheckboxGroup
             legend="Is there a known threat?"
-            hint="This makes the related steps a high priority. If you are in danger now, call 117 (police) or 144 (ambulance) — Skif is not an emergency service."
+            hint={`This makes the related steps a high priority. If you are in danger now, call ${emergencyNumbersText()} — Skif is not an emergency service.`}
             name="threats"
             options={raisingFor(THREATS, environment.type)}
             selected={[]}
