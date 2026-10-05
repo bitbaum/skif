@@ -10,13 +10,11 @@ import {
 } from "@/config/capabilities";
 import { capabilityField } from "@/domain/inputs";
 import type { ProtectorCapability } from "@/server/protectors";
-import { Badge } from "./ui";
+import { Badge, segmentClass } from "./ui";
 
 const inputClass = "min-h-11 w-full rounded-lg border border-line bg-surface px-3 py-2 text-base";
 const chipClass =
   "inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 text-sm has-checked:border-accent has-checked:bg-accent-soft has-checked:font-medium has-checked:text-accent has-focus-visible:ring-2 has-focus-visible:ring-accent";
-const levelClass =
-  "flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-2 text-sm has-checked:border-accent has-checked:bg-accent-soft has-checked:font-medium has-checked:text-accent has-focus-visible:ring-2 has-focus-visible:ring-accent";
 
 /** The form's live values, owned by the parent (the AI-assisted application),
  * so a level the assistant fills in opens its row here too. */
@@ -90,7 +88,7 @@ export function CapabilityFields({ held, bind }: { held: readonly ProtectorCapab
                     </legend>
                     <div role="radiogroup" aria-label={`${c.label} level`} className="grid grid-cols-3 gap-2">
                       {CAPABILITY_LEVELS.map((l) => (
-                        <label key={l.key} className={levelClass}>
+                        <label key={l.key} className={segmentClass}>
                           <input
                             type="radio"
                             name={levelName}

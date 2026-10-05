@@ -46,6 +46,7 @@ function ChoiceGroup({
   selected,
   hint,
   inline = false,
+  describeChosen = false,
   onChange,
 }: {
   type: "checkbox" | "radio";
@@ -56,6 +57,9 @@ function ChoiceGroup({
   hint?: string;
   /** Lay short options (a rating scale) out in a row. */
   inline?: boolean;
+  /** Show an option's description only once it is chosen, so a long list of
+   * described options stays one line each until the person picks. */
+  describeChosen?: boolean;
   /** Controlled: `selected` is the live value and every change is reported.
    * Without it the group is uncontrolled and `selected` is only the default. */
   onChange?: (next: string[]) => void;
@@ -68,7 +72,10 @@ function ChoiceGroup({
       {hint && <p className="text-sm text-muted">{hint}</p>}
       <div className={inline ? "flex flex-wrap gap-2" : "space-y-2"}>
         {options.map((o) => (
-          <label key={o.key} className="flex items-start gap-3 rounded-lg border border-line bg-surface p-3">
+          <label
+            key={o.key}
+            className="group flex items-start gap-3 rounded-lg border border-line bg-surface p-3 has-checked:border-accent"
+          >
             <input
               type={type}
               name={name}
@@ -81,7 +88,11 @@ function ChoiceGroup({
             />
             <span>
               <span className="block text-sm">{o.label}</span>
-              {o.description && <span className="block text-sm text-muted">{o.description}</span>}
+              {o.description && (
+                <span className={`text-sm text-muted ${describeChosen ? "hidden group-has-checked:block" : "block"}`}>
+                  {o.description}
+                </span>
+              )}
             </span>
           </label>
         ))}

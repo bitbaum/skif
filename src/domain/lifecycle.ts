@@ -104,6 +104,18 @@ export function isTerminal(status: BookingStatus): boolean {
   return TERMINAL_STATUSES.includes(status);
 }
 
+/** A person's bookings as they think of them: what is still coming (or
+ * happening now), soonest first, and what is over, latest first. */
+export function comingAndPast<T extends { status: BookingStatus; startsAt: Date }>(
+  bookings: readonly T[],
+): { coming: T[]; past: T[] } {
+  const by = (dir: 1 | -1) => (a: T, b: T) => dir * (a.startsAt.getTime() - b.startsAt.getTime());
+  return {
+    coming: bookings.filter((b) => !isTerminal(b.status)).sort(by(1)),
+    past: bookings.filter((b) => isTerminal(b.status)).sort(by(-1)),
+  };
+}
+
 /** Statuses in which the assigned Protector has accepted the job: only then
  * do they see the meeting point and notes, and only then can they report. */
 const ACCEPTED_STATUSES: readonly BookingStatus[] = ["ACCEPTED", "CHECKED_IN", "IN_PROGRESS", "COMPLETED"];

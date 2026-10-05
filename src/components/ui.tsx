@@ -50,6 +50,11 @@ export function Badge({ tone = "neutral", children }: { tone?: Tone; children: R
   );
 }
 
+/** One option of a segmented choice: a 44px label around a visually hidden
+ * radio, marked when checked and ringed when focused from the keyboard. */
+export const segmentClass =
+  "flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-2 py-2 text-center text-sm has-checked:border-accent has-checked:bg-accent-soft has-checked:font-medium has-checked:text-accent has-focus-visible:ring-2 has-focus-visible:ring-accent";
+
 /** Every control is at least 44px tall (min-h-11), the smallest reliable tap target. */
 export const buttonClass = {
   primary:
