@@ -55,3 +55,12 @@ export function AvailabilitySummary({ windows }: { windows: readonly Availabilit
     </ul>
   );
 }
+
+/** "Mon 20:00–04:00 · Fri 18:00–02:00" — one line, for a folded preview. */
+export function availabilityLine(windows: readonly AvailabilityRow[]): string {
+  if (windows.length === 0) return "Not set — you can't be matched to jobs yet";
+  const hours = (w: AvailabilityRow) => `${minuteToClock(w.startMinute)}–${minuteToClock(w.startMinute + w.durationMinutes)}`;
+  const first = hours(windows[0]);
+  if (windows.length === WEEKDAYS.length && windows.every((w) => hours(w) === first)) return `Every day ${first}`;
+  return windows.map((w) => `${WEEKDAYS.find((d) => d.day === w.weekday)?.short ?? ""} ${hours(w)}`).join(" · ");
+}

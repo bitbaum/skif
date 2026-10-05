@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ActionForm } from "@/components/action-form";
-import { StatusBadge } from "@/components/booking";
-import { AvailabilityFields } from "@/components/availability-fields";
+import { availabilityLine, AvailabilityFields } from "@/components/availability-fields";
+import { BookingSections } from "@/components/booking-list";
 import { ProtectorApplication } from "@/components/protector-application";
-import { Badge, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
-import { serviceLabel } from "@/config/services";
+import { Badge, Card, Empty, FoldCard, PageHeader } from "@/components/ui";
 import { getDb } from "@/db/client";
 import { listAvailability } from "@/server/availability";
 import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
@@ -38,6 +37,34 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
   const held = protector ? await listCapabilities(db, protector.id) : [];
   const windows = protector ? await listAvailability(db, protector.id) : [];
   const asked = protector?.status === "APPROVED" ? await listComplaintsForProtector(db, protector.id) : [];
+  // A question waiting on the Protector's answer is the first thing to do.
+  const awaitingYou = asked.some((c) => complaintActions(c.status, "PROTECTOR").length > 0);
+  const questions =
+    asked.length > 0 ? (
+      <Card title="Questions from Operations" className="mb-6">
+        <ul className="space-y-5">
+          {asked.map((c) => (
+            <li key={c.id} className="space-y-2 text-sm">
+              <p className="flex flex-wrap items-center gap-2">
+                <strong>{complaintCategoryLabel(c.category)}</strong>
+                <Badge tone={c.status === "UPHELD" ? "danger" : "warn"}>{COMPLAINT_STATUS_LABELS[c.status]}</Badge>
+                <Link href={`/protector/jobs/${c.bookingId}`} className="inline-flex min-h-11 items-center text-accent underline">
+                  The job
+                </Link>
+              </p>
+              <p className="whitespace-pre-wrap">{c.summaryForProtector}</p>
+              {c.protectorResponse && <p className="text-muted">Your response: {c.protectorResponse}</p>}
+              {c.appeal && <p className="text-muted">Your appeal: {c.appeal}</p>}
+              <ComplaintActions
+                complaintId={c.id}
+                actions={complaintActions(c.status, "PROTECTOR")}
+                action={protectorComplaintAction}
+              />
+            </li>
+          ))}
+        </ul>
+      </Card>
+    ) : null;
   const needsAvailability = windows.length === 0 && (protector?.status === "APPLIED" || protector?.status === "APPROVED");
   const application = (
     <ProtectorApplication
@@ -69,73 +96,36 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
           </a>
         </div>
       )}
+      {awaitingYou && questions}
       {protector?.status === "APPROVED" && (
         <Card title="Your jobs" className="mb-6">
           {jobs.length === 0 ? (
             <Empty>No jobs assigned yet.</Empty>
           ) : (
-            <ul className="divide-y divide-line">
-              {jobs.map((j) => (
-                <li key={j.id}>
-                  <Link href={`/protector/jobs/${j.id}`} className="flex flex-wrap items-center gap-3 py-3 hover:bg-bg">
-                    <span className="font-medium">{serviceLabel(j.service)}</span>
-                    <span className="text-sm text-muted">
-                      {formatWhen(j.startsAt)} · {j.area}
-                    </span>
-                    <span className="ml-auto">
-                      <StatusBadge status={j.status} />
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <BookingSections bookings={jobs} href={(id) => `/protector/jobs/${id}`} heading="h3" />
           )}
         </Card>
       )}
-      {asked.length > 0 && (
-        <Card title="Questions from Operations" className="mb-6">
-          <ul className="space-y-5">
-            {asked.map((c) => (
-              <li key={c.id} className="space-y-2 text-sm">
-                <p className="flex flex-wrap items-center gap-2">
-                  <strong>{complaintCategoryLabel(c.category)}</strong>
-                  <Badge tone={c.status === "UPHELD" ? "danger" : "warn"}>{COMPLAINT_STATUS_LABELS[c.status]}</Badge>
-                  <Link href={`/protector/jobs/${c.bookingId}`} className="text-accent underline">
-                    The job
-                  </Link>
-                </p>
-                <p className="whitespace-pre-wrap">{c.summaryForProtector}</p>
-                {c.protectorResponse && <p className="text-muted">Your response: {c.protectorResponse}</p>}
-                {c.appeal && <p className="text-muted">Your appeal: {c.appeal}</p>}
-                <ComplaintActions
-                  complaintId={c.id}
-                  actions={complaintActions(c.status, "PROTECTOR")}
-                  action={protectorComplaintAction}
-                />
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
+      {!awaitingYou && questions}
       {protector && (
-        <Card title="Availability" className="mb-6 scroll-mt-4" id="availability">
+        <FoldCard
+          title="Availability"
+          action="Change"
+          preview={availabilityLine(windows)}
+          open={windows.length === 0}
+          id="availability"
+          className="mb-6 scroll-mt-4"
+        >
           <ActionForm action={availabilityAction} submitLabel="Save availability">
             <AvailabilityFields windows={windows} />
           </ActionForm>
-        </Card>
+        </FoldCard>
       )}
       {protector ? (
-        // Edited now and then, not every visit: folded below the jobs, open
-        // only when a rejection makes changing it the next step.
-        <Card>
-          <details open={protector.status === "REJECTED"} className="group">
-            <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-lg font-semibold">
-              Your profile
-              <span className="text-sm font-normal text-accent underline group-open:hidden">Edit</span>
-            </summary>
-            <div className="mt-4">{application}</div>
-          </details>
-        </Card>
+        // Open only when a rejection makes changing it the next step.
+        <FoldCard title="Your profile" action="Edit" open={protector.status === "REJECTED"}>
+          {application}
+        </FoldCard>
       ) : (
         <Card title="Application">{application}</Card>
       )}
