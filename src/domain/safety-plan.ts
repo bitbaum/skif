@@ -164,3 +164,21 @@ export function planVerdict(plan: Pick<SafetyPlan, "findings" | "nothingToBuy">)
   if (plan.findings.every((f) => f.outcome === "COVERED")) return "ADEQUATE";
   return plan.nothingToBuy ? "NOTHING_TO_BUY" : "SOME_SPENDING";
 }
+
+/** One step to take, and every worry it answers. */
+export type PlanStep = { key: string; concerns: string[] };
+
+/**
+ * The plan as a to-do list: each recommended step once, in the order the
+ * findings come, with the worries it answers. One step often answers
+ * several findings (varying your route helps both arriving at night and
+ * being followed); the person should read it once.
+ */
+export function planSteps(plan: Pick<SafetyPlan, "findings">): PlanStep[] {
+  const steps = new Map<string, string[]>();
+  for (const f of plan.findings) {
+    if (!f.recommended) continue;
+    steps.set(f.recommended.key, [...(steps.get(f.recommended.key) ?? []), f.concern]);
+  }
+  return [...steps].map(([key, concerns]) => ({ key, concerns }));
+}

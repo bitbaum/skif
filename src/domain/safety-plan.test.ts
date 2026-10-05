@@ -4,7 +4,7 @@ import { HARD_CONSTRAINT_KEYS } from "@/config/constraints";
 import { ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
 import { findIntervention, needsPurchase } from "@/config/interventions";
 import { deriveFindings } from "./findings";
-import { buildSafetyPlan, planVerdict, type PlanInput } from "./safety-plan";
+import { buildSafetyPlan, planSteps, planVerdict, type PlanInput } from "./safety-plan";
 
 const input = (overrides: Partial<PlanInput> = {}): PlanInput => ({
   environment: "HOME",
@@ -199,5 +199,20 @@ describe("planVerdict", () => {
   it("says nothing to buy when every step is free, and spending otherwise", () => {
     expect(planVerdict(plan({ environment: "PERSON", concerns: ["FRAUD"] }))).toBe("NOTHING_TO_BUY");
     expect(planVerdict(plan({ environment: "PERSON", threats: ["ACCOUNT_BREACHED"] }))).toBe("SOME_SPENDING");
+  });
+});
+
+describe("planSteps", () => {
+  it("lists a step that answers several worries once, with every worry it answers", () => {
+    const p = plan({ environment: "PERSON", concerns: ["ARRIVING_AT_NIGHT", "FOLLOWED"], budget: "FREE" });
+    // Both findings get the same least intrusive step (varying your route).
+    expect(new Set(p.findings.map((f) => f.recommended?.key)).size).toBe(1);
+    const steps = planSteps(p);
+    expect(steps).toHaveLength(1);
+    expect(steps[0]!.concerns.sort()).toEqual(["ARRIVING_AT_NIGHT", "FOLLOWED"]);
+  });
+
+  it("has no steps when nothing needs doing", () => {
+    expect(planSteps(plan())).toEqual([]);
   });
 });

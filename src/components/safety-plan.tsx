@@ -14,7 +14,7 @@ import {
   type Intervention,
 } from "@/config/interventions";
 import { PRIORITY_LABELS } from "@/domain/findings";
-import { planVerdict, type FindingPlan, type PlanVerdict, type SafetyPlan } from "@/domain/safety-plan";
+import { planSteps, planVerdict, type FindingPlan, type PlanVerdict, type SafetyPlan } from "@/domain/safety-plan";
 import { Badge, Card } from "./ui";
 
 export function InterventionCard({ id, why, emphasis = false }: { id: string; why?: string[]; emphasis?: boolean }) {
@@ -69,11 +69,25 @@ function ImpactLine({ i }: { i: Intervention }) {
   );
 }
 
-function KeyList({ title, keys, mark, note }: { title: string; keys: string[]; mark: string; note?: (key: string) => string }) {
+const foldSummary = "flex min-h-11 cursor-pointer items-center text-sm font-semibold";
+
+function KeyList({
+  title,
+  keys,
+  mark,
+  note,
+  folded = false,
+}: {
+  title: string;
+  keys: string[];
+  mark: string;
+  note?: (key: string) => string;
+  /** Behind a summary line, like the other options: worth knowing, not to act on. */
+  folded?: boolean;
+}) {
   if (keys.length === 0) return null;
-  return (
+  const items = (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold">{title}</h3>
       {keys.map((k) => {
         const i = findIntervention(k);
         if (!i) return null;
@@ -87,9 +101,22 @@ function KeyList({ title, keys, mark, note }: { title: string; keys: string[]; m
       })}
     </div>
   );
+  return folded ? (
+    <details>
+      <summary className={foldSummary}>
+        {title} ({keys.length})
+      </summary>
+      <div className="mt-2">{items}</div>
+    </details>
+  ) : (
+    <div className="space-y-2">
+      <h3 className="text-sm font-semibold">{title}</h3>
+      {items}
+    </div>
+  );
 }
 
-export function FindingSection({ finding }: { finding: FindingPlan }) {
+export function FindingSection({ finding, shownAbove = false }: { finding: FindingPlan; shownAbove?: boolean }) {
   return (
     <Card title={concernLabel(finding.concern)}>
       <div className="space-y-4">
@@ -106,7 +133,15 @@ export function FindingSection({ finding }: { finding: FindingPlan }) {
         {finding.recommended ? (
           <div className="space-y-2">
             <h3 className="text-sm font-semibold">Most proportionate step</h3>
-            <InterventionCard id={finding.recommended.key} why={finding.recommended.why} emphasis />
+            {shownAbove ? (
+              // Already shown in full under an earlier finding: read it once.
+              <p className="rounded-lg border border-accent p-3 text-sm">
+                <span className="font-medium">{findIntervention(finding.recommended.key)?.title}</span>
+                <span className="text-muted"> — the same step as above.</span>
+              </p>
+            ) : (
+              <InterventionCard id={finding.recommended.key} why={finding.recommended.why} emphasis />
+            )}
           </div>
         ) : (
           finding.outcome !== "RECOMMENDED" && (
@@ -116,9 +151,7 @@ export function FindingSection({ finding }: { finding: FindingPlan }) {
         <KeyList title="Already covered by what you do" keys={finding.alreadyCovered} mark="✓" />
         {finding.alternatives.length > 0 && (
           <details>
-            <summary className="cursor-pointer text-sm font-semibold">
-              Other options within your limits ({finding.alternatives.length})
-            </summary>
+            <summary className={foldSummary}>Other options within your limits ({finding.alternatives.length})</summary>
             <div className="mt-2 space-y-2">
               {finding.alternatives.map((k) => (
                 <InterventionCard key={k} id={k} />
@@ -126,7 +159,7 @@ export function FindingSection({ finding }: { finding: FindingPlan }) {
             </div>
           </details>
         )}
-        <KeyList title="Over your budget" keys={finding.overBudget} mark="·" />
+        <KeyList title="Over your budget" keys={finding.overBudget} mark="·" folded />
         <KeyList
           title="Ruled out by your limits"
           keys={finding.excluded.map((e) => e.key)}
@@ -166,7 +199,7 @@ export function PlanSummary({ plan }: { plan: SafetyPlan }) {
   return (
     <p className="mb-6 rounded-card border border-accent bg-accent-soft p-4 text-accent">
       <strong>{verdict.headline}</strong> {verdict.detail}
-      {plan.budget && ` Budget you gave: ${budgetLabel(plan.budget).toLowerCase()}.`}
+      {plan.budget && ` Your budget: ${budgetLabel(plan.budget)}.`}
     </p>
   );
 }
@@ -179,6 +212,18 @@ export function FindingsByFamily({ plan, wholeLife }: { plan: SafetyPlan; wholeL
     findings: plan.findings.filter((x) => concernFamily(x.concern) === f.key),
   }));
   const quiet = groups.filter((g) => g.findings.length === 0);
+  // In the order they render: a step shown in full once is referred to after.
+  const seen = new Set<string>();
+  const shownAbove = new Map(
+    groups.flatMap((g) =>
+      g.findings.map((f) => {
+        const key = f.recommended?.key;
+        const repeat = key !== undefined && seen.has(key);
+        if (key) seen.add(key);
+        return [f.concern, repeat] as const;
+      }),
+    ),
+  );
   return (
     <div className="space-y-8">
       {groups
@@ -187,7 +232,7 @@ export function FindingsByFamily({ plan, wholeLife }: { plan: SafetyPlan; wholeL
           <section key={g.key} className="space-y-4">
             <h2 className="text-xl font-semibold">{g.label}</h2>
             {g.findings.map((f) => (
-              <FindingSection key={f.concern} finding={f} />
+              <FindingSection key={f.concern} finding={f} shownAbove={shownAbove.get(f.concern)} />
             ))}
           </section>
         ))}
@@ -197,5 +242,34 @@ export function FindingsByFamily({ plan, wholeLife }: { plan: SafetyPlan; wholeL
         </p>
       )}
     </div>
+  );
+}
+
+/** The plan as a to-do list, before the detail: each step once, with the
+ * worries it answers. Nothing here when there is nothing to do. */
+export function PlanSteps({ plan }: { plan: SafetyPlan }) {
+  const steps = planSteps(plan);
+  if (steps.length === 0) return null;
+  return (
+    <Card title="Your steps" className="mb-6">
+      <ol className="space-y-3">
+        {steps.map((step, n) => {
+          const i = findIntervention(step.key);
+          if (!i) return null;
+          return (
+            <li key={step.key} className="flex gap-3 text-sm">
+              <span className="font-semibold text-muted">{n + 1}.</span>
+              <span className="space-y-1">
+                <span className="block font-medium">{i.title}</span>
+                <span className="flex flex-wrap gap-2">
+                  {needsPurchase(i.kind) ? <Badge>{costLabel(i.cost)}</Badge> : <Badge tone="accent">Nothing to buy</Badge>}
+                </span>
+                <span className="block text-muted">For: {step.concerns.map(concernLabel).join(" · ")}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </Card>
   );
 }
