@@ -88,6 +88,7 @@ export function ProtectorApplication({
           legend="Languages"
           name="languages"
           options={LANGUAGES}
+          inline
           hint={note("languages")}
           selected={list("languages")}
           onChange={(next) => form.setValue("languages", next)}
@@ -103,7 +104,6 @@ export function ProtectorApplication({
             required
           />
         </Field>
-        <CapabilityFields held={held} bind={{ value: form.text, set: form.setValue }} />
         <CheckboxGroup
           legend="Styles you work in"
           name="presenceStyles"
@@ -112,6 +112,8 @@ export function ProtectorApplication({
           selected={list("presenceStyles")}
           onChange={(next) => form.setValue("presenceStyles", next)}
         />
+        {/* Last, right above the submit: it is as long as what the person ticks. */}
+        <CapabilityFields held={held} bind={{ value: form.text, set: form.setValue }} />
       </ActionForm>
     </div>
   );

@@ -14,9 +14,19 @@ export function PageHeader({ title, lead, children }: { title: string; lead?: Re
   );
 }
 
-export function Card({ title, children, className = "" }: { title?: string; children: ReactNode; className?: string }) {
+export function Card({
+  title,
+  children,
+  className = "",
+  id,
+}: {
+  title?: string;
+  children: ReactNode;
+  className?: string;
+  id?: string;
+}) {
   return (
-    <section className={`rounded-card border border-line bg-surface p-5 ${className}`}>
+    <section id={id} className={`rounded-card border border-line bg-surface p-5 ${className}`}>
       {title && <h2 className="mb-3 text-lg font-semibold">{title}</h2>}
       {children}
     </section>
