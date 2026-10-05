@@ -26,7 +26,7 @@ import { matchForBooking } from "@/server/matching";
 import { listComplaintsForBooking } from "@/server/complaints";
 import { getCustomerProfile } from "@/server/customers";
 import { complaintCategoryLabel } from "@/config/complaints";
-import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
+import { isOpen as isComplaintOpen, STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import Link from "next/link";
 import { getPreferences } from "@/server/preferences";
 import { audit } from "@/server/audit";
@@ -117,6 +117,38 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
     openThreadFor(db, booking, viewer, "OPS"),
   ]);
 
+  // An open incident or complaint is the work waiting on this page: it leads.
+  // Rating and reports appear once they can exist, not as empty cards.
+  const openIncidents = reports.filter((r) => r.review && r.review !== "RESOLVED");
+  const needsReview = openIncidents.length > 0 || bookingComplaints.some((c) => isComplaintOpen(c.status));
+  const complaintsCard =
+    bookingComplaints.length > 0 ? (
+      <Card title="Complaints">
+        <ul className="space-y-1 text-sm">
+          {bookingComplaints.map((c) => (
+            <li key={c.id}>
+              <Link href={`/ops/complaints/${c.id}`} className="inline-flex min-h-11 items-center text-accent underline">
+                {complaintCategoryLabel(c.category)}
+              </Link>{" "}
+              — {COMPLAINT_STATUS_LABELS[c.status]}
+            </li>
+          ))}
+        </ul>
+      </Card>
+    ) : null;
+  const reportsCard =
+    reports.length > 0 || booking.status === "COMPLETED" ? (
+      <Card title="Reports and incidents" className={needsReview ? "md:col-span-2" : ""}>
+        <ReportList reports={reports} showReview />
+        {openIncidents.map((r) => (
+          <div key={r.id} className="mt-4 border-t border-line pt-4">
+            <p className="mb-2 text-sm font-medium">Review incident from {formatWhen(r.createdAt)}</p>
+            <IncidentReview incident={r} action={reviewIncidentAction} />
+          </div>
+        ))}
+      </Card>
+    ) : null;
+
   return (
     <>
       <PageHeader
@@ -126,6 +158,8 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
         <StatusBadge status={booking.status} />
       </PageHeader>
       <div className="grid gap-6 md:grid-cols-2">
+        {needsReview && reportsCard}
+        {needsReview && complaintsCard}
         {match && (
           <Card title="Protectors, ranked — with reasons" className="md:col-span-2">
             <Matches bookingId={booking.id} match={match} />
@@ -171,34 +205,13 @@ export default async function OpsBookingPage({ params }: { params: Promise<{ id:
         <Card title="Lifecycle">
           <Timeline events={events} showNotes />
         </Card>
-        <Card title="Customer's rating">
-          <RatingSummary rating={rating} />
-        </Card>
-        {bookingComplaints.length > 0 && (
-          <Card title="Complaints">
-            <ul className="space-y-1 text-sm">
-              {bookingComplaints.map((c) => (
-                <li key={c.id}>
-                  <Link href={`/ops/complaints/${c.id}`} className="text-accent underline">
-                    {complaintCategoryLabel(c.category)}
-                  </Link>{" "}
-                  — {COMPLAINT_STATUS_LABELS[c.status]}
-                </li>
-              ))}
-            </ul>
+        {booking.status === "COMPLETED" && (
+          <Card title="Customer's rating">
+            <RatingSummary rating={rating} />
           </Card>
         )}
-        <Card title="Reports and incidents">
-          <ReportList reports={reports} showReview />
-          {reports
-            .filter((r) => r.review && r.review !== "RESOLVED")
-            .map((r) => (
-              <div key={r.id} className="mt-4 border-t border-line pt-4">
-                <p className="mb-2 text-sm font-medium">Review incident from {formatWhen(r.createdAt)}</p>
-                <IncidentReview incident={r} action={reviewIncidentAction} />
-              </div>
-            ))}
-        </Card>
+        {!needsReview && complaintsCard}
+        {!needsReview && reportsCard}
       </div>
     </>
   );
