@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList, RequirementList, RatingSummary, ReportList, StatusBadge, Timeline, languagesText } from "@/components/booking";
 import { Field, Select, TextArea } from "@/components/fields";
-import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
+import { Card, DefinitionList, FoldCard, formatWhen, PageHeader } from "@/components/ui";
 import { RATING_COMMENT_MAX, RATING_DIMENSIONS } from "@/config/ratings";
 import { RatingScale } from "@/components/rating-scale";
 import { serviceLabel } from "@/config/services";
@@ -102,40 +102,34 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
           <Timeline events={events} />
         </Card>
         {booking.status === "COMPLETED" && !toRate && feeling}
-        <Card>
-          <details open={myComplaints.length > 0} className="group">
-            <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-lg font-semibold">
-              Something wrong?
-              <span className="text-sm font-normal text-accent underline group-open:hidden">Tell Operations</span>
-            </summary>
-            <p className="mt-3 mb-4 text-sm text-muted">
-              Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about
-              it, they do so in their own words.
-            </p>
-            {myComplaints.length > 0 && (
-              <ul className="mb-4 space-y-1 text-sm">
-                {myComplaints.map((c) => (
-                  <li key={c.id}>
-                    {complaintCategoryLabel(c.category)} — <strong>{c.status}</strong>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <ActionForm
-              action={fileComplaintAction}
-              submitLabel="Send to Operations"
-              variant="secondary"
-              hidden={{ bookingId: booking.id }}
-            >
-              <Field label="What is it about?">
-                <Select name="category" options={COMPLAINT_CATEGORIES} />
-              </Field>
-              <Field label="What happened">
-                <TextArea name="body" maxLength={COMPLAINT_TEXT_MAX} required />
-              </Field>
-            </ActionForm>
-          </details>
-        </Card>
+        <FoldCard title="Something wrong?" action="Tell Operations" open={myComplaints.length > 0}>
+          <p className="mb-4 text-sm text-muted">
+            Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about
+            it, they do so in their own words.
+          </p>
+          {myComplaints.length > 0 && (
+            <ul className="mb-4 space-y-1 text-sm">
+              {myComplaints.map((c) => (
+                <li key={c.id}>
+                  {complaintCategoryLabel(c.category)} — <strong>{c.status}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+          <ActionForm
+            action={fileComplaintAction}
+            submitLabel="Send to Operations"
+            variant="secondary"
+            hidden={{ bookingId: booking.id }}
+          >
+            <Field label="What is it about?">
+              <Select name="category" options={COMPLAINT_CATEGORIES} />
+            </Field>
+            <Field label="What happened">
+              <TextArea name="body" maxLength={COMPLAINT_TEXT_MAX} required />
+            </Field>
+          </ActionForm>
+        </FoldCard>
         {reports.length > 0 && (
           <Card title="Protector's reports" className="md:col-span-2">
             <ReportList reports={reports} />

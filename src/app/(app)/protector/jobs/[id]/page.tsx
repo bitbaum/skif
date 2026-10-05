@@ -4,10 +4,11 @@ import { ActionForm } from "@/components/action-form";
 import { ConstraintList, ReasonList, RequirementList, languagesText, presenceText, ReportList, StatusBadge } from "@/components/booking";
 import { CheckboxGroup, Field, RadioGroup, Select, TextArea } from "@/components/fields";
 import { INCIDENT_SEVERITIES, OBSERVATIONS } from "@/config/reports";
-import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
+import { Card, DefinitionList, FoldCard, formatWhen, PageHeader } from "@/components/ui";
 import { BOOKING_LIMITS, serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
+import { counted } from "@/domain/plural";
 import { availableActions, isTerminal, protectorHasAccepted, type BookingAction } from "@/domain/lifecycle";
 import { getJobForProtector } from "@/server/bookings";
 import { requireApprovedProtector } from "@/server/viewer";
@@ -58,35 +59,52 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   });
   // Once it's completed, filing the report is what's left to do.
   const done = job.status === "COMPLETED";
-  const reports = (
-    <Card title="Reports">
-      <ReportList reports={job.reports} />
-      {accepted && (
-        <div className="mt-5 border-t border-line pt-5">
-          <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }}>
-            <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />
-            <CheckboxGroup
-              legend="What happened? Tick all that apply"
-              name="observations"
-              options={OBSERVATIONS}
-              selected={[]}
-              inline
-            />
-            <Field label="Severity" hint="Incidents only.">
-              <Select name="severity" options={[{ key: "", label: "—" }, ...INCIDENT_SEVERITIES]} />
-            </Field>
-            <Field label="In your words">
-              <TextArea name="summary" maxLength={BOOKING_LIMITS.notesMax} required />
-            </Field>
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="policeInvolved" className="accent-accent" />
-              The police were involved
-            </label>
-          </ActionForm>
+  const reportForm = accepted && (
+    <div className="mt-5 border-t border-line pt-5">
+      <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }} className="group/report space-y-5">
+        <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />
+        <CheckboxGroup
+          legend="What happened? Tick all that apply"
+          name="observations"
+          options={OBSERVATIONS}
+          selected={[]}
+          inline
+        />
+        {/* Severity is for incidents: it appears once "Incident" is chosen. */}
+        <div className="hidden group-has-[input[value=INCIDENT]:checked]/report:block">
+          <Field label="Severity">
+            <Select name="severity" options={[{ key: "", label: "—" }, ...INCIDENT_SEVERITIES]} />
+          </Field>
         </div>
-      )}
-    </Card>
+        <Field label="In your words">
+          <TextArea name="summary" maxLength={BOOKING_LIMITS.notesMax} required />
+        </Field>
+        <label className="flex min-h-11 items-center gap-2 text-sm">
+          <input type="checkbox" name="policeInvolved" className="accent-accent" />
+          The police were involved
+        </label>
+      </ActionForm>
+    </div>
   );
+  // During the job the form is one tap away, folded; once it's completed,
+  // filing the report is what's left to do, so it is open and leads.
+  const reports =
+    accepted && !done ? (
+      <FoldCard
+        title="Reports"
+        action="File a report or incident"
+        preview={job.reports.length === 0 ? "None filed yet" : `${counted(job.reports.length, "report", "reports")} filed`}
+        className="md:col-span-2"
+      >
+        <ReportList reports={job.reports} />
+        {reportForm}
+      </FoldCard>
+    ) : (
+      <Card title="Reports">
+        <ReportList reports={job.reports} />
+        {reportForm}
+      </Card>
+    );
 
   return (
     <>

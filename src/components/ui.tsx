@@ -33,6 +33,44 @@ export function Card({
   );
 }
 
+/**
+ * A card whose body is folded behind its title: for what is edited now and
+ * then, not on every visit. `preview` stays visible while it is folded (the
+ * current value, say); `action` is the word that says what opening it does.
+ */
+export function FoldCard({
+  title,
+  action,
+  preview,
+  open = false,
+  id,
+  className = "",
+  children,
+}: {
+  title: string;
+  action: string;
+  preview?: ReactNode;
+  open?: boolean;
+  id?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Card id={id} className={className}>
+      <details open={open} className="group">
+        <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          <span className="flex min-h-11 items-center justify-between gap-3">
+            <span className="text-lg font-semibold">{title}</span>
+            <span className="text-sm text-accent underline group-open:hidden">{action}</span>
+          </span>
+          {preview && <span className="block text-sm text-muted group-open:hidden">{preview}</span>}
+        </summary>
+        <div className="mt-3">{children}</div>
+      </details>
+    </Card>
+  );
+}
+
 const TONES = {
   neutral: "bg-bg text-muted border-line",
   accent: "bg-accent-soft text-accent border-accent",
