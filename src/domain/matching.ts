@@ -18,6 +18,7 @@ import { serviceLabel, serviceRequires, type ServiceKey } from "@/config/service
 import { capabilityLabel, type CapabilityKey } from "@/config/capabilities";
 import { isAvailable, type AvailabilityWindow } from "./availability";
 import { describeHeld, standing, type HeldCapability } from "./capabilities";
+import { counted } from "./plural";
 import { zonedIsoDay } from "./time";
 
 export type MatchRequest = {
@@ -132,16 +133,17 @@ function reasonsFor(req: MatchRequest, c: MatchCandidate, today: string): MatchR
   }
 
   if (c.relevantJobs > 0) {
-    const counted = Math.min(c.relevantJobs, MATCH_WEIGHTS.relevantJobsCap);
+    const capped = Math.min(c.relevantJobs, MATCH_WEIGHTS.relevantJobsCap);
+    const kind = `completed ${serviceLabel(req.service)}`;
     reasons.push({
-      label: `${c.relevantJobs} completed ${serviceLabel(req.service)} job(s)`,
-      points: counted * MATCH_WEIGHTS.relevantJob,
+      label: counted(c.relevantJobs, `${kind} job`, `${kind} jobs`),
+      points: capped * MATCH_WEIGHTS.relevantJob,
     });
   }
 
   if (c.completedRecently > 0) {
     reasons.push({
-      label: `${c.completedRecently} job(s) in the last ${WORKLOAD_WINDOW_DAYS} days — spreading work fairly`,
+      label: `${counted(c.completedRecently, "job", "jobs")} in the last ${WORKLOAD_WINDOW_DAYS} days — spreading work fairly`,
       points: -c.completedRecently * MATCH_WEIGHTS.recentWorkload,
     });
   }

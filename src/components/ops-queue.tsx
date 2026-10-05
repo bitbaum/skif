@@ -37,7 +37,9 @@ function FacetChips({ facet, counts, params, query }: Current & { facet: QueueFa
   return (
     <div className="space-y-1">
       <p className="text-sm font-medium text-muted">{legend}</p>
-      <ul className="flex flex-wrap gap-2">
+      {/* One row that scrolls sideways on a phone, so the queue isn't pushed
+          screens down; wrapped on wider screens. */}
+      <ul className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 md:flex-wrap md:overflow-visible">
         {options.map((o) => {
           const on = selected.includes(o.key);
           return (
@@ -45,7 +47,7 @@ function FacetChips({ facet, counts, params, query }: Current & { facet: QueueFa
               <Link
                 href={toggleHref(params, query, facet, o.key)}
                 aria-current={on ? "true" : undefined}
-                className={`inline-flex min-h-11 items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium ${chipClass[on ? "on" : "off"]}`}
+                className={`inline-flex min-h-11 items-center gap-1 whitespace-nowrap rounded-full border px-3 py-1 text-sm font-medium ${chipClass[on ? "on" : "off"]}`}
               >
                 {o.label}
                 <span className="tabular-nums opacity-80">{counts[o.key] ?? 0}</span>
@@ -134,38 +136,59 @@ export function QueueTable({ rows, narrowed, clear }: { rows: QueueRow[]; narrow
     );
   }
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-sm">
-        <thead className="text-muted">
-          <tr>
-            <th className="py-2 pr-4 font-medium">When</th>
-            <th className="py-2 pr-4 font-medium">Ref</th>
-            <th className="py-2 pr-4 font-medium">Service</th>
-            <th className="py-2 pr-4 font-medium">Area</th>
-            <th className="py-2 pr-4 font-medium">Protector</th>
-            <th className="py-2 pr-4 font-medium">Status</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-line">
-          {rows.map((b) => (
-            <tr key={b.id}>
-              <td className="py-2 pr-4 whitespace-nowrap">
-                <Link href={`/ops/bookings/${b.id}`} className="inline-flex min-h-11 items-center text-accent underline">
-                  {formatWhen(b.startsAt)}
-                </Link>
-              </td>
-              <td className="py-2 pr-4 font-mono text-sm">{bookingRef(b.id)}</td>
-              <td className="py-2 pr-4">{serviceLabel(b.service)}</td>
-              <td className="py-2 pr-4">{b.area}</td>
-              <td className="py-2 pr-4">{b.protectorName ?? "—"}</td>
-              <td className="py-2 pr-4">
-                <StatusBadge status={b.status} />
-              </td>
+    <>
+      {/* A phone gets one card per booking: six columns don't fit 390px. */}
+      <ul className="divide-y divide-line md:hidden">
+        {rows.map((b) => (
+          <li key={b.id} className="space-y-1 py-3 text-sm">
+            <div className="flex items-center justify-between gap-3">
+              <Link href={`/ops/bookings/${b.id}`} className="inline-flex min-h-11 items-center font-medium text-accent underline">
+                {formatWhen(b.startsAt)}
+              </Link>
+              <StatusBadge status={b.status} />
+            </div>
+            <p>
+              {serviceLabel(b.service)} · {b.area}
+            </p>
+            <p className="text-muted">
+              <span className="font-mono">{bookingRef(b.id)}</span> · {b.protectorName ?? "No Protector yet"}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <div className="hidden overflow-x-auto md:block">
+        <table className="w-full text-left text-sm">
+          <thead className="text-muted">
+            <tr>
+              <th className="py-2 pr-4 font-medium">When</th>
+              <th className="py-2 pr-4 font-medium">Ref</th>
+              <th className="py-2 pr-4 font-medium">Service</th>
+              <th className="py-2 pr-4 font-medium">Area</th>
+              <th className="py-2 pr-4 font-medium">Protector</th>
+              <th className="py-2 pr-4 font-medium">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="divide-y divide-line">
+            {rows.map((b) => (
+              <tr key={b.id}>
+                <td className="py-2 pr-4 whitespace-nowrap">
+                  <Link href={`/ops/bookings/${b.id}`} className="inline-flex min-h-11 items-center text-accent underline">
+                    {formatWhen(b.startsAt)}
+                  </Link>
+                </td>
+                <td className="py-2 pr-4 font-mono text-sm">{bookingRef(b.id)}</td>
+                <td className="py-2 pr-4">{serviceLabel(b.service)}</td>
+                <td className="py-2 pr-4">{b.area}</td>
+                <td className="py-2 pr-4">{b.protectorName ?? "—"}</td>
+                <td className="py-2 pr-4">
+                  <StatusBadge status={b.status} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 

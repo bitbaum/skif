@@ -18,6 +18,7 @@ import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import { listProtectors } from "@/server/protectors";
 import { severityLabel } from "@/config/reports";
 import { REVIEW_LABELS } from "@/domain/incidents";
+import { counted } from "@/domain/plural";
 import { requireOps } from "@/server/viewer";
 import { protectorStatusAction } from "./actions";
 
@@ -46,7 +47,7 @@ export default async function OpsPage({ searchParams }: { searchParams: Promise<
 
   return (
     <>
-      <PageHeader title="Operations" lead={`${waiting} booking(s) waiting for a Protector.`}>
+      <PageHeader title="Operations" lead={`${counted(waiting, "booking", "bookings")} waiting for a Protector.`}>
         <Link href="/ops/audit" className="inline-flex min-h-11 items-center text-sm text-accent underline">
           Audit log
         </Link>
