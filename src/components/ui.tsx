@@ -71,7 +71,9 @@ export function Empty({ children }: { children: ReactNode }) {
 
 export function DefinitionList({ items }: { items: [string, ReactNode][] }) {
   return (
-    <dl className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-2 text-sm">
+    // On a phone the label column is capped, so a long label wraps rather
+    // than squeezing every value into a narrow column.
+    <dl className="grid grid-cols-[minmax(0,7.5rem)_1fr] gap-x-4 gap-y-2 text-sm sm:grid-cols-[max-content_1fr] sm:gap-x-6">
       {items.map(([term, value]) => (
         <div key={term} className="contents">
           <dt className="text-muted">{term}</dt>

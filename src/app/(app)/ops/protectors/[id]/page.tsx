@@ -24,7 +24,8 @@ function CapabilityRow({ c, today }: { c: ProtectorCapability; today: string }) 
   const s = standing({ key: c.capability, level: c.level, verification: c.verification, expiresOn: c.expiresOn }, today);
   return (
     <li className="flex flex-wrap items-start gap-4 py-3">
-      <div className="min-w-0 flex-1 space-y-1 text-sm">
+      {/* Full width on a phone, so Verify / Reject wrap below the text instead of squeezing it. */}
+      <div className="min-w-0 flex-1 basis-full space-y-1 text-sm sm:basis-0">
         <p className="flex flex-wrap items-center gap-2">
           <span className="font-medium">{capabilityLabel(c.capability)}</span>
           <span className="text-muted">{levelLabel(c.level)}</span>
