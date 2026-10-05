@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/auth";
-import { requireViewer } from "@/server/viewer";
+import { isLokiWatcher, requireViewer } from "@/server/viewer";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const viewer = await requireViewer();
@@ -9,7 +9,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/bookings", label: "Bookings" },
     { href: "/assessments", label: "Safety assessment" },
     { href: "/protector", label: viewer.protector ? "My jobs" : "Become a Protector" },
-    ...(viewer.isOps ? [{ href: "/ops", label: "Operations" }] : []),
+    // A full load into /ops leaves the Loki widget behind (ops/layout.tsx).
+    ...(viewer.isOps ? [{ href: "/ops", label: "Operations", fullLoad: isLokiWatcher(viewer.sub) }] : []),
   ];
 
   return (
@@ -19,11 +20,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Link href="/" className="mr-2 font-semibold">
             Skif
           </Link>
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="text-muted hover:text-ink">
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) =>
+            l.fullLoad ? (
+              <a key={l.href} href={l.href} className="text-muted hover:text-ink">
+                {l.label}
+              </a>
+            ) : (
+              <Link key={l.href} href={l.href} className="text-muted hover:text-ink">
+                {l.label}
+              </Link>
+            ),
+          )}
           <form
             className="ml-auto"
             action={async () => {

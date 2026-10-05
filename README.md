@@ -78,4 +78,10 @@ Optional: `GROQ_API_KEY` (and/or `GEMINI_API_KEY`, `OPENROUTER_API_KEY`)
 switches on AI form assistance — only on the Protector application, where a
 Protector describes their own experience; it fills fields they review, and
 never touches location, incident or matching data (see `src/config/ai-forms.ts`).
+Optional: `SKIF_LOKI_WATCH_SUBS` (the owner's sub) loads the Loki feedback
+widget inside the app for that person alone, so opening Skif from Loki's
+"Open your site" link turns on watch mode: errors, failed requests and dead
+taps become suggested fixes in Loki. It mounts on their own pages only, never
+under `/ops` (see `src/config/feedback.ts`); unset, the app loads no
+third-party script.
 Migrations in `drizzle/` are applied by the deploy pipeline's schema step once the app has a database declared in its deploy manifest.

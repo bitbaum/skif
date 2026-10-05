@@ -17,14 +17,23 @@ function orangecat() {
   };
 }
 
+/** A comma-separated list of OIDC subs, as a set. */
+function subs(raw: string | undefined): Set<string> {
+  return new Set(
+    (raw ?? "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+}
+
 export const authConfig = {
   orangecat: orangecat(),
   devLogin: process.env.NODE_ENV === "development" && process.env.SKIF_DEV_LOGIN === "1",
   /** OIDC subs with Operations access, comma-separated in SKIF_OPS_SUBS. */
-  opsSubs: new Set(
-    (process.env.SKIF_OPS_SUBS ?? "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean),
-  ),
+  opsSubs: subs(process.env.SKIF_OPS_SUBS),
+  /** OIDC subs whose browser may load the Loki widget inside the signed-in
+   * app (src/config/feedback.ts), comma-separated in SKIF_LOKI_WATCH_SUBS.
+   * Empty by default: then the app has no third-party script for anyone. */
+  lokiWatchSubs: subs(process.env.SKIF_LOKI_WATCH_SUBS),
 } as const;

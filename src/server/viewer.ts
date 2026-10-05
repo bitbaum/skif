@@ -26,6 +26,11 @@ export async function getViewer(): Promise<Viewer | null> {
   };
 }
 
+/** Whether Loki's widget may load in the app for this person (src/config/feedback.ts). */
+export function isLokiWatcher(sub: string): boolean {
+  return authConfig.lokiWatchSubs.has(sub);
+}
+
 export async function requireViewer(): Promise<Viewer> {
   const viewer = await getViewer();
   if (!viewer) redirect("/signin");
