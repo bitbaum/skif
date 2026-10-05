@@ -47,6 +47,8 @@ function ChoiceGroup({
   hint,
   inline = false,
   describeChosen = false,
+  list = false,
+  hideLegend = false,
   onChange,
 }: {
   type: "checkbox" | "radio";
@@ -60,6 +62,11 @@ function ChoiceGroup({
   /** Show an option's description only once it is chosen, so a long list of
    * described options stays one line each until the person picks. */
   describeChosen?: boolean;
+  /** One bordered list with dividers rather than a box per option: for long
+   * lists of short options, where the boxes doubled the height. */
+  list?: boolean;
+  /** The legend is read by screen readers only (a fold's summary already shows it). */
+  hideLegend?: boolean;
   /** Controlled: `selected` is the live value and every change is reported.
    * Without it the group is uncontrolled and `selected` is only the default. */
   onChange?: (next: string[]) => void;
@@ -68,13 +75,21 @@ function ChoiceGroup({
     onChange?.(type === "radio" ? [key] : on ? [...selected, key] : selected.filter((k) => k !== key));
   return (
     <fieldset className="space-y-2">
-      <legend className="text-sm font-medium">{legend}</legend>
+      <legend className={hideLegend ? "sr-only" : "text-sm font-medium"}>{legend}</legend>
       {hint && <p className="text-sm text-muted">{hint}</p>}
-      <div className={inline ? "flex flex-wrap gap-2" : "space-y-2"}>
+      <div
+        className={
+          list ? "divide-y divide-line rounded-lg border border-line bg-surface" : inline ? "flex flex-wrap gap-2" : "space-y-2"
+        }
+      >
         {options.map((o) => (
           <label
             key={o.key}
-            className="group flex items-start gap-3 rounded-lg border border-line bg-surface p-3 has-checked:border-accent"
+            className={
+              list
+                ? "group flex min-h-11 items-start gap-3 px-3 py-2.5 has-checked:bg-accent-soft"
+                : "group flex items-start gap-3 rounded-lg border border-line bg-surface p-3 has-checked:border-accent"
+            }
           >
             <input
               type={type}
@@ -112,4 +127,23 @@ export function RadioGroup(props: Omit<Parameters<typeof ChoiceGroup>[0], "type"
 /** Turn a config list of `{ key, label }` or plain strings into options. */
 export function toOptions(list: readonly (string | Option)[]): Option[] {
   return list.map((o) => (typeof o === "string" ? { key: o, label: o } : o));
+}
+
+/** A titled part of a long form that opens on tap: every option stays one
+ * tap away while the form reads as a list of its parts. */
+export function FormFold({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+  return (
+    <details className="group rounded-lg border border-line bg-surface">
+      <summary className="flex min-h-11 cursor-pointer list-none flex-col justify-center px-3 py-2 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center justify-between gap-3 text-sm font-medium">
+          {title}
+          <span aria-hidden className="text-muted group-open:rotate-180">
+            ⌄
+          </span>
+        </span>
+        {hint && <span className="text-sm text-muted">{hint}</span>}
+      </summary>
+      <div className="border-t border-line p-3">{children}</div>
+    </details>
+  );
 }

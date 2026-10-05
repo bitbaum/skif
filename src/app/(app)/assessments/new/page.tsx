@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { emergencyNumbersText } from "@/config/emergency";
 import { notFound, redirect } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
-import { CheckboxGroup, Field, RadioGroup, TextInput } from "@/components/fields";
+import { CheckboxGroup, Field, FormFold, RadioGroup, TextInput } from "@/components/fields";
 import { Card, PageHeader } from "@/components/ui";
 import {
   ASSESSMENT_LIMITS,
@@ -53,31 +53,47 @@ export default async function NewAssessmentPage({ searchParams }: { searchParams
           <fieldset className="space-y-4">
             <legend className="text-sm font-medium">What worries you?</legend>
             <p className="text-sm text-muted">Tick none if nothing does.</p>
+            {/* One fold per family of harm: every part of a life is one tap away,
+                and the form is ten lines until the person opens one. */}
             {families.map((f) => (
-              <CheckboxGroup key={f.key} legend={f.label} hint={f.description} name="concerns" options={f.concerns} selected={[]} />
+              <FormFold key={f.key} title={f.label} hint={f.description}>
+                <CheckboxGroup legend={f.label} name="concerns" options={f.concerns} selected={[]} list hideLegend />
+              </FormFold>
             ))}
           </fieldset>
-          <CheckboxGroup
-            legend="Does any of this apply?"
+          {/* Refinements, not the question itself: folded, like the worries. */}
+          <FormFold
+            title="Does any of this apply?"
             hint="Routines and exposure can make some things more likely, whether or not they worry you."
-            name="exposures"
-            options={raisingFor(EXPOSURES, environment.type)}
-            selected={[]}
-          />
+          >
+            <CheckboxGroup
+              legend="Does any of this apply?"
+              name="exposures"
+              options={raisingFor(EXPOSURES, environment.type)}
+              selected={[]}
+              list
+              hideLegend
+            />
+          </FormFold>
           <CheckboxGroup
             legend="Is there a known threat?"
             hint={`This makes the related steps a high priority. If you are in danger now, call ${emergencyNumbersText()} — Skif is not an emergency service.`}
             name="threats"
+            list
             options={raisingFor(THREATS, environment.type)}
             selected={[]}
           />
-          <CheckboxGroup
-            legend="What do you already have or do?"
-            name="measures"
-            options={measuresFor(environment.type)}
-            selected={[]}
-          />
-          <RadioGroup legend="What would you spend?" name="budget" options={BUDGET_OPTIONS} selected="FREE" />
+          <FormFold title="What do you already have or do?" hint="So the plan doesn't suggest what you already have.">
+            <CheckboxGroup
+              legend="What do you already have or do?"
+              name="measures"
+              options={measuresFor(environment.type)}
+              selected={[]}
+              list
+              hideLegend
+            />
+          </FormFold>
+          <RadioGroup legend="What would you spend?" name="budget" options={BUDGET_OPTIONS} selected="FREE" list />
           <Field label="Anything coming up? (optional)" hint="A trip, an event, a public appearance — in a few words.">
             <TextInput name="upcoming" maxLength={ASSESSMENT_LIMITS.upcomingMax} />
           </Field>
