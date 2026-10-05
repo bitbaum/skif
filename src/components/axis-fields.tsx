@@ -1,5 +1,6 @@
 import { PREFERENCE_AXES, type AxisLeans } from "@/config/constraints";
 import { axisField } from "@/domain/inputs";
+import { segmentClass } from "./ui";
 
 /** One row per trade-off: lean left, stay balanced, or lean right. */
 export function AxisFields({ leans }: { leans: AxisLeans }) {
@@ -26,10 +27,7 @@ export function AxisFields({ leans }: { leans: AxisLeans }) {
             </legend>
             <div className="grid grid-cols-3 gap-2">
               {choices.map((c) => (
-                <label
-                  key={c.value}
-                  className="flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-2 py-2 text-center text-sm has-checked:border-accent has-checked:bg-accent-soft has-checked:font-medium has-checked:text-accent has-focus-visible:ring-2 has-focus-visible:ring-accent"
-                >
+                <label key={c.value} className={segmentClass}>
                   <input
                     type="radio"
                     name={axisField(axis.key)}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableActions, isOverdue, nextStatus, protectorHasAccepted, releasesProtector } from "./lifecycle";
+import { availableActions, comingAndPast, isOverdue, nextStatus, protectorHasAccepted, releasesProtector } from "./lifecycle";
 
 describe("nextStatus", () => {
   it("walks the happy path", () => {
@@ -59,5 +59,20 @@ describe("protectorHasAccepted", () => {
   it("hides the meeting point until accepted", () => {
     expect(protectorHasAccepted("ASSIGNED")).toBe(false);
     expect(protectorHasAccepted("ACCEPTED")).toBe(true);
+  });
+});
+
+describe("comingAndPast", () => {
+  const at = (day: number) => new Date(Date.UTC(2026, 9, day, 19));
+  it("puts what is still coming first, soonest first, and what is over after, latest first", () => {
+    const { coming, past } = comingAndPast([
+      { id: "cancelled", status: "CANCELLED" as const, startsAt: at(12) },
+      { id: "done", status: "COMPLETED" as const, startsAt: at(10) },
+      { id: "now", status: "IN_PROGRESS" as const, startsAt: at(9) },
+      { id: "later", status: "REQUESTED" as const, startsAt: at(14) },
+      { id: "expired", status: "EXPIRED" as const, startsAt: at(11) },
+    ]);
+    expect(coming.map((b) => b.id)).toEqual(["now", "later"]);
+    expect(past.map((b) => b.id)).toEqual(["cancelled", "expired", "done"]);
   });
 });

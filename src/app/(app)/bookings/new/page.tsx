@@ -37,7 +37,7 @@ export default async function NewBookingPage() {
       <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
         <Card>
           <ActionForm action={createBookingAction} submitLabel="Send request">
-            <RadioGroup legend="What do you need?" name="service" options={SERVICE_OPTIONS} selected="NIGHT_OUT" />
+            <RadioGroup legend="What do you need?" name="service" options={SERVICE_OPTIONS} selected="NIGHT_OUT" describeChosen />
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="When" hint="Zürich time">
                 <TextInput type="datetime-local" name="startsAt" required />
@@ -65,6 +65,7 @@ export default async function NewBookingPage() {
               name="requiredCapabilities"
               options={MUST_HAVE_OPTIONS}
               selected={[]}
+              inline
             />
             <Field label="Anything they should know (optional)" hint="Also revealed only after acceptance.">
               <TextArea name="notes" maxLength={BOOKING_LIMITS.notesMax} />

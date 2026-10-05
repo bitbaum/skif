@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ActionForm } from "@/components/action-form";
 import { ConstraintList, RequirementList, RatingSummary, ReportList, StatusBadge, Timeline, languagesText } from "@/components/booking";
-import { Field, RadioGroup, Select, TextArea } from "@/components/fields";
+import { Field, Select, TextArea } from "@/components/fields";
 import { Card, DefinitionList, formatWhen, PageHeader } from "@/components/ui";
-import { RATING_COMMENT_MAX, RATING_DIMENSIONS, RATING_SCALE } from "@/config/ratings";
+import { RATING_COMMENT_MAX, RATING_DIMENSIONS } from "@/config/ratings";
+import { RatingScale } from "@/components/rating-scale";
 import { serviceLabel } from "@/config/services";
 import { getDb } from "@/db/client";
 import { idInput } from "@/domain/inputs";
@@ -21,8 +22,6 @@ import { openThreadFor } from "@/server/booking-thread";
 
 export const metadata: Metadata = { title: "Booking" };
 
-const SCALE_OPTIONS = RATING_SCALE.map((s) => ({ key: String(s.value), label: s.label }));
-const NOT_APPLICABLE = { key: "", label: "Nothing tense happened" };
 
 export default async function BookingPage({ params }: { params: Promise<{ id: string }> }) {
   const viewer = await requireViewer();
@@ -42,14 +41,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
       {toRate ? (
         <ActionForm action={rateBookingAction} submitLabel="Send" hidden={{ bookingId: booking.id }}>
           {RATING_DIMENSIONS.map((d) => (
-            <RadioGroup
-              key={d.key}
-              legend={d.question}
-              name={d.key}
-              options={d.optional ? [NOT_APPLICABLE, ...SCALE_OPTIONS] : SCALE_OPTIONS}
-              selected={d.optional ? NOT_APPLICABLE.key : undefined}
-              inline
-            />
+            <RatingScale key={d.key} name={d.key} question={d.question} optional={d.optional} />
           ))}
           <Field label="Anything else (optional)">
             <TextArea name="comment" maxLength={RATING_COMMENT_MAX} />
@@ -71,6 +63,18 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
       <div className="grid gap-6 md:grid-cols-2">
         {toRate && feeling}
         {!isTerminal(booking.status) && <EmergencyNotice className="md:col-span-2" />}
+        <Card title="Your Protector">
+          {protector ? (
+            <div className="space-y-2 text-sm">
+              <p className="font-medium">{protector.displayName}</p>
+              <p className="whitespace-pre-wrap text-muted">{protector.bio}</p>
+              <p className="text-muted">Speaks {languagesText(protector.languages)}</p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted">Operations is choosing someone for you.</p>
+          )}
+        </Card>
+        {thread && <BookingThread bookingId={booking.id} seat="CUSTOMER" view={thread} className="md:col-span-2" />}
         <Card title="Details">
           <DefinitionList
             items={[
@@ -94,44 +98,43 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
             </div>
           )}
         </Card>
-        <Card title="Your Protector">
-          {protector ? (
-            <div className="space-y-2 text-sm">
-              <p className="font-medium">{protector.displayName}</p>
-              <p className="whitespace-pre-wrap text-muted">{protector.bio}</p>
-              <p className="text-muted">Speaks {languagesText(protector.languages)}</p>
-            </div>
-          ) : (
-            <p className="text-sm text-muted">Operations is choosing someone for you.</p>
-          )}
-        </Card>
-        {thread && <BookingThread bookingId={booking.id} seat="CUSTOMER" view={thread} className="md:col-span-2" />}
         <Card title="What happened">
           <Timeline events={events} />
         </Card>
-        {!toRate && feeling}
-        <Card title="Something wrong?">
-          <p className="mb-4 text-sm text-muted">
-            Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about it,
-            they do so in their own words.
-          </p>
-          {myComplaints.length > 0 && (
-            <ul className="mb-4 space-y-1 text-sm">
-              {myComplaints.map((c) => (
-                <li key={c.id}>
-                  {complaintCategoryLabel(c.category)} — <strong>{c.status}</strong>
-                </li>
-              ))}
-            </ul>
-          )}
-          <ActionForm action={fileComplaintAction} submitLabel="Send to Operations" variant="secondary" hidden={{ bookingId: booking.id }}>
-            <Field label="What is it about?">
-              <Select name="category" options={COMPLAINT_CATEGORIES} />
-            </Field>
-            <Field label="What happened">
-              <TextArea name="body" maxLength={COMPLAINT_TEXT_MAX} required />
-            </Field>
-          </ActionForm>
+        {booking.status === "COMPLETED" && !toRate && feeling}
+        <Card>
+          <details open={myComplaints.length > 0} className="group">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-lg font-semibold">
+              Something wrong?
+              <span className="text-sm font-normal text-accent underline group-open:hidden">Tell Operations</span>
+            </summary>
+            <p className="mt-3 mb-4 text-sm text-muted">
+              Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about
+              it, they do so in their own words.
+            </p>
+            {myComplaints.length > 0 && (
+              <ul className="mb-4 space-y-1 text-sm">
+                {myComplaints.map((c) => (
+                  <li key={c.id}>
+                    {complaintCategoryLabel(c.category)} — <strong>{c.status}</strong>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <ActionForm
+              action={fileComplaintAction}
+              submitLabel="Send to Operations"
+              variant="secondary"
+              hidden={{ bookingId: booking.id }}
+            >
+              <Field label="What is it about?">
+                <Select name="category" options={COMPLAINT_CATEGORIES} />
+              </Field>
+              <Field label="What happened">
+                <TextArea name="body" maxLength={COMPLAINT_TEXT_MAX} required />
+              </Field>
+            </ActionForm>
+          </details>
         </Card>
         {reports.length > 0 && (
           <Card title="Protector's reports" className="md:col-span-2">
