@@ -37,7 +37,7 @@ describe("matchForBooking", () => {
     }
     const next = await book(db, "oc-cust");
     const [ranked] = (await matchForBooking(db, next)).ranked;
-    expect(ranked!.reasons).toContainEqual({ label: "1 completed Night Out job(s)", points: MATCH_WEIGHTS.relevantJob });
+    expect(ranked!.reasons).toContainEqual({ label: "1 completed Night Out job", points: MATCH_WEIGHTS.relevantJob });
     const other = await book(db, "oc-cust", { service: "GET_HOME" });
     const [forOther] = (await matchForBooking(db, other)).ranked;
     expect(forOther!.reasons.some((r) => r.label.includes("completed"))).toBe(false);

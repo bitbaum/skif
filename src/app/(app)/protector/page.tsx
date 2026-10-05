@@ -109,7 +109,7 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
       <Card title={protector ? "Profile" : "Application"}>
         <ProtectorApplication
           action={applyAction}
-          submitLabel={protector ? "Save profile" : "Apply"}
+          submitLabel={protector ? "Save profile" : "Send application"}
           initial={applicationValues(protector, held)}
           held={held}
           aiConfigured={aiStatus() === "configured"}

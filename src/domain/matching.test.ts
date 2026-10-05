@@ -174,7 +174,7 @@ describe("rankProtectors", () => {
   it("credits completed jobs of the same service, up to a cap", () => {
     const { ranked } = rank([{ ...base, relevantJobs: 40 }]);
     expect(ranked[0]!.reasons).toContainEqual({
-      label: "40 completed Night Out job(s)",
+      label: "40 completed Night Out jobs",
       points: MATCH_WEIGHTS.relevantJobsCap * MATCH_WEIGHTS.relevantJob,
     });
   });
