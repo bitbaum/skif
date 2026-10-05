@@ -73,6 +73,7 @@ export default async function PreferencesPage({
             name="languages"
             options={LANGUAGES}
             selected={prefs?.languages ?? []}
+            inline
           />
           <Field label="What matters to you (optional)" hint="Shared with Operations, not with Protectors.">
             <TextArea name="valuesNote" maxLength={BOOKING_LIMITS.notesMax} defaultValue={prefs?.valuesNote ?? ""} />

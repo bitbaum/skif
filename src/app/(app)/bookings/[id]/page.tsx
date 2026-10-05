@@ -35,6 +35,33 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
   const { booking, protector, events, rating, reports } = detail;
   const thread = await openThreadFor(db, booking, viewer, "CUSTOMER");
   const canCancel = availableActions(booking.status, "CUSTOMER").includes("CANCEL");
+  // Completed and not rated yet: rating is the one thing left to do, so it leads.
+  const toRate = booking.status === "COMPLETED" && !rating;
+  const feeling = (
+    <Card title="How it felt">
+      {toRate ? (
+        <ActionForm action={rateBookingAction} submitLabel="Send" hidden={{ bookingId: booking.id }}>
+          {RATING_DIMENSIONS.map((d) => (
+            <RadioGroup
+              key={d.key}
+              legend={d.question}
+              name={d.key}
+              options={d.optional ? [NOT_APPLICABLE, ...SCALE_OPTIONS] : SCALE_OPTIONS}
+              selected={d.optional ? NOT_APPLICABLE.key : undefined}
+              inline
+            />
+          ))}
+          <Field label="Anything else (optional)">
+            <TextArea name="comment" maxLength={RATING_COMMENT_MAX} />
+          </Field>
+        </ActionForm>
+      ) : booking.status === "COMPLETED" ? (
+        <RatingSummary rating={rating} />
+      ) : (
+        <p className="text-sm text-muted">You can tell us how it felt once it&apos;s completed.</p>
+      )}
+    </Card>
+  );
 
   return (
     <>
@@ -42,6 +69,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
         <StatusBadge status={booking.status} />
       </PageHeader>
       <div className="grid gap-6 md:grid-cols-2">
+        {toRate && feeling}
         {!isTerminal(booking.status) && <EmergencyNotice className="md:col-span-2" />}
         <Card title="Details">
           <DefinitionList
@@ -81,29 +109,7 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
         <Card title="What happened">
           <Timeline events={events} />
         </Card>
-        <Card title="How it felt">
-          {booking.status === "COMPLETED" && !rating ? (
-            <ActionForm action={rateBookingAction} submitLabel="Send" hidden={{ bookingId: booking.id }}>
-              {RATING_DIMENSIONS.map((d) => (
-                <RadioGroup
-                  key={d.key}
-                  legend={d.question}
-                  name={d.key}
-                  options={d.optional ? [NOT_APPLICABLE, ...SCALE_OPTIONS] : SCALE_OPTIONS}
-                  selected={d.optional ? NOT_APPLICABLE.key : undefined}
-                  inline
-                />
-              ))}
-              <Field label="Anything else (optional)">
-                <TextArea name="comment" maxLength={RATING_COMMENT_MAX} />
-              </Field>
-            </ActionForm>
-          ) : booking.status === "COMPLETED" ? (
-            <RatingSummary rating={rating} />
-          ) : (
-            <p className="text-sm text-muted">You can tell us how it felt once it&apos;s completed.</p>
-          )}
-        </Card>
+        {!toRate && feeling}
         <Card title="Something wrong?">
           <p className="mb-4 text-sm text-muted">
             Tell Operations in confidence. Only Operations reads what you write here; if they ask your Protector about it,

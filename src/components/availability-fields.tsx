@@ -3,7 +3,7 @@ import { availabilityField } from "@/domain/inputs";
 import { minuteToClock } from "@/domain/time";
 import type { AvailabilityRow } from "@/server/availability";
 
-const inputClass = "rounded-lg border border-line bg-surface px-2 py-1.5 text-sm";
+const inputClass = "min-h-11 w-full min-w-0 rounded-lg border border-line bg-surface px-2 py-1.5 text-sm";
 
 /** A from/to pair per weekday, in Zürich time. An end before the start runs overnight. */
 export function AvailabilityFields({ windows }: { windows: readonly AvailabilityRow[] }) {
@@ -16,8 +16,9 @@ export function AvailabilityFields({ windows }: { windows: readonly Availability
       {WEEKDAYS.map(({ day, label }) => {
         const w = windows.find((x) => x.weekday === day);
         return (
-          <div key={day} className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="w-24">{label}</span>
+          // One row per day at any width: the inputs shrink, they never wrap.
+          <div key={day} className="grid grid-cols-[5.5rem_1fr_auto_1fr] items-center gap-2 text-sm sm:grid-cols-[7rem_10rem_auto_10rem]">
+            <span>{label}</span>
             <input
               type="time"
               name={availabilityField(day, "from")}

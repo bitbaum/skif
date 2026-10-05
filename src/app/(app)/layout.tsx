@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { signOut } from "@/auth";
+import { Account } from "@/components/account";
 import { AppNav, type AppNavLink } from "@/components/app-nav";
 import { isLokiWatcher, requireViewer } from "@/server/viewer";
 
@@ -21,18 +21,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             Skif
           </Link>
           <AppNav links={links} className="order-last w-full md:order-none md:w-auto md:flex-1" />
-          <form
-            className="ml-auto flex items-center gap-3 text-sm"
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/" });
-            }}
-          >
-            <span className="max-w-32 truncate text-muted">{viewer.name}</span>
-            <button type="submit" className="inline-flex min-h-11 items-center text-muted underline hover:text-ink">
-              Sign out
-            </button>
-          </form>
+          <div className="ml-auto">
+            <Account name={viewer.name} />
+          </div>
         </nav>
       </header>
       <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>

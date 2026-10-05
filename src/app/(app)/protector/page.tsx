@@ -38,6 +38,16 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
   const held = protector ? await listCapabilities(db, protector.id) : [];
   const windows = protector ? await listAvailability(db, protector.id) : [];
   const asked = protector?.status === "APPROVED" ? await listComplaintsForProtector(db, protector.id) : [];
+  const needsAvailability = windows.length === 0 && (protector?.status === "APPLIED" || protector?.status === "APPROVED");
+  const application = (
+    <ProtectorApplication
+      action={applyAction}
+      submitLabel={protector ? "Save profile" : "Send application"}
+      initial={applicationValues(protector, held)}
+      held={held}
+      aiConfigured={aiStatus() === "configured"}
+    />
+  );
 
   return (
     <>
@@ -51,6 +61,14 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
       </PageHeader>
       {saved && <p className="mb-4 rounded-lg bg-accent-soft p-3 text-sm text-accent">Saved.</p>}
       {protector && <p className="mb-6 text-muted">{STATUS_NOTE[protector.status]}</p>}
+      {needsAvailability && (
+        <div className="mb-6 rounded-lg border border-warn bg-warn-soft px-3 pt-3 text-sm text-warn">
+          <p>Operations can only match you to jobs in hours you&apos;re available.</p>
+          <a href="#availability" className="inline-flex min-h-11 items-center font-medium underline">
+            Set your availability
+          </a>
+        </div>
+      )}
       {protector?.status === "APPROVED" && (
         <Card title="Your jobs" className="mb-6">
           {jobs.length === 0 ? (
@@ -100,21 +118,27 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
         </Card>
       )}
       {protector && (
-        <Card title="Availability" className="mb-6">
+        <Card title="Availability" className="mb-6 scroll-mt-4" id="availability">
           <ActionForm action={availabilityAction} submitLabel="Save availability">
             <AvailabilityFields windows={windows} />
           </ActionForm>
         </Card>
       )}
-      <Card title={protector ? "Profile" : "Application"}>
-        <ProtectorApplication
-          action={applyAction}
-          submitLabel={protector ? "Save profile" : "Send application"}
-          initial={applicationValues(protector, held)}
-          held={held}
-          aiConfigured={aiStatus() === "configured"}
-        />
-      </Card>
+      {protector ? (
+        // Edited now and then, not every visit: folded below the jobs, open
+        // only when a rejection makes changing it the next step.
+        <Card>
+          <details open={protector.status === "REJECTED"} className="group">
+            <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 text-lg font-semibold">
+              Your profile
+              <span className="text-sm font-normal text-accent underline group-open:hidden">Edit</span>
+            </summary>
+            <div className="mt-4">{application}</div>
+          </details>
+        </Card>
+      ) : (
+        <Card title="Application">{application}</Card>
+      )}
     </>
   );
 }

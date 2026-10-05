@@ -52,6 +52,41 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   }
   const actions = availableActions(job.status, "PROTECTOR");
   const accepted = protectorHasAccepted(job.status);
+  const nextSteps = actions.flatMap((a) => {
+    const button = ACTION_BUTTONS[a];
+    return button ? [[a, button] as const] : [];
+  });
+  // Once it's completed, filing the report is what's left to do.
+  const done = job.status === "COMPLETED";
+  const reports = (
+    <Card title="Reports">
+      <ReportList reports={job.reports} />
+      {accepted && (
+        <div className="mt-5 border-t border-line pt-5">
+          <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }}>
+            <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />
+            <CheckboxGroup
+              legend="What happened? Tick all that apply"
+              name="observations"
+              options={OBSERVATIONS}
+              selected={[]}
+              inline
+            />
+            <Field label="Severity" hint="Incidents only.">
+              <Select name="severity" options={[{ key: "", label: "—" }, ...INCIDENT_SEVERITIES]} />
+            </Field>
+            <Field label="In your words">
+              <TextArea name="summary" maxLength={BOOKING_LIMITS.notesMax} required />
+            </Field>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="policeInvolved" className="accent-accent" />
+              The police were involved
+            </label>
+          </ActionForm>
+        </div>
+      )}
+    </Card>
+  );
 
   return (
     <>
@@ -59,6 +94,24 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         <StatusBadge status={job.status} />
       </PageHeader>
       <div className="grid gap-6 md:grid-cols-2">
+        {/* The next step first: on a phone it was under the details. */}
+        {nextSteps.length > 0 && (
+          <Card title="Next step" className="md:col-span-2">
+            <div className="flex flex-wrap gap-3">
+              {nextSteps.map(([a, button]) => (
+                <ActionForm
+                  key={a}
+                  action={protectorJobAction}
+                  submitLabel={button.label}
+                  variant={button.variant}
+                  hidden={{ bookingId: job.id, action: a }}
+                  className=""
+                />
+              ))}
+            </div>
+          </Card>
+        )}
+        {done && reports}
         {!isTerminal(job.status) && <EmergencyNotice className="md:col-span-2" />}
         <Card title="What the job needs">
           <DefinitionList
@@ -77,21 +130,6 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
               They&apos;ve asked that nothing goes to the police without their decision. Ask them first — except in an emergency.
             </p>
           )}
-          <div className="mt-5 flex flex-wrap gap-3">
-            {actions.map((a) => {
-              const button = ACTION_BUTTONS[a];
-              return button ? (
-                <ActionForm
-                  key={a}
-                  action={protectorJobAction}
-                  submitLabel={button.label}
-                  variant={button.variant}
-                  hidden={{ bookingId: job.id, action: a }}
-                  className=""
-                />
-              ) : null;
-            })}
-          </div>
         </Card>
         {thread && <BookingThread bookingId={job.id} seat="PROTECTOR" view={thread} className="md:col-span-2" />}
         {job.whyMatched.length > 0 && (
@@ -99,33 +137,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
             <ReasonList reasons={job.whyMatched} />
           </Card>
         )}
-        <Card title="Reports">
-          <ReportList reports={job.reports} />
-          {accepted && (
-            <div className="mt-5 border-t border-line pt-5">
-              <ActionForm action={reportAction} submitLabel="File" hidden={{ bookingId: job.id }}>
-                <RadioGroup legend="Type" name="kind" options={REPORT_KINDS} selected="REPORT" />
-                <CheckboxGroup
-                  legend="What happened? Tick all that apply"
-                  name="observations"
-                  options={OBSERVATIONS}
-                  selected={[]}
-                  inline
-                />
-                <Field label="Severity" hint="Incidents only.">
-                  <Select name="severity" options={[{ key: "", label: "—" }, ...INCIDENT_SEVERITIES]} />
-                </Field>
-                <Field label="In your words">
-                  <TextArea name="summary" maxLength={BOOKING_LIMITS.notesMax} required />
-                </Field>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" name="policeInvolved" className="accent-accent" />
-                  The police were involved
-                </label>
-              </ActionForm>
-            </div>
-          )}
-        </Card>
+        {!done && reports}
       </div>
     </>
   );
