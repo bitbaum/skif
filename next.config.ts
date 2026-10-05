@@ -19,11 +19,16 @@ const nextConfig: NextConfig = {
   async headers() {
     // Pages here hold preferences, bookings and incidents: never leak a URL
     // to another site, and never let the app be framed.
+    //
+    // `same-origin`, not `no-referrer`: both send nothing to another site,
+    // but under `no-referrer` a browser sends `Origin: null` with a plain
+    // form POST, and Next refuses a Server Action whose origin does not match
+    // its host (CSRF protection). Every form failed with JavaScript off.
     return [
       {
         source: "/:path*",
         headers: [
-          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Referrer-Policy", value: "same-origin" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
         ],
