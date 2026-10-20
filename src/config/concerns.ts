@@ -72,6 +72,13 @@ export const CONCERNS = [
     derived: false,
   },
   {
+    key: "UNREST_NEARBY",
+    family: "ENVIRONMENTAL",
+    label: "A protest turning into unrest, looting or damage nearby",
+    environments: ["VENUE", "WORKPLACE", "HOME"],
+    derived: false,
+  },
+  {
     key: "ACCOUNT_TAKEOVER",
     label: "Someone getting into my email, phone number or accounts",
     family: "CYBER",

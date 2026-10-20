@@ -4,6 +4,7 @@ import { HOUSEHOLD_INTERVENTIONS } from "./household";
 import { PERSONAL_INTERVENTIONS } from "./personal";
 import { RESILIENCE_INTERVENTIONS } from "./resilience";
 import type { Intervention } from "./types";
+import { UNREST_INTERVENTIONS } from "./unrest";
 import { VENUE_INTERVENTIONS } from "./venue";
 
 export * from "./types";
@@ -16,6 +17,7 @@ export const INTERVENTIONS = [
   ...DIGITAL_INTERVENTIONS,
   ...HOUSEHOLD_INTERVENTIONS,
   ...RESILIENCE_INTERVENTIONS,
+  ...UNREST_INTERVENTIONS,
 ] as const;
 
 export type InterventionKey = (typeof INTERVENTIONS)[number]["key"];
