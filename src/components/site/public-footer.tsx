@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EMERGENCY_NUMBERS, NOT_AN_EMERGENCY_SERVICE } from "@/config/emergency";
 import { FOOTER, PLACE } from "@/config/site";
 import { LABEL, SHELL } from "./shell";
+import { SkifMark } from "./skif-mark";
 
 /** Every public page ends with the emergency numbers: Skif is not an
  * emergency service, and the page says so before anything else. */
@@ -32,7 +33,10 @@ export function PublicFooter() {
         </section>
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <p className="font-heading text-lg font-semibold tracking-display text-fg-primary">Skif</p>
+            <p className="flex items-center gap-2 font-heading text-lg font-semibold tracking-display text-fg-primary">
+              <SkifMark className="size-8" />
+              Skif
+            </p>
             <p className="mt-2 max-w-prose text-sm leading-relaxed text-fg-secondary">{FOOTER.tagline}</p>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">

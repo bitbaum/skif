@@ -25,6 +25,7 @@ export function partnerMailto(subject: string): string {
 
 export const NAV = [
   { href: "/safety", label: "Safety" },
+  { href: "/guides", label: "Guides" },
   { href: "/method", label: "Method" },
   { href: "/academy", label: "Academy" },
   { href: "/join", label: "Join" },
@@ -34,8 +35,8 @@ export const SIGN_IN = { href: "/signin", label: "Sign in" } as const;
 
 export const HOME = {
   eyebrow: `Skif · ${PLACE} · ${STAGE}`,
-  statement: "Safety, studied from every side.",
-  lead: "Physical safety is one field of ten. Skif maps what could harm what matters to you — your body, your accounts, your privacy, your name, your family, your money — and recommends the most proportionate step. Often it is something you can do yourself, today, for nothing.",
+  statement: "Safety and freedom, from every side.",
+  lead: "Physical safety is one field of ten. Skif maps what could harm what matters to you — your body, your accounts, your privacy, your name, your family, your money — and recommends the most proportionate step, counting what it would cost your freedom. Often it is something you can do yourself, today, for nothing.",
   actions: [
     { href: "#check", label: "Run a quick check" },
     { href: "/bookings/new", label: "Book a Protector" },
@@ -66,6 +67,20 @@ export const FIELDS_SECTION = {
 } as const;
 
 /** DOCTRINE.md "Entry points": three doors from day one. */
+export const GUIDES_SECTION = {
+  eyebrow: "Guides",
+  title: "Read deeper. Act today.",
+  lede: "Practical guides with steps you can take this week: the self-defence ladder, weapons and the law, combat sports judged on the street, locking down your devices, scams and keys, children, travel and the risks that are not people.",
+  all: { href: "/guides", label: "All guides" },
+  onHome: 4,
+} as const;
+
+export const FREEDOM = {
+  eyebrow: "Safety and freedom",
+  title: "Safer should never mean smaller.",
+  body: "Surveillance, restriction and constant fear can make someone technically safer and their life worse. Skif counts that cost on every step: what it asks of your privacy, your freedom and your time. The goal is a life you can live fully, with risk you chose, knowing its size.",
+} as const;
+
 export const DOORS = [
   {
     key: "WITH_ME",
@@ -111,7 +126,7 @@ export const METHOD_TEASER = {
 export const PEOPLE_TEASER = {
   eyebrow: "Protectors and the Academy",
   title: "Judgment before muscle.",
-  body: "A Skif Protector is someone you want beside you: calm, observant, trained in de-escalation and first aid. The Academy is where that is learned, and it is open to anyone: from first aid and de-escalation to Jiu-Jitsu, driving and keeping your accounts safe.",
+  body: "A Skif Protector is someone you want beside you: calm, observant, trained in de-escalation and first aid. The Academy is where that is learned, and it is open to anyone: from first aid and de-escalation to parkour, Muay Thai, Jiu-Jitsu, weapons and the law, and keeping your accounts safe.",
   actions: [
     { href: "/academy", label: "The Academy" },
     { href: "/join", label: "Work with Skif" },
@@ -119,9 +134,9 @@ export const PEOPLE_TEASER = {
 } as const;
 
 export const FOOTER = {
-  tagline: "Safety from every side, without trading away privacy or freedom.",
+  tagline: "Safety and freedom, from every side.",
   columns: [
-    { title: "Learn", links: [...NAV.slice(0, 3)] },
+    { title: "Learn", links: [...NAV.slice(0, 4)] },
     {
       title: "Use Skif",
       links: [

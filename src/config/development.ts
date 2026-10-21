@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-21",
+      done: "Nine practical guides: the self-defence ladder (escape first, the parkour way of seeing a street), weapons and what Swiss law allows, combat sports judged on the street, women's and children's safety, locking down your devices and disks, scams and Bitcoin keys, nature, travel and sport, and what professionals teach the public. The Academy now covers weapons, escape and movement, striking and grappling arts. Skif has a mark: a Scythian stag.",
+    },
+    {
+      date: "2026-10-21",
       done: "A new public site. Each of the ten fields of safety has its own page: what can go wrong, every step that helps and what each one costs you in money, privacy and freedom. A quick check on the home page shows your free first steps without signing in. The Method page explains how Skif decides, the Academy lists what Protectors learn, and Join is for Protectors, schools and specialists.",
     },
     {

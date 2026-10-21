@@ -32,7 +32,7 @@ export function academyPage(): SitePage {
         eyebrow: `Academy · ${COURSE_STATUS.label}`,
         statement: "Learn what Protectors learn.",
         lead: [
-          "From first aid and de-escalation to Jiu-Jitsu, driving and keeping your accounts safe. Open to anyone who wants to be more capable, and the route by which a Protector's skills become verified.",
+          "From first aid and de-escalation to parkour, Muay Thai, Jiu-Jitsu, weapons and the law, and keeping your accounts and money safe. Open to anyone who wants to be more capable and freer for it, and the route by which a Protector's skills become verified.",
           "No course runs yet. This is the curriculum Skif is building: some courses with its own exams, others with partner schools it will send people to.",
         ],
         actions: [
