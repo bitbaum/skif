@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import { notFound } from "next/navigation";
 import { SiteSectionsView } from "@/components/site/site-sections";
 import { SourceList } from "@/components/site/source-list";
@@ -15,8 +16,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const guide = guideBySlug((await params).slug);
-  return guide ? { title: guide.title, description: guide.summary } : {};
+  return shareMetadata(`/guides/${(await params).slug}`);
 }
 
 export default async function GuidePage({ params }: { params: Params }) {

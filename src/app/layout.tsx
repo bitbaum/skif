@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import "@bitbaum/design-tokens/tokens.css";
 import "@bitbaum/accountkit/styles.css";
 import "./globals.css";
+import { PUBLIC_ORIGIN } from "@/config/site";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(PUBLIC_ORIGIN),
   title: { default: "Skif", template: "%s · Skif" },
   description:
     "Holistic safety for people and the places they live, Zürich first — without trading away privacy or freedom.",
+  // Pages without a card of their own (src/site/share.ts) share the home one.
+  openGraph: { siteName: "Skif", type: "website", images: [{ url: "/og/home", width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", images: ["/og/home"] },
 };
 
 /** The shared tokens flip on a `.dark` class; Skif follows the OS setting.

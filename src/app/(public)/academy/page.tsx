@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import Link from "next/link";
 import { AcademyBrowser } from "@/components/site/academy-browser";
 import { PageHero } from "@/components/site/page-hero";
 import { ACTION, SHELL } from "@/components/site/shell";
 import { COURSES } from "@/config/academy";
 import { PHOTOS } from "@/config/photos";
-import { partnerMailto } from "@/config/site";
+import { ACADEMY_HERO, partnerMailto } from "@/config/site";
 
-export const metadata: Metadata = {
-  title: "Academy",
-  description: "First aid, de-escalation, parkour, combat sports, weapons and the law, driving and digital security. What Protectors learn, open to anyone.",
-};
+export const metadata: Metadata = shareMetadata("/academy");
 
 export default function AcademyPage() {
   return (
     <>
       <PageHero
         eyebrow={`Academy · ${COURSES.length} courses planned`}
-        statement="Learn what Protectors learn."
+        statement={ACADEMY_HERO.statement}
         lead={[
-          "From first aid and de-escalation to parkour, Muay Thai, Jiu-Jitsu, weapons and the law, and keeping your accounts and money safe. Open to anyone who wants to be more capable and freer for it.",
+          ACADEMY_HERO.lead,
           "No course runs yet. This is the curriculum Skif is building: some courses with its own exams, others with partner schools.",
         ]}
         actions={[

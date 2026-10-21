@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChecklistCards } from "@/components/site/checklist-cards";
@@ -22,8 +23,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const field = familyBySlug((await params).field);
-  return field ? { title: field.label, description: field.headline } : {};
+  return shareMetadata(`/safety/${(await params).field}`);
 }
 
 function Heading({ id, children }: { id: string; children: string }) {

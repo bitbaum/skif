@@ -18,6 +18,7 @@ import { businessPage } from "./business";
 import { privacyPage } from "./privacy";
 import { protectorsPage } from "./protectors";
 import { citations, researchPage } from "./research";
+import { SHARE_CARDS, shareCard } from "./share";
 
 const APP = join(__dirname, "..", "app");
 const PUBLIC = join(__dirname, "..", "..", "public");
@@ -112,6 +113,17 @@ describe("public site", () => {
       const cited = citations(g);
       expect(cited, g.slug).toEqual((g.sources ?? []).map((_, i) => i + 1));
       if (g.sources) expect(g.checked, g.slug).toBeTruthy();
+    }
+  });
+
+  it("gives every shared link a picture of a page that exists, and every menu page one", () => {
+    expect(new Set(SHARE_CARDS.map((c) => c.path)).size).toBe(SHARE_CARDS.length);
+    for (const c of SHARE_CARDS) expect(pageExists(c.path), c.path).toBe(true);
+    for (const href of MENU.flatMap((m) => [m.href, ...m.links.map((l) => l.href)])) {
+      const path = href.split(/[?#]/)[0];
+      if (path.startsWith("/") && !path.startsWith("/signin") && !path.startsWith("/assessments") && !path.startsWith("/bookings")) {
+        expect(shareCard(path), path).toBeDefined();
+      }
     }
   });
 

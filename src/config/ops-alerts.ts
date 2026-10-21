@@ -5,6 +5,7 @@
  * no report text. It says what happened, gives a short booking reference and
  * links to the page where a signed-in operator sees the rest.
  */
+import { PUBLIC_ORIGIN } from "./site";
 export const OPS_ALERT_KINDS = ["BOOKING_NEEDS_ASSIGNING", "INCIDENT_FILED"] as const;
 export type OpsAlertKind = (typeof OPS_ALERT_KINDS)[number];
 
@@ -12,7 +13,7 @@ export type OpsAlertKind = (typeof OPS_ALERT_KINDS)[number];
 export const OPS_ALERT_SENDER_NAME = "Skif";
 
 /** Where links point when AUTH_URL is unset. */
-export const PUBLIC_ORIGIN_DEFAULT = "https://skif.orangecat.ch";
+export const PUBLIC_ORIGIN_DEFAULT = PUBLIC_ORIGIN;
 
 export const OPS_ALERT_COPY: Record<
   OpsAlertKind,
