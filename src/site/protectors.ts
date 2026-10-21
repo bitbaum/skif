@@ -5,6 +5,7 @@
  */
 import type { SitePage } from "@bitbaum/sitekit";
 import { SERVICES } from "@/config/services";
+import { signInTo } from "@/config/site";
 
 export const WEAPONS_POLICY =
   "Most Skif work involves no weapon at all: a Protector's tools are judgment, distance, de-escalation and first aid. A Protector carries a weapon only where they hold the legal licence to carry it and the job calls for it.";
@@ -23,7 +24,7 @@ export function protectorsPage(): SitePage {
           "A Skif Protector is a vetted professional you would want next to you: observant, steady, trained in de-escalation and first aid. Chosen for judgment rather than size, matched to what you asked for, and the match is explained.",
         ],
         actions: [
-          { label: "Book a Protector", href: "/bookings/new" },
+          { label: "Book a Protector", href: signInTo("/bookings/new") },
           { label: "Become a Protector", href: "/join" },
         ],
       },

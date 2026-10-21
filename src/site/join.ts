@@ -8,7 +8,7 @@ import type { SitePage } from "@bitbaum/sitekit";
 import { INTERVENTIONS, type Intervention } from "@/config/interventions";
 import { LANGUAGES } from "@/config/constraints";
 import { PROVIDER_TYPES } from "@/config/providers";
-import { partnerMailto } from "@/config/site";
+import { partnerMailto, signInTo } from "@/config/site";
 
 function stepsNaming(provider: string): number {
   return (INTERVENTIONS as readonly Intervention[]).filter((i) => i.provider === provider).length;
@@ -30,7 +30,7 @@ export function joinPage(): SitePage {
           "Skif is a new safety company, built on judgment rather than intimidation. It needs three kinds of people: Protectors to be with those who ask, schools to teach what Protectors learn, and specialists for the steps a Safety Plan recommends.",
         ],
         actions: [
-          { label: "Apply as a Protector", href: "/protector" },
+          { label: "Apply as a Protector", href: signInTo("/protector") },
           { label: "Partner with Skif", href: partnerMailto("partnership") },
         ],
       },
