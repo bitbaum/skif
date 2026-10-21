@@ -98,6 +98,20 @@ export function signInTo(path: string, mode: "create" | "sign-in" = "create"): s
 export const SIGN_IN = { href: "/signin", label: "Sign in" } as const;
 export const CREATE_ACCOUNT = { href: "/signin?mode=create", label: "Create account" } as const;
 
+/** The signed-in part of Skif: where "My Skif" lands, and its sections, in
+ * the order a person needs them. Short labels so the row fits a phone. */
+export const MY_SKIF = {
+  href: "/assessments",
+  label: "My Skif",
+  sections: [
+    { href: "/assessments", label: "Safety plan" },
+    { href: "/bookings", label: "Bookings" },
+    { href: "/preferences", label: "Preferences" },
+  ],
+  protector: { href: "/protector", label: "Protector", jobs: "My jobs" },
+  ops: { href: "/ops", label: "Operations" },
+} as const;
+
 /** The account screen's words. Accounts are OrangeCat accounts (fleet identity
  * contract); the screen says so once, in the fine print, and never makes it a
  * step the person has to understand. */

@@ -49,6 +49,7 @@ function ChoiceGroup({
   describeChosen = false,
   list = false,
   hideLegend = false,
+  more,
   onChange,
 }: {
   type: "checkbox" | "radio";
@@ -57,7 +58,8 @@ function ChoiceGroup({
   options: readonly Option[];
   selected: readonly string[];
   hint?: string;
-  /** Lay short options (a rating scale) out in a row. */
+  /** Short options (languages, a rating scale) as an even grid of equal
+   * cells, never a ragged wrap of different widths. */
   inline?: boolean;
   /** Show an option's description only once it is chosen, so a long list of
    * described options stays one line each until the person picks. */
@@ -67,51 +69,67 @@ function ChoiceGroup({
   list?: boolean;
   /** The legend is read by screen readers only (a fold's summary already shows it). */
   hideLegend?: boolean;
+  /** Show only the first `more` options; the rest open behind "N more",
+   * already open when one of them is chosen. Folded inputs still submit. */
+  more?: number;
   /** Controlled: `selected` is the live value and every change is reported.
    * Without it the group is uncontrolled and `selected` is only the default. */
   onChange?: (next: string[]) => void;
 }) {
   const toggle = (key: string, on: boolean) =>
     onChange?.(type === "radio" ? [key] : on ? [...selected, key] : selected.filter((k) => k !== key));
+  const box = (opts: readonly Option[]) => (
+    <div
+      className={
+        list ? "divide-y divide-line rounded-lg border border-line bg-surface" : inline ? "grid grid-cols-2 gap-2 sm:grid-cols-3" : "space-y-2"
+      }
+    >
+      {opts.map((o) => (
+        <label
+          key={o.key}
+          className={
+            list
+              ? "group flex min-h-11 items-start gap-3 px-3 py-2.5 has-checked:bg-accent-soft"
+              : "group flex items-start gap-3 rounded-lg border border-line bg-surface p-3 has-checked:border-accent"
+          }
+        >
+          <input
+            type={type}
+            name={name}
+            value={o.key}
+            {...(onChange
+              ? { checked: selected.includes(o.key), onChange: (e: React.ChangeEvent<HTMLInputElement>) => toggle(o.key, e.target.checked) }
+              : { defaultChecked: selected.includes(o.key) })}
+            required={type === "radio"}
+            className="mt-1 accent-accent"
+          />
+          <span>
+            <span className="block text-sm">{o.label}</span>
+            {o.description && (
+              <span className={`text-sm text-muted ${describeChosen ? "hidden group-has-checked:block" : "block"}`}>
+                {o.description}
+              </span>
+            )}
+          </span>
+        </label>
+      ))}
+    </div>
+  );
+  const folded = more !== undefined && options.length > more ? options.slice(more) : [];
   return (
     <fieldset className="space-y-2">
       <legend className={hideLegend ? "sr-only" : "text-sm font-medium"}>{legend}</legend>
       {hint && <p className="text-sm text-muted">{hint}</p>}
-      <div
-        className={
-          list ? "divide-y divide-line rounded-lg border border-line bg-surface" : inline ? "flex flex-wrap gap-2" : "space-y-2"
-        }
-      >
-        {options.map((o) => (
-          <label
-            key={o.key}
-            className={
-              list
-                ? "group flex min-h-11 items-start gap-3 px-3 py-2.5 has-checked:bg-accent-soft"
-                : "group flex items-start gap-3 rounded-lg border border-line bg-surface p-3 has-checked:border-accent"
-            }
-          >
-            <input
-              type={type}
-              name={name}
-              value={o.key}
-              {...(onChange
-                ? { checked: selected.includes(o.key), onChange: (e: React.ChangeEvent<HTMLInputElement>) => toggle(o.key, e.target.checked) }
-                : { defaultChecked: selected.includes(o.key) })}
-              required={type === "radio"}
-              className="mt-1 accent-accent"
-            />
-            <span>
-              <span className="block text-sm">{o.label}</span>
-              {o.description && (
-                <span className={`text-sm text-muted ${describeChosen ? "hidden group-has-checked:block" : "block"}`}>
-                  {o.description}
-                </span>
-              )}
-            </span>
-          </label>
-        ))}
-      </div>
+      {box(folded.length ? options.slice(0, more) : options)}
+      {folded.length > 0 && (
+        <details open={folded.some((o) => selected.includes(o.key))} className="group/more">
+          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-fg-secondary underline underline-offset-4 hover:text-fg-primary [&::-webkit-details-marker]:hidden">
+            <span className="group-open/more:hidden">{folded.length} more</span>
+            <span className="hidden group-open/more:inline">Fewer</span>
+          </summary>
+          <div className="mt-2">{box(folded)}</div>
+        </details>
+      )}
     </fieldset>
   );
 }

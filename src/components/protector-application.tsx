@@ -88,6 +88,7 @@ export function ProtectorApplication({
           legend="Languages"
           name="languages"
           options={LANGUAGES}
+          more={6}
           inline
           hint={note("languages")}
           selected={list("languages")}

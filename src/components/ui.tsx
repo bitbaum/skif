@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { DISPLAY_LOCALE, TIME_ZONE } from "@/config/locale";
+import { ACTION } from "./site/shell";
 
 export function PageHeader({ title, lead, children }: { title: string; lead?: ReactNode; children?: ReactNode }) {
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="font-heading text-3xl font-semibold tracking-display text-fg-primary">{title}</h1>
         {lead && <p className="max-w-2xl text-muted">{lead}</p>}
       </div>
       {children}
@@ -93,14 +94,12 @@ export function Badge({ tone = "neutral", children }: { tone?: Tone; children: R
 export const segmentClass =
   "flex min-h-11 cursor-pointer items-center justify-center rounded-lg border border-line bg-surface px-2 py-2 text-center text-sm has-checked:border-accent has-checked:bg-accent-soft has-checked:font-medium has-checked:text-accent has-focus-visible:ring-2 has-focus-visible:ring-accent";
 
-/** Every control is at least 44px tall (min-h-11), the smallest reliable tap target. */
+/** The public site's buttons (site/shell ACTION), so a button is one shape
+ * everywhere. Every control is at least 44px tall (min-h-11). */
 export const buttonClass = {
-  primary:
-    "inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-ink hover:opacity-90 disabled:opacity-50",
-  secondary:
-    "inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium hover:bg-bg disabled:opacity-50",
-  danger:
-    "inline-flex min-h-11 items-center justify-center rounded-lg border border-danger px-4 py-2 text-sm font-medium text-danger hover:bg-danger-soft disabled:opacity-50",
+  primary: `${ACTION.primary} disabled:opacity-50`,
+  secondary: `${ACTION.secondary} disabled:opacity-50`,
+  danger: `${ACTION.danger} disabled:opacity-50`,
   link: "inline-flex min-h-11 items-center text-sm font-medium text-accent underline-offset-4 hover:underline",
 } as const;
 

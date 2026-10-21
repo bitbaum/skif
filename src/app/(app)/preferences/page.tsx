@@ -72,6 +72,7 @@ export default async function PreferencesPage({
             hint="Leave empty for no preference. A Protector sharing none of these won't be matched to you."
             name="languages"
             options={LANGUAGES}
+            more={6}
             selected={prefs?.languages ?? []}
             inline
           />

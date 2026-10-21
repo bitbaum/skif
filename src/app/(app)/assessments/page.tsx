@@ -7,6 +7,7 @@ import { Field, Select, TextInput, toOptions } from "@/components/fields";
 import { VerdictBadge } from "@/components/safety-plan";
 import { buttonClass, ButtonLink, Card, Empty, formatWhen, PageHeader } from "@/components/ui";
 import { ENVIRONMENT_LIMITS, environmentTypeLabel, PLACE_TYPES } from "@/config/environments";
+import { FieldIcon } from "@/components/site/field-icon";
 import { HARM_FAMILIES } from "@/config/harm-families";
 import { AREAS } from "@/config/services";
 import { getDb } from "@/db/client";
@@ -40,9 +41,10 @@ export default async function AssessmentsPage() {
           Start here. Safety is more than locks and doors: we look at every part of your life, and never ask you to list
           who might attack you.
         </p>
-        <ul className="mt-3 flex flex-wrap gap-2 text-sm text-muted" aria-label="What we look at">
+        <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm text-fg-secondary sm:grid-cols-3 lg:grid-cols-5" aria-label="What we look at">
           {HARM_FAMILIES.map((f) => (
-            <li key={f.key} className="rounded-full border border-line px-3 py-1" title={f.description}>
+            <li key={f.key} className="flex items-center gap-2" title={f.description}>
+              <FieldIcon field={f.key} className="size-4 shrink-0 text-fg-tertiary" />
               {f.label}
             </li>
           ))}
