@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "@bitbaum/design-tokens/tokens.css";
 import "@bitbaum/accountkit/styles.css";
 import "./globals.css";
-import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
   title: { default: "Skif", template: "%s · Skif" },
@@ -25,7 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen font-sans antialiased">
         {children}
-        <SiteFooter />
       </body>
     </html>
   );

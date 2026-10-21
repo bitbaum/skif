@@ -62,6 +62,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   ],
   changelog: [
     {
+      date: "2026-10-21",
+      done: "A new public site. Each of the ten fields of safety has its own page: what can go wrong, every step that helps and what each one costs you in money, privacy and freedom. A quick check on the home page shows your free first steps without signing in. The Method page explains how Skif decides, the Academy lists what Protectors learn, and Join is for Protectors, schools and specialists.",
+    },
+    {
       date: "2026-10-20",
       done: "If you run a shop or work near a protest that may turn into unrest, your Safety Plan now covers it: follow the police route, close early, clear the window, agree with your neighbours who calls 117, check your insurance, protect the glass — and, if you want people with you while you close, book Protectors who keep you safe and never confront a crowd.",
     },

@@ -66,7 +66,7 @@ export type SafetyPlan = {
 const BENEFIT_RANK: Record<Level, number> = { LOW: 0, MEDIUM: 1, HIGH: 2 };
 
 /** Privacy first, then money, then how much it asks of the person's freedom. */
-function leastIntrusive(a: Intervention, b: Intervention): number {
+export function leastIntrusive(a: Intervention, b: Intervention): number {
   return (
     a.privacyImpact - b.privacyImpact ||
     costRank(a.cost) - costRank(b.cost) ||

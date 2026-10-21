@@ -29,11 +29,14 @@ End to end, with everything persisted in Postgres:
 ## Layout
 
 ```
-src/config/     what exists — services, constraints, interventions, weights (SSOT)
+src/config/     what exists — services, constraints, interventions, weights, the
+                public site's words (site.ts) and the Academy (academy.ts) (SSOT)
+src/site/       the public content pages as @bitbaum/sitekit data, assembled from
+                config (fields, method, academy, join); validated in site.test.ts
 src/domain/     pure logic — lifecycle state machine, matching, safety plan, inputs
 src/db/         Drizzle schema + client (no users table; OIDC sub is identity)
 src/server/     data access + authorisation, one module per concern
-src/app/        pages and server actions
+src/app/        pages and server actions — (public) for the site, (app) behind sign-in
 src/components/ UI
 drizzle/        committed SQL migrations
 ```
