@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import Link from "next/link";
 import { ChecklistCards } from "@/components/site/checklist-cards";
 import { PageHero } from "@/components/site/page-hero";
@@ -9,10 +10,7 @@ import { CHECKLISTS } from "@/config/checklists";
 import { PHOTOS } from "@/config/photos";
 import { ACT, QUICK_CHECK } from "@/config/site";
 
-export const metadata: Metadata = {
-  title: "Act",
-  description: "Checklists for one situation each, a quick check, a full Safety Plan, or a Protector beside you.",
-};
+export const metadata: Metadata = shareMetadata("/act");
 
 export default function ActPage() {
   return (

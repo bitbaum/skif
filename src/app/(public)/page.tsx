@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ChecklistCards } from "@/components/site/checklist-cards";
 import { FieldTiles } from "@/components/site/field-tiles";
@@ -8,9 +9,12 @@ import { SectionIntro } from "@/components/site/section-intro";
 import { ACTION, LABEL, SHELL } from "@/components/site/shell";
 import { CHECKLISTS } from "@/config/checklists";
 import { PHOTOS } from "@/config/photos";
+import { shareMetadata } from "@/site/share";
 import { FIELDS_SECTION, FREEDOM, HOME, PATHS, PEOPLE_TEASER, QUICK_CHECK } from "@/config/site";
 
 // Words live in src/config/site.ts; fields, checklists and photos in their own config.
+export const metadata: Metadata = shareMetadata("/");
+
 export default function Home() {
   return (
     <>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChecklistView } from "@/components/site/checklist";
@@ -21,8 +22,7 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const c = checklistBySlug((await params).slug);
-  return c ? { title: c.title, description: c.when } : {};
+  return shareMetadata(`/act/${(await params).slug}`);
 }
 
 export default async function ChecklistPage({ params }: { params: Params }) {

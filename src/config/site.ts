@@ -122,6 +122,15 @@ export const ACCOUNT = {
   notConfigured: "Accounts are not switched on in this copy of Skif.",
 } as const;
 
+/** Where Skif is served. Shared links and preview pictures are absolute
+ * against it (src/app/layout.tsx metadataBase). */
+export const PUBLIC_ORIGIN = "https://skif.orangecat.ch";
+
+export const ACADEMY_HERO = {
+  statement: "Learn what Protectors learn.",
+  lead: "From first aid and de-escalation to parkour, Muay Thai, Jiu-Jitsu, weapons and the law, and keeping your accounts and money safe. Open to anyone who wants to be more capable and freer for it.",
+} as const;
+
 export const HOME = {
   eyebrow: `Skif · ${PLACE} · ${STAGE}`,
   statement: "Safety and freedom, from every side.",

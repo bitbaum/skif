@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import Link from "next/link";
 import { FieldTiles } from "@/components/site/field-tiles";
 import { GuideList } from "@/components/site/guide-list";
@@ -10,10 +11,7 @@ import { RESEARCH } from "@/config/research";
 import { LIBRARY } from "@/config/site";
 import { researchHref } from "@/site/research";
 
-export const metadata: Metadata = {
-  title: "Library",
-  description: "Ten fields of safety, practical guides, sourced research, and how Skif decides.",
-};
+export const metadata: Metadata = shareMetadata("/library");
 
 export default function LibraryPage() {
   return (

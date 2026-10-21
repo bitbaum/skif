@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
+import { shareMetadata } from "@/site/share";
 import { GuideBrowser } from "@/components/site/guide-browser";
 import { PageHero } from "@/components/site/page-hero";
 import { SHELL } from "@/components/site/shell";
 import { GUIDES } from "@/config/guides";
 import { familyLabel, HARM_FAMILIES } from "@/config/harm-families";
 
-export const metadata: Metadata = {
-  title: "Guides",
-  description: "Practical guides: self-defence, weapons, combat sports, alcohol and drugs, driving, travel, devices, money, children and more.",
-};
+export const metadata: Metadata = shareMetadata("/guides");
 
 export default function GuidesIndex() {
   const cards = GUIDES.map((g) => ({ slug: g.slug, title: g.title, summary: g.summary, fields: g.fields, fieldLabels: g.fields.map(familyLabel).join(" · ") }));
