@@ -80,6 +80,7 @@ export const MENU = [
     links: [
       { href: "/protectors", label: "How it works", note: "What people book, and how a booking runs." },
       { href: signInTo("/bookings/new"), label: "Book a Protector", note: "Ask for what you need." },
+      { href: "/business", label: "For businesses and venues", note: "Shops, bars, clubs, offices, events." },
       { href: "/join", label: "Become a Protector", note: "Judgment, calm, care." },
     ],
     featured: { href: "/protectors", label: "Someone calm beside you", photo: "doorway" },

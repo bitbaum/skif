@@ -14,6 +14,7 @@ import { fieldConcerns, fieldSteps } from "./fields";
 import { guidePage } from "./guides";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
+import { businessPage } from "./business";
 import { privacyPage } from "./privacy";
 import { protectorsPage } from "./protectors";
 import { citations, researchPage } from "./research";
@@ -36,7 +37,7 @@ function pageExists(href: string): boolean {
   return ["(public)", "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
 
 function heroLinks(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));
@@ -103,6 +104,14 @@ describe("public site", () => {
     for (const r of RESEARCH) {
       const cited = citations(r);
       expect(cited, r.slug).toEqual(r.sources.map((_, i) => i + 1));
+    }
+  });
+
+  it("cites every source in a guide that has them, and gives no figures without them", () => {
+    for (const g of GUIDES) {
+      const cited = citations(g);
+      expect(cited, g.slug).toEqual((g.sources ?? []).map((_, i) => i + 1));
+      if (g.sources) expect(g.checked, g.slug).toBeTruthy();
     }
   });
 

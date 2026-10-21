@@ -87,6 +87,33 @@ export const PHOTOS = {
     alt: "A stack of old books and a pencil on a dark wooden desk.",
     credit: unsplash("Robin Worrall", "robin_rednine", "https://unsplash.com/photos/Q8HfuO9udts"),
   },
+  nightRoad: {
+    src: "/photos/night-road.jpg",
+    alt: "A car with its headlights on coming along a narrow, foggy country road lined with bare trees at dusk.",
+    credit: unsplash("Kwami Fattah Al Sissi", "kwami_heude_50", "https://unsplash.com/photos/HIxGOdDuQ9U"),
+  },
+  cityRiver: {
+    src: "/photos/river-swim.jpg",
+    alt: "A line of kayaks on a wide, sunlit city river, with people sitting along the bank under the trees.",
+    focus: "50% 60%",
+    credit: unsplash("Claudio Schwarz", "purzlbaum", "https://unsplash.com/photos/wN1KDeIz3A8"),
+  },
+  festival: {
+    src: "/photos/festival.jpg",
+    alt: "A dense festival crowd, seen from behind, facing a distant stage through smoke lit amber by stage lights.",
+    credit: unsplash("Yvette de Wit", "yvettedewit", "https://unsplash.com/photos/NYrVisodQ2M"),
+  },
+  platform: {
+    src: "/photos/platform.jpg",
+    alt: "A person with a backpack walking away down a covered train platform beside a waiting train.",
+    credit: unsplash("Jan Macháček", "machcz", "https://unsplash.com/photos/D0TKC9d4i78"),
+  },
+  eveningFlats: {
+    src: "/photos/evening-flats.jpg",
+    alt: "An apartment block with balconies and a few warmly lit windows against a deep blue evening sky.",
+    focus: "50% 65%",
+    credit: unsplash("Timur Seyfelmlyukov", "timurse", "https://unsplash.com/photos/_ElhRrxZNVQ"),
+  },
 } as const satisfies Record<string, Photo>;
 
 export type PhotoKey = keyof typeof PHOTOS;
