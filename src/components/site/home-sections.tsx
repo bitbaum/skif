@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { buttonClass } from "@/components/ui";
-import { DOORS, DOORS_SECTION, LOOP, METHOD_TEASER, PEOPLE_TEASER } from "@/config/site";
+import { DOORS, DOORS_SECTION, FREEDOM, LOOP, METHOD_TEASER, PEOPLE_TEASER } from "@/config/site";
 import { SectionIntro } from "./section-intro";
 import { ACTION, LABEL, SHELL } from "./shell";
 
@@ -64,6 +64,22 @@ export function PeopleTeaser() {
             {a.label}
           </Link>
         ))}
+      </div>
+    </section>
+  );
+}
+
+export function FreedomBand() {
+  return (
+    <section aria-labelledby="freedom-title" className="border-y border-subtle bg-surface-raised">
+      <div className={`${SHELL} grid gap-8 py-20 lg:grid-cols-12`}>
+        <div className="lg:col-span-5">
+          <p className={LABEL}>{FREEDOM.eyebrow}</p>
+          <h2 id="freedom-title" className="mt-3 font-heading text-4xl font-semibold leading-tight tracking-display text-fg-primary sm:text-5xl">
+            {FREEDOM.title}
+          </h2>
+        </div>
+        <p className="max-w-prose text-lg leading-relaxed text-fg-secondary lg:col-span-6 lg:col-start-7 lg:self-end">{FREEDOM.body}</p>
       </div>
     </section>
   );

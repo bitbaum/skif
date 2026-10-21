@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { GuideList } from "@/components/site/guide-list";
 import { SitePageView } from "@/components/site/site-page";
 import { LABEL } from "@/components/site/shell";
+import { guidesFor } from "@/config/guides";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
 import { fieldHref, fieldNumber, fieldPage } from "@/site/fields";
 
@@ -29,6 +31,14 @@ export default async function FieldPage({ params }: { params: Params }) {
   ];
   return (
     <SitePageView page={fieldPage(field)}>
+      {guidesFor(field.key).length > 0 && (
+        <section aria-labelledby="field-guides" className="mt-16">
+          <h2 id="field-guides" className="mb-6 font-heading text-lg font-semibold text-fg-primary">
+            Guides for this field
+          </h2>
+          <GuideList guides={guidesFor(field.key)} />
+        </section>
+      )}
       <nav aria-label="Other fields" className="mt-20 grid gap-px overflow-hidden rounded-card border border-subtle bg-subtle sm:grid-cols-2">
         {neighbours.map(({ rel, f }) => (
           <Link

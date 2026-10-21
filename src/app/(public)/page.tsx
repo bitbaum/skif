@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { FieldIndex } from "@/components/site/field-index";
-import { Doors, MethodTeaser, PeopleTeaser } from "@/components/site/home-sections";
+import { GuideList } from "@/components/site/guide-list";
+import { Doors, FreedomBand, MethodTeaser, PeopleTeaser } from "@/components/site/home-sections";
 import { QuickCheck } from "@/components/site/quick-check";
 import { SafetyMap } from "@/components/site/safety-map";
 import { SectionIntro } from "@/components/site/section-intro";
 import { ACTION, LABEL, SHELL } from "@/components/site/shell";
-import { FIELDS_SECTION, HOME, QUICK_CHECK } from "@/config/site";
+import { GUIDES } from "@/config/guides";
+import { FIELDS_SECTION, GUIDES_SECTION, HOME, QUICK_CHECK } from "@/config/site";
 
 // Words live in src/config/site.ts; the fields render from harm-families.ts.
 export default function Home() {
@@ -44,6 +46,16 @@ export default function Home() {
       <section aria-labelledby="fields-title" className={`${SHELL} py-20`}>
         <SectionIntro id="fields-title" eyebrow={FIELDS_SECTION.eyebrow} title={FIELDS_SECTION.title} lede={FIELDS_SECTION.lede} />
         <FieldIndex />
+      </section>
+
+      <FreedomBand />
+
+      <section aria-labelledby="guides-title" className={`${SHELL} py-20`}>
+        <SectionIntro id="guides-title" eyebrow={GUIDES_SECTION.eyebrow} title={GUIDES_SECTION.title} lede={GUIDES_SECTION.lede} />
+        <GuideList guides={GUIDES.slice(0, GUIDES_SECTION.onHome)} />
+        <Link href={GUIDES_SECTION.all.href} className={`${ACTION.secondary} mt-8`}>
+          {GUIDES_SECTION.all.label}
+        </Link>
       </section>
 
       <MethodTeaser />

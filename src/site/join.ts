@@ -61,13 +61,13 @@ export function joinPage(): SitePage {
         kind: "cards",
         heading: "Schools and trainers",
         blurb:
-          "The Academy will teach some courses itself and send people to partner schools for the rest. If you teach first aid, a martial art, driving, firearms safety at a licensed range, or digital security, we would like to talk.",
+          "The Academy will teach some courses itself and send people to partner schools for the rest. If you teach first aid, parkour, a combat sport, weapons at a licensed range, driving, or digital security, we would like to talk.",
         anchor: "schools",
         columns: 3,
         cards: [
           { title: "Medical", body: "First aid, emergency response and advanced courses." },
           { title: "Martial arts and self-defence", body: "Jiu-Jitsu, Muay Thai, Krav Maga, restraint and control." },
-          { title: "Firearms", body: "Licensed instructors and ranges: safe handling and Swiss weapons law." },
+          { title: "Weapons", body: "Licensed ranges and instructors for firearms; stick and blade arts; defence against weapons." },
           { title: "Driving", body: "Defensive and professional driving." },
           { title: "Digital", body: "Account security, privacy and the safe holding of keys." },
           { title: "People", body: "Trauma-informed care, conflict and crisis psychology." },

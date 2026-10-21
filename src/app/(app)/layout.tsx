@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Account } from "@/components/account";
 import { AppNav, type AppNavLink } from "@/components/app-nav";
 import { DevelopmentFooter } from "@/components/development-footer";
+import { SkifMark } from "@/components/site/skif-mark";
 import { isLokiWatcher, requireViewer } from "@/server/viewer";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +19,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen">
       <header className="border-b border-line bg-surface">
         <nav aria-label="Skif" className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 px-6 py-1">
-          <Link href="/" className="inline-flex min-h-11 items-center font-semibold">
+          <Link href="/" className="inline-flex min-h-11 items-center gap-2 font-semibold">
+            <SkifMark className="size-7" />
             Skif
           </Link>
           <AppNav links={links} className="order-last w-full md:order-none md:w-auto md:flex-1" />

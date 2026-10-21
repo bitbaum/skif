@@ -2,11 +2,14 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { validateSite, type SitePage } from "@bitbaum/sitekit";
 import { describe, expect, it } from "vitest";
-import { ACADEMY_AREAS, coursesIn } from "@/config/academy";
+import { ACADEMY_AREAS, COURSES, coursesIn } from "@/config/academy";
+import { GUIDES } from "@/config/guides";
+import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
 import { DOORS, FOOTER, HOME, METHOD_TEASER, NAV, PEOPLE_TEASER, QUICK_CHECK, SIGN_IN } from "@/config/site";
 import { academyPage } from "./academy";
 import { fieldConcerns, fieldPage, fieldSteps } from "./fields";
+import { guidePage } from "./guides";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
 
@@ -18,10 +21,17 @@ function pageExists(href: string): boolean {
   if (path === "") return existsSync(join(APP, "(public)", "page.tsx"));
   const [first, second] = path.split("/");
   if (first === "safety" && second) return Boolean(familyBySlug(second));
+  if (first === "guides" && second) return GUIDES.some((g) => g.slug === second);
   return ["(public)", "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), academyPage(), joinPage(), ...HARM_FAMILIES.map(fieldPage)];
+const CONTENT_PAGES: SitePage[] = [
+  methodPage(),
+  academyPage(),
+  joinPage(),
+  ...HARM_FAMILIES.map(fieldPage),
+  ...GUIDES.map(guidePage),
+];
 
 function hrefsOf(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));
@@ -72,5 +82,17 @@ describe("public site", () => {
 
   it("has a course in every Academy area", () => {
     for (const a of ACADEMY_AREAS) expect(coursesIn(a.key).length, a.key).toBeGreaterThan(0);
+  });
+
+  it("gives every guide a unique slug and real substance", () => {
+    expect(new Set(GUIDES.map((g) => g.slug)).size).toBe(GUIDES.length);
+    for (const g of GUIDES) expect(g.sections.length, g.slug).toBeGreaterThanOrEqual(3);
+  });
+
+  it("names only Academy courses and areas that exist in the ladder's training table", () => {
+    const table = SELF_DEFENCE_LADDER.sections.find((s) => s.kind === "table");
+    const named = table && table.kind === "table" ? table.rows.map((r) => r[2]) : [];
+    const known = new Set<string>([...COURSES.map((c) => c.title), ...ACADEMY_AREAS.map((a) => a.title), "Striking and grappling arts"]);
+    for (const n of named) expect(known.has(n), n).toBe(true);
   });
 });
