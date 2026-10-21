@@ -9,6 +9,7 @@ import { checklistBySlug, CHECKLISTS } from "@/config/checklists";
 import { guideBySlug } from "@/config/guides";
 import { familyLabel } from "@/config/harm-families";
 import { PHOTOS } from "@/config/photos";
+import { signInTo } from "@/config/site";
 import { guideHref } from "@/site/guides";
 
 type Params = Promise<{ slug: string }>;
@@ -54,7 +55,7 @@ export default async function ChecklistPage({ params }: { params: Params }) {
           <div className="rounded-card border border-subtle p-5">
             <p className={LABEL}>Want it done properly?</p>
             <p className="mt-2 text-sm leading-relaxed text-fg-secondary">A Safety Plan looks at your whole situation and weighs every step against your limits and budget.</p>
-            <Link href="/assessments" className={`${ACTION.secondary} mt-4`}>
+            <Link href={signInTo("/assessments")} className={`${ACTION.secondary} mt-4`}>
               Start an assessment
             </Link>
           </div>

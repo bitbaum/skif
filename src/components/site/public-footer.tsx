@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EMERGENCY_NUMBERS, NOT_AN_EMERGENCY_SERVICE } from "@/config/emergency";
-import { FOOTER, PLACE } from "@/config/site";
+import { FOOTER, MENU, PLACE } from "@/config/site";
 import { LABEL, SHELL } from "./shell";
 import { SkifMark } from "./skif-mark";
 
@@ -39,8 +39,8 @@ export function PublicFooter() {
             </p>
             <p className="mt-2 max-w-prose text-sm leading-relaxed text-fg-secondary">{FOOTER.tagline}</p>
           </div>
-          <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
-            {FOOTER.columns.map((col) => (
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8 lg:grid-cols-5">
+            {[...MENU.map((m) => ({ title: m.label, links: m.links })), FOOTER.more].map((col) => (
               <div key={col.title}>
                 <h2 className={LABEL}>{col.title}</h2>
                 <ul className="mt-2">

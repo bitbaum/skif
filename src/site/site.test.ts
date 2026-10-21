@@ -9,11 +9,12 @@ import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
 import { PHOTOS } from "@/config/photos";
 import { RESEARCH } from "@/config/research";
-import { ACT, FOOTER, HOME, LIBRARY, NAV, PATHS, PEOPLE_TEASER, QUICK_CHECK, SIGN_IN } from "@/config/site";
+import { ACT, CREATE_ACCOUNT, FOOTER, HOME, LIBRARY, MENU, PATHS, PEOPLE_TEASER, QUICK_CHECK, SIGN_IN } from "@/config/site";
 import { fieldConcerns, fieldSteps } from "./fields";
 import { guidePage } from "./guides";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
+import { privacyPage } from "./privacy";
 import { protectorsPage } from "./protectors";
 import { citations, researchPage } from "./research";
 
@@ -22,7 +23,10 @@ const PUBLIC = join(__dirname, "..", "..", "public");
 
 /** True when an in-site link reaches a page that exists. */
 function pageExists(href: string): boolean {
-  const path = href.split("#")[0].replace(/^\/+|\/+$/g, "");
+  const [route, query = ""] = href.split("#")[0].split("?");
+  const from = new URLSearchParams(query).get("from");
+  if (from && !pageExists(from)) return false;
+  const path = route.replace(/^\/+|\/+$/g, "");
   if (path === "") return existsSync(join(APP, "(public)", "page.tsx"));
   const [first, second] = path.split("/");
   if (second && first === "safety") return Boolean(familyBySlug(second));
@@ -32,7 +36,7 @@ function pageExists(href: string): boolean {
   return ["(public)", "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
 
 function heroLinks(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));
@@ -49,15 +53,16 @@ describe("public site", () => {
 
   it("links only to pages that exist", () => {
     const hrefs = [
-      ...NAV.map((n) => n.href),
+      ...MENU.flatMap((m) => [m.href, m.featured.href, ...m.links.map((l) => l.href)]),
       SIGN_IN.href,
+      CREATE_ACCOUNT.href,
       ...HOME.actions.map((a) => a.href),
       QUICK_CHECK.cta.href,
       ...PATHS.map((p) => p.href),
       ...ACT.help.items.map((h) => h.href),
       ...PEOPLE_TEASER.actions.map((a) => a.href),
       LIBRARY.method.href,
-      ...FOOTER.columns.flatMap((c) => c.links.map((l) => l.href)),
+      ...FOOTER.more.links.map((l) => l.href),
       ...CONTENT_PAGES.flatMap(heroLinks),
     ].filter((h) => h.startsWith("/"));
     for (const href of hrefs) expect(pageExists(href), href).toBe(true);

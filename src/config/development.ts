@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-21",
+      done: "You can create a Skif account straight from Skif, with your email, Google or GitHub, and land back where you were going. The menu now opens into panels listing every page with a line on each, and on a phone it is one full-screen map. A new page, What Skif keeps, lists every record Skif stores about you and what it never collects.",
+    },
+    {
+      date: "2026-10-21",
       done: "The site has two halves now. Act: checklists for one situation each (lock down your phone, a night out, a protest past your shop, travel, a family plan, a possible scam, right after an incident) that you tick off as you go, plus booking and the full Safety Plan. Library: the ten fields with every step that helps shown as a card with its cost to your privacy and freedom, the guides, and two research articles with every number tied to its source. The Academy shows one area at a time, the Protectors page explains how a booking works, and sign-in says how you can sign in or create an account.",
     },
     {
