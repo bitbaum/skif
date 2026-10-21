@@ -63,7 +63,7 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-21",
-      done: "Six new guides, each number tied to its source: situational awareness, alcohol and drugs (Zürich's free drug checking, the signs of alcohol poisoning, what to do and not do), driving (what causes serious crashes in Switzerland, the alcohol limits), lakes and rivers (the twelve SLRG rules), travel, and reading crime numbers for where you live. Three new checklists: a party or festival, a long drive, a swim. Guides can be filtered by field, and a page for businesses and venues says what Skif does for a place.",
+      done: "Six new guides, each number tied to its source: situational awareness, alcohol and drugs (Zürich's free drug checking, the signs of alcohol poisoning, what to do and not do), driving (what causes serious crashes in Switzerland, the alcohol limits), lakes and rivers (the twelve SLRG rules), travel, and reading crime numbers for where you live. Three new checklists: a party or festival, a long drive, a swim. Guides can be filtered by field, and a page for businesses and venues says what Skif does for a place. The Protectors page now says plainly what a Protector is not.",
     },
     {
       date: "2026-10-21",

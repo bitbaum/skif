@@ -48,6 +48,19 @@ export function protectorsPage(): SitePage {
         ],
       },
       {
+        kind: "definitions",
+        heading: "What a Protector is not",
+        blurb: "Said plainly, so nobody books the wrong thing.",
+        anchor: "not",
+        items: [
+          { term: "Not the police", detail: "A Protector has no police powers. When something needs the police, they call 117 and stay with you until they arrive." },
+          { term: "Not an emergency service", detail: "Skif cannot send police, an ambulance or the fire brigade. In an emergency, call them first." },
+          { term: "Not there to fight", detail: "The job is to keep things calm and keep you safe: distance, de-escalation, leaving. Force is the last resort, within the law, and never the plan." },
+          { term: "Not surveillance", detail: "The service is someone with you, not someone watching others. A Protector's report after a job is written words; Skif collects no photos or video." },
+          { term: "Not a guarantee", detail: "Nobody can promise nothing will happen. A Protector makes the likely things less likely and the bad moments shorter." },
+        ],
+      },
+      {
         kind: "prose",
         heading: "Weapons",
         anchor: "weapons",
