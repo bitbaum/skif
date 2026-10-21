@@ -20,7 +20,7 @@ export function guidePage(guide: Guide): SitePage {
     sections: [
       {
         kind: "hero",
-        eyebrow: `Guide · ${guide.fields.map(familyLabel).join(" · ")}`,
+        eyebrow: `Guide · ${guide.fields.map(familyLabel).join(" · ")}${guide.sources ? ` · ${guide.sources.length} sources` : ""}`,
         statement: guide.statement,
         lead: [...guide.lead],
         actions: [

@@ -1,6 +1,7 @@
 import type { SiteSection } from "@bitbaum/sitekit";
 import type { HarmFamily } from "../harm-families";
 import type { PhotoKey } from "../photos";
+import type { Source } from "../research/types";
 
 /**
  * A guide: deep, actionable reading on one subject, written as sitekit
@@ -24,4 +25,8 @@ export type Guide = {
   statement: string;
   lead: readonly string[];
   sections: readonly Exclude<SiteSection, { kind: "hero" }>[];
+  /** When the guide states figures, their sources, cited in the text as [n]
+   * exactly as in a research article; `checked` is when they were read. */
+  sources?: readonly Source[];
+  checked?: string;
 };

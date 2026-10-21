@@ -11,9 +11,9 @@ export function researchHref(r: Research): string {
   return `/research/${r.slug}`;
 }
 
-/** Every [n] cited anywhere in an article's text. */
-export function citations(r: Research): number[] {
-  const text = JSON.stringify(r.sections);
+/** Every [n] cited anywhere in an article's (or a guide's) text. */
+export function citations(r: Pick<Research, "lead" | "sections">): number[] {
+  const text = JSON.stringify([r.lead, r.sections]);
   return [...new Set([...text.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])))].sort((a, b) => a - b);
 }
 

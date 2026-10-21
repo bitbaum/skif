@@ -21,10 +21,22 @@ export default function Home() {
         <QuickCheck />
       </section>
 
-      <section aria-label="Act or understand" className={`${SHELL} grid gap-4 pb-20 md:grid-cols-2`}>
-        {PATHS.map((p) => (
-          <PhotoCard key={p.key} photo={PHOTOS[p.photo]} eyebrow={p.eyebrow} title={p.title} body={p.body} href={p.href} label={p.label} />
-        ))}
+      <section aria-label="Act or understand" className={`${SHELL} pb-20`}>
+        <div className="grid gap-4 md:grid-cols-2">
+          {PATHS.map((p) => (
+            <PhotoCard key={p.key} photo={PHOTOS[p.photo]} eyebrow={p.eyebrow} title={p.title} body={p.body} href={p.href} label={p.label} />
+          ))}
+        </div>
+        <Link
+          href="/business"
+          className="mt-4 flex min-h-11 items-center justify-between gap-4 rounded-card border border-subtle px-6 py-4 text-fg-primary hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          <span>
+            <span className="font-medium">Running a shop, bar, office or event?</span>{" "}
+            <span className="text-fg-secondary">See what Skif does for a place.</span>
+          </span>
+          <span aria-hidden>→</span>
+        </Link>
       </section>
 
       <section aria-labelledby="fields-title" className="border-y border-subtle bg-surface-raised">
