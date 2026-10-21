@@ -34,7 +34,7 @@ export function PublicFooter() {
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="flex items-center gap-2 font-heading text-lg font-semibold tracking-display text-fg-primary">
-              <SkifMark className="size-8" />
+              <SkifMark className="size-8 text-gold" />
               Skif
             </p>
             <p className="mt-2 max-w-prose text-sm leading-relaxed text-fg-secondary">{FOOTER.tagline}</p>

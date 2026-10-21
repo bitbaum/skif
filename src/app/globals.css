@@ -17,6 +17,8 @@
   --accent: #2f5d50;
   --accent-ink: #ffffff;
   --accent-soft: #e3ece8;
+  /* Scythian gold: the mark and small ornaments only, never an action. */
+  --gold: #9a7536;
   --warn: #8a5a12;
   --warn-soft: #f6ecd9;
   --danger: #9b2c2c;
@@ -30,6 +32,7 @@
   --accent: #7fb8a6;
   --accent-ink: #0e1512;
   --accent-soft: #22322d;
+  --gold: #d2ad6b;
   --warn: #e0b56a;
   --warn-soft: #2f2719;
   --danger: #ef9a9a;
@@ -124,6 +127,7 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
   --color-warn: var(--warn);
   --color-warn-soft: var(--warn-soft);
   --color-danger: var(--danger);

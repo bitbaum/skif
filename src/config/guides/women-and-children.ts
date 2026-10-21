@@ -5,6 +5,7 @@ export const WOMEN: Guide = {
   title: "Women's safety, as it actually is",
   fields: ["PHYSICAL", "PRIVACY", "FAMILY"],
   summary: "Stranger danger is half the story. Known people, digital stalking, and the skills that work for a smaller person.",
+  photo: "tramStop",
   statement: "Self-defence for women starts closer to home.",
   lead: [
     "The World Health Organization reports that the most common form of violence against women worldwide is violence by an intimate partner. Advice that only covers dark streets and strangers leaves most of the danger out.",
@@ -50,6 +51,7 @@ export const CHILDREN: Guide = {
   title: "Children's safety, by age",
   fields: ["FAMILY", "HEALTH", "CYBER"],
   summary: "What a child can learn at each age, from their own phone number to online grooming, without raising them afraid.",
+  photo: "familyPath",
   statement: "A capable child is a safer child.",
   lead: [
     "Children are not protected by fear of the world but by knowing what to do in it. Each skill below fits an age and grows with the child.",

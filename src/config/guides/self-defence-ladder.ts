@@ -5,6 +5,7 @@ export const SELF_DEFENCE_LADDER: Guide = {
   title: "Escape first: the self-defence ladder",
   fields: ["PHYSICAL", "RESILIENCE"],
   summary: "Avoid, escape, de-escalate, defend, recover — in that order, and why the order is the whole point.",
+  photo: "parkour",
   statement: "The best fight is the one you were never in.",
   lead: [
     "Self-defence is a ladder, not a technique. Each rung costs more and risks more than the one below it, so you climb only as far as you must: avoid, escape, de-escalate, defend, recover.",

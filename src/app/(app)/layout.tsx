@@ -20,7 +20,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="border-b border-line bg-surface">
         <nav aria-label="Skif" className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 px-6 py-1">
           <Link href="/" className="inline-flex min-h-11 items-center gap-2 font-semibold">
-            <SkifMark className="size-7" />
+            <SkifMark className="size-7 text-gold" />
             Skif
           </Link>
           <AppNav links={links} className="order-last w-full md:order-none md:w-auto md:flex-1" />

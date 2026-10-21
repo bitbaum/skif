@@ -3,44 +3,45 @@ import { join } from "node:path";
 import { validateSite, type SitePage } from "@bitbaum/sitekit";
 import { describe, expect, it } from "vitest";
 import { ACADEMY_AREAS, COURSES, coursesIn } from "@/config/academy";
-import { GUIDES } from "@/config/guides";
+import { CHECKLISTS } from "@/config/checklists";
+import { guideBySlug, GUIDES } from "@/config/guides";
 import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
-import { DOORS, FOOTER, HOME, METHOD_TEASER, NAV, PEOPLE_TEASER, QUICK_CHECK, SIGN_IN } from "@/config/site";
-import { academyPage } from "./academy";
-import { fieldConcerns, fieldPage, fieldSteps } from "./fields";
+import { PHOTOS } from "@/config/photos";
+import { RESEARCH } from "@/config/research";
+import { ACT, FOOTER, HOME, LIBRARY, NAV, PATHS, PEOPLE_TEASER, QUICK_CHECK, SIGN_IN } from "@/config/site";
+import { fieldConcerns, fieldSteps } from "./fields";
 import { guidePage } from "./guides";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
+import { protectorsPage } from "./protectors";
+import { citations, researchPage } from "./research";
 
 const APP = join(__dirname, "..", "app");
+const PUBLIC = join(__dirname, "..", "..", "public");
 
 /** True when an in-site link reaches a page that exists. */
 function pageExists(href: string): boolean {
   const path = href.split("#")[0].replace(/^\/+|\/+$/g, "");
   if (path === "") return existsSync(join(APP, "(public)", "page.tsx"));
   const [first, second] = path.split("/");
-  if (first === "safety" && second) return Boolean(familyBySlug(second));
-  if (first === "guides" && second) return GUIDES.some((g) => g.slug === second);
+  if (second && first === "safety") return Boolean(familyBySlug(second));
+  if (second && first === "guides") return GUIDES.some((g) => g.slug === second);
+  if (second && first === "research") return RESEARCH.some((r) => r.slug === second);
+  if (second && first === "act") return CHECKLISTS.some((c) => c.slug === second);
   return ["(public)", "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [
-  methodPage(),
-  academyPage(),
-  joinPage(),
-  ...HARM_FAMILIES.map(fieldPage),
-  ...GUIDES.map(guidePage),
-];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
 
-function hrefsOf(page: SitePage): string[] {
+function heroLinks(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));
 }
 
 describe("public site", () => {
   it("validates every content page against sitekit's schema", () => {
     const result = validateSite({
-      chrome: { name: "Skif", tagline: "Safety, studied from every side.", footerNote: "Beta" },
+      chrome: { name: "Skif", tagline: "Safety and freedom, from every side.", footerNote: "Beta" },
       pages: CONTENT_PAGES,
     });
     expect(result.success ? [] : result.errors).toEqual([]);
@@ -52,30 +53,22 @@ describe("public site", () => {
       SIGN_IN.href,
       ...HOME.actions.map((a) => a.href),
       QUICK_CHECK.cta.href,
-      METHOD_TEASER.cta.href,
+      ...PATHS.map((p) => p.href),
+      ...ACT.help.items.map((h) => h.href),
       ...PEOPLE_TEASER.actions.map((a) => a.href),
-      ...DOORS.map((d) => d.cta.href),
+      LIBRARY.method.href,
       ...FOOTER.columns.flatMap((c) => c.links.map((l) => l.href)),
-      ...CONTENT_PAGES.flatMap(hrefsOf),
+      ...CONTENT_PAGES.flatMap(heroLinks),
     ].filter((h) => h.startsWith("/"));
     for (const href of hrefs) expect(pageExists(href), href).toBe(true);
   });
 
-  it("points the home page's in-page actions at sections that exist", () => {
-    for (const a of HOME.actions.filter((x) => x.href.startsWith("#"))) expect(a.href).toBe("#check");
-  });
-
-  it("gives every field a page with something to read: concerns and steps", () => {
+  it("gives every field something to read and steps least intrusive first", () => {
     expect(new Set(HARM_FAMILIES.map((f) => f.slug)).size).toBe(HARM_FAMILIES.length);
     for (const f of HARM_FAMILIES) {
       expect(fieldConcerns(f).length, f.key).toBeGreaterThan(0);
-      expect(fieldSteps(f).length, f.key).toBeGreaterThan(0);
-    }
-  });
-
-  it("lists field steps least intrusive first, as a plan would", () => {
-    for (const f of HARM_FAMILIES) {
       const privacy = fieldSteps(f).map((i) => i.privacyImpact);
+      expect(privacy.length, f.key).toBeGreaterThan(0);
       expect(privacy, f.key).toEqual([...privacy].sort((a, b) => a - b));
     }
   });
@@ -94,5 +87,24 @@ describe("public site", () => {
     const named = table && table.kind === "table" ? table.rows.map((r) => r[2]) : [];
     const known = new Set<string>([...COURSES.map((c) => c.title), ...ACADEMY_AREAS.map((a) => a.title), "Striking and grappling arts"]);
     for (const n of named) expect(known.has(n), n).toBe(true);
+  });
+
+  it("points checklists at guides that exist", () => {
+    expect(new Set(CHECKLISTS.map((c) => c.slug)).size).toBe(CHECKLISTS.length);
+    for (const c of CHECKLISTS) if ("guide" in c) expect(guideBySlug(c.guide), c.slug).toBeDefined();
+  });
+
+  it("cites every source in a research article, and cites nothing that is missing", () => {
+    for (const r of RESEARCH) {
+      const cited = citations(r);
+      expect(cited, r.slug).toEqual(r.sources.map((_, i) => i + 1));
+    }
+  });
+
+  it("has a file for every photograph, credited", () => {
+    for (const [key, p] of Object.entries(PHOTOS)) {
+      expect(existsSync(join(PUBLIC, p.src)), key).toBe(true);
+      expect(p.credit.page.startsWith("https://unsplash.com/"), key).toBe(true);
+    }
   });
 });

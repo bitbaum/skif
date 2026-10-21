@@ -5,6 +5,7 @@ export const PROFESSIONALS: Guide = {
   title: "What professionals teach the public",
   fields: ["RESILIENCE", "HEALTH", "PHYSICAL"],
   summary: "Run, hide, tell; stopping a bleed; noticing warning signs. Public programmes from police and medicine, not agency myths.",
+  photo: "cprTraining",
   statement: "The best methods are published, tested and boring.",
   lead: [
     "Police forces, medical bodies and threat-assessment researchers publish guidance for the public, tested against real incidents. It is less exciting than stories about special forces and intelligence services, and far more useful.",

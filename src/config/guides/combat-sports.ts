@@ -5,6 +5,7 @@ export const COMBAT_SPORTS: Guide = {
   title: "Combat sports, judged on the street",
   fields: ["PHYSICAL", "HEALTH"],
   summary: "Boxing, Muay Thai, wrestling, judo, BJJ, Krav Maga, Systema and more, compared on what matters outside the gym.",
+  photo: "grappling",
   statement: "What you train against matters more than what it is called.",
   lead: [
     "Every martial art claims to work. The one test that predicts whether it will is live resistance: regular sparring against a partner who is really trying to stop you. Arts that spar build skill that survives adrenaline; arts that only drill often do not.",

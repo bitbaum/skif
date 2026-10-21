@@ -1,5 +1,6 @@
 import type { SiteSection } from "@bitbaum/sitekit";
 import type { HarmFamily } from "../harm-families";
+import type { PhotoKey } from "../photos";
 
 /**
  * A guide: deep, actionable reading on one subject, written as sitekit
@@ -18,6 +19,8 @@ export type Guide = {
   fields: readonly [HarmFamily, ...HarmFamily[]];
   /** One line for lists. */
   summary: string;
+  /** The opening photograph, when one fits. */
+  photo?: PhotoKey;
   statement: string;
   lead: readonly string[];
   sections: readonly Exclude<SiteSection, { kind: "hero" }>[];

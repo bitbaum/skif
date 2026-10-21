@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-21",
+      done: "The site has two halves now. Act: checklists for one situation each (lock down your phone, a night out, a protest past your shop, travel, a family plan, a possible scam, right after an incident) that you tick off as you go, plus booking and the full Safety Plan. Library: the ten fields with every step that helps shown as a card with its cost to your privacy and freedom, the guides, and two research articles with every number tied to its source. The Academy shows one area at a time, the Protectors page explains how a booking works, and sign-in says how you can sign in or create an account.",
+    },
+    {
+      date: "2026-10-21",
       done: "Nine practical guides: the self-defence ladder (escape first, the parkour way of seeing a street), weapons and what Swiss law allows, combat sports judged on the street, women's and children's safety, locking down your devices and disks, scams and Bitcoin keys, nature, travel and sport, and what professionals teach the public. The Academy now covers weapons, escape and movement, striking and grappling arts. Skif has a mark: a Scythian stag.",
     },
     {

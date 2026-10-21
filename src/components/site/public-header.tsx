@@ -14,7 +14,7 @@ export function PublicHeader() {
           href="/"
           className="inline-flex min-h-11 items-center gap-2 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          <SkifMark className="size-8 text-fg-primary" />
+          <SkifMark className="size-8 text-gold" />
           <span className="font-heading text-lg font-semibold tracking-display text-fg-primary">Skif</span>
           <span className={`${LABEL} rounded-full border border-subtle px-2 py-0.5`}>{STAGE}</span>
         </Link>

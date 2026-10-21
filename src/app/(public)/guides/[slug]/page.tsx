@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { SitePageView } from "@/components/site/site-page";
+import { SiteSectionsView } from "@/components/site/site-sections";
 import { guideBySlug, GUIDES } from "@/config/guides";
+import { PHOTOS } from "@/config/photos";
 import { guidePage } from "@/site/guides";
 
 type Params = Promise<{ slug: string }>;
@@ -20,5 +21,5 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function GuidePage({ params }: { params: Params }) {
   const guide = guideBySlug((await params).slug);
   if (!guide) notFound();
-  return <SitePageView page={guidePage(guide)} />;
+  return <SiteSectionsView sections={guidePage(guide).sections} photo={guide.photo ? PHOTOS[guide.photo] : undefined} />;
 }

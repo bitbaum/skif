@@ -5,6 +5,7 @@ export const BEYOND_PEOPLE: Guide = {
   title: "Risks that are not people: nature, animals, travel and sport",
   fields: ["ENVIRONMENTAL", "HEALTH", "RESILIENCE"],
   summary: "Avalanches, floods, ticks, cows, cities abroad and the sports you love: measured, not feared.",
+  photo: "skiTouring",
   statement: "Most risk does not have a face.",
   lead: [
     "Weather, terrain, animals, a city you do not know and the sport you love all carry risk, often more than the people around you. Skif treats them the same way: understand the risk, reduce what is cheap to reduce, and then go and live.",
@@ -49,7 +50,7 @@ export const BEYOND_PEOPLE: Guide = {
       heading: "The sports you choose",
       anchor: "sport",
       paragraphs: [
-        "Risk researchers use the micromort, a one-in-a-million chance of death, to compare activities on one scale. On it, BASE jumping sits among the most dangerous things people do for fun, high-altitude mountaineering and motorcycling are high, and most team sports are low.",
+        "Risk researchers use the micromort, a one-in-a-million chance of death, to compare activities on one scale. A skydive in the United States carries about 4.6; a BASE jump from Kjerag in Norway about 430; a general anaesthetic about 10. The sources are in the Library's research on the science of safety.",
         "Death is not the only cost. Combat sports carry the slower risk of repeated head impacts; endurance sports carry heat and heart risks; mountain sports carry terrain and weather. Each one is reduced the same way: training, the right equipment, reading conditions, and partners who will say no.",
         "Skif does not tell anyone which risks are worth taking. It helps you see their size, so that the choice is yours and informed.",
       ],
