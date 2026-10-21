@@ -45,7 +45,7 @@ export function joinPage(): SitePage {
           { term: "De-escalation", detail: "Ending conflict with words, distance and posture rather than force." },
           { term: "First aid", detail: "Being the useful person in the minutes before help arrives." },
           { term: "Care", detail: "Discretion, respect and a feel for people who have been through something." },
-          { term: "Languages", detail: `${LANGUAGES.map((l) => l.label).join(", ")}: each one widens who you can help.` },
+          { term: "Languages", detail: `German, English, French, Italian and ${LANGUAGES.length - 4} more, from Albanian to Ukrainian: each one widens who you can help.` },
         ],
       },
       {

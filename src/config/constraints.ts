@@ -93,12 +93,31 @@ export const PRESENCE_STYLE_KEYS = PRESENCE_STYLES.map((p) => p.key) as [
   ...PresenceStyle[],
 ];
 
+/** Languages a person can ask to be spoken to in, and a Protector can offer.
+ * The site itself is English only; this list is about people. Switzerland's
+ * own languages and English first, then the languages most spoken in Zürich
+ * beside them, alphabetically. Keys are ISO 639 codes ("sh", Serbo-Croatian, covers Bosnian,
+ * Croatian, Montenegrin and Serbian, which speakers understand across). */
 export const LANGUAGES = [
   { key: "de", label: "German" },
   { key: "gsw", label: "Swiss German" },
   { key: "en", label: "English" },
   { key: "fr", label: "French" },
   { key: "it", label: "Italian" },
+  { key: "rm", label: "Romansh" },
+  { key: "sq", label: "Albanian" },
+  { key: "ar", label: "Arabic" },
+  { key: "sh", label: "Serbo-Croatian" },
+  { key: "zh", label: "Chinese" },
+  { key: "fa", label: "Persian" },
+  { key: "pl", label: "Polish" },
+  { key: "pt", label: "Portuguese" },
+  { key: "ru", label: "Russian" },
+  { key: "es", label: "Spanish" },
+  { key: "ta", label: "Tamil" },
+  { key: "ti", label: "Tigrinya" },
+  { key: "tr", label: "Turkish" },
+  { key: "uk", label: "Ukrainian" },
 ] as const;
 
 export type LanguageKey = (typeof LANGUAGES)[number]["key"];

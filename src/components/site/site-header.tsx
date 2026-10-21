@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PHOTOS } from "@/config/photos";
-import { CREATE_ACCOUNT, MENU, SIGN_IN, STAGE } from "@/config/site";
+import { Account } from "@/components/account";
+import { CREATE_ACCOUNT, MENU, MY_SKIF, SIGN_IN, STAGE } from "@/config/site";
 import { ACTION, LABEL, SHELL } from "./shell";
 import { SkifMark } from "./skif-mark";
 
@@ -24,12 +25,15 @@ type Section = (typeof MENU)[number];
  * (SHARED.md "Navigation chrome") after sitekit's nav shipped the same defects
  * to every consumer; the contract and its audit are what is shared.
  */
-export function SiteHeader() {
+export function SiteHeader({ account }: { account?: { name: string } }) {
   const pathname = usePathname();
   const [open, setOpen] = useState<Section["key"] | null>(null);
   const [phoneOpen, setPhoneOpen] = useState(false);
   const header = useRef<HTMLElement>(null);
-  const signedIn = useSignedIn();
+  // Signed-in pages know who it is on the server; the public pages are static
+  // and ask once in the browser.
+  const asked = useSessionName(!account);
+  const who = account ?? asked;
 
   // Navigating closes whatever was open (derived during render, not in an effect).
   const [lastPath, setLastPath] = useState(pathname);
@@ -114,12 +118,17 @@ export function SiteHeader() {
           </nav>
 
           <div className="ml-auto hidden items-center gap-2 lg:flex">
-            <AccountLinks signedIn={signedIn} />
+            <AccountLinks who={who} />
           </div>
 
+          {who ? (
+            <div className="ml-auto lg:hidden">
+              <Account name={who.name} />
+            </div>
+          ) : null}
           <button
             type="button"
-            className="ml-auto inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent lg:hidden"
+            className={`${who ? "" : "ml-auto"} inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent lg:hidden`}
             aria-label={phoneOpen ? "Close menu" : "Open menu"}
             aria-expanded={phoneOpen}
             aria-controls="phone-menu"
@@ -136,8 +145,8 @@ export function SiteHeader() {
       {phoneOpen && (
         <div id="phone-menu" className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-surface-page lg:hidden">
           <nav aria-label="Main" className={`${SHELL} space-y-8 py-6`}>
-            <div className="grid grid-cols-2 gap-2 ">
-              <AccountLinks signedIn={signedIn} stretch />
+            <div className="grid grid-cols-2 gap-2">
+              <AccountLinks who={who} stretch />
             </div>
 
             {MENU.map((m) => (
@@ -218,15 +227,19 @@ function Panel({ section }: { section: Section }) {
   );
 }
 
-/** Signed out: Sign in and Create account. Signed in: one way back in. The
- * public pages are static, so the session is asked for once in the browser. */
-function AccountLinks({ signedIn, stretch = false }: { signedIn: boolean; stretch?: boolean }) {
+/** Signed out: Sign in and Create account. Signed in: the way to My Skif,
+ * and (on a wide screen) the fleet account menu beside it. On a phone the
+ * account menu sits in the bar itself, so the full-screen menu only links. */
+function AccountLinks({ who, stretch = false }: { who: { name: string } | null; stretch?: boolean }) {
   const w = stretch ? "w-full" : "";
-  if (signedIn) {
+  if (who) {
     return (
-      <Link href="/assessments" className={`${ACTION.primary} ${w} ${stretch ? "col-span-2" : ""}`}>
-        My Skif
-      </Link>
+      <>
+        <Link href={MY_SKIF.href} className={`${ACTION.secondary} ${w} ${stretch ? "col-span-2" : ""}`}>
+          {MY_SKIF.label}
+        </Link>
+        {stretch ? null : <Account name={who.name} />}
+      </>
     );
   }
   return (
@@ -241,17 +254,22 @@ function AccountLinks({ signedIn, stretch = false }: { signedIn: boolean; stretc
   );
 }
 
-function useSignedIn(): boolean {
-  const [signedIn, setSignedIn] = useState(false);
+/** Who is signed in, asked of Auth.js once in the browser; null when nobody
+ * is (or when the page already knows and `ask` is false). */
+function useSessionName(ask: boolean): { name: string } | null {
+  const [who, setWho] = useState<{ name: string } | null>(null);
   useEffect(() => {
+    if (!ask) return;
     let live = true;
     fetch("/api/auth/session")
       .then((r) => (r.ok ? r.json() : null))
-      .then((s: { user?: { id?: string } } | null) => live && setSignedIn(Boolean(s?.user?.id)))
+      .then((s: { user?: { id?: string; name?: string | null } } | null) => {
+        if (live && s?.user?.id) setWho({ name: s.user.name ?? "" });
+      })
       .catch(() => {});
     return () => {
       live = false;
     };
-  }, []);
-  return signedIn;
+  }, [ask]);
+  return who;
 }
