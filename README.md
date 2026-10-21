@@ -30,10 +30,13 @@ End to end, with everything persisted in Postgres:
 
 ```
 src/config/     what exists — services, constraints, interventions, weights, the
-                public site's words (site.ts), the Academy (academy.ts) and the guides
-                (guides/) (SSOT)
+                public site's words (site.ts), the Academy (academy.ts), guides (guides/),
+                research with sources (research/), Act checklists (checklists.ts)
+                and photographs with credits (photos.ts) (SSOT)
 src/site/       the public content pages as @bitbaum/sitekit data, assembled from
-                config (fields, guides, method, academy, join); validated in site.test.ts
+                config (guides, research, method, protectors, join); validated in
+                site.test.ts. Drawn with sitekit's renderers, except page openings
+                (photographs) and tables (stack on phones), which sitekit cannot do
 src/domain/     pure logic — lifecycle state machine, matching, safety plan, inputs
 src/db/         Drizzle schema + client (no users table; OIDC sub is identity)
 src/server/     data access + authorisation, one module per concern

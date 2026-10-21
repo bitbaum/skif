@@ -26,6 +26,7 @@
     "drizzle-orm": "^0.45.3",
     "limitkit": "^0.2.0",
     "listkit": "github:bitbaum/listkit#v0.1.0",
+    "lucide-react": "1.58.0",
     "next": "16.3.8",
     "next-auth": "5.0.0-beta.32",
     "pg": "^8.23.0",

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { SitePageView } from "@/components/site/site-page";
+import { Scale } from "lucide-react";
+import { SiteSectionsView } from "@/components/site/site-sections";
 import { methodPage } from "@/site/method";
 
 export const metadata: Metadata = {
-  title: "Method",
-  description: "How Skif decides: the most proportionate step, what every step costs, hard limits and how a Protector is chosen.",
+  title: "How Skif decides",
+  description: "The most proportionate step, what every step costs, hard limits, and how a Protector is chosen.",
 };
 
 export default function MethodPage() {
-  return <SitePageView page={methodPage()} />;
+  return <SiteSectionsView sections={methodPage().sections} icon={<Scale aria-hidden className="size-6" strokeWidth={1.75} />} />;
 }

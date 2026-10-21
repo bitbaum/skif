@@ -72,7 +72,7 @@ export const ACADEMY_AREAS = [
     slug: "weapons",
     title: "Weapons",
     intro:
-      "What weapons are, how they move and what the law allows: firearms at licensed ranges, sticks and blades, defence against weapons, and seeing the everyday objects that can protect you. Skif bookings do not involve weapons.",
+      "What weapons are, how they move and what the law allows: firearms at licensed ranges, sticks and blades, defence against weapons, and seeing the everyday objects that can protect you.",
   },
   {
     key: "MOBILITY",

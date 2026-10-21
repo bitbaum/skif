@@ -64,7 +64,7 @@ export const WEAPONS: Guide = {
       items: [
         { question: "Should I carry something for self-defence?", answer: "Look at the law where you are first. For most people, a charged phone, a light, shoes you can run in and the habit of noticing do more than any object. Training changes more than a tool does." },
         { question: "Is pepper spray a good idea?", answer: "It can create the moment you need to leave, and it can blow back in wind or a closed room. If you carry it, practise drawing it, and treat using it as using force." },
-        { question: "Do Skif Protectors carry weapons?", answer: "No. Skif bookings do not involve weapons: a Protector's tools are judgment, distance, de-escalation and first aid." },
+        { question: "Do Skif Protectors carry weapons?", answer: "Most Skif work involves no weapon at all. A Protector carries one only where they hold the legal licence to carry it and the job calls for it." },
       ],
     },
   ],

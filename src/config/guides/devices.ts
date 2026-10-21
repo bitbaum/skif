@@ -5,6 +5,7 @@ export const DEVICES: Guide = {
   title: "Lock down your devices and accounts",
   fields: ["CYBER", "PRIVACY"],
   summary: "Encrypt the disk, protect the email account that resets everything, and back up — a checklist in order of what matters.",
+  photo: "phoneDark",
   statement: "An hour today closes most of the doors.",
   lead: [
     "Most digital break-ins are not clever. They use a reused password, a code sent by SMS, a phone without a passcode or a laptop left unencrypted. Closing those takes an afternoon and costs little or nothing.",

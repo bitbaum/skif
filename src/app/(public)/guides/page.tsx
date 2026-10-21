@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
 import { GuideList } from "@/components/site/guide-list";
-import { SectionIntro } from "@/components/site/section-intro";
+import { PageHero } from "@/components/site/page-hero";
 import { SHELL } from "@/components/site/shell";
-import { GUIDES_SECTION } from "@/config/site";
 import { GUIDES } from "@/config/guides";
 
 export const metadata: Metadata = {
   title: "Guides",
-  description: "Deep, practical guides on self-defence, weapons, combat sports, devices, money, children, travel and more.",
+  description: "Practical guides on self-defence, weapons, combat sports, devices, money, children, travel and more.",
 };
 
 export default function GuidesIndex() {
   return (
-    <div className={`${SHELL} pt-14 sm:pt-20`}>
-      <SectionIntro id="guides-title" eyebrow={GUIDES_SECTION.eyebrow} title={GUIDES_SECTION.title} lede={GUIDES_SECTION.lede} />
-      <GuideList guides={GUIDES} />
-    </div>
+    <>
+      <PageHero
+        eyebrow="Library · Guides"
+        statement="Read deeper. Act today."
+        lead={["Each guide covers one subject in depth and ends in steps you can take this week."]}
+      />
+      <div className={SHELL}>
+        <GuideList guides={GUIDES} />
+      </div>
+    </>
   );
 }

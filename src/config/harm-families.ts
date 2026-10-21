@@ -4,6 +4,8 @@
  * catalogue must answer every family — a threat model with only the physical
  * row is the conventional security company the doctrine rejects.
  */
+import type { PhotoKey } from "./photos";
+
 type HarmFamilyDef = {
   key: string;
   label: string;
@@ -17,6 +19,8 @@ type HarmFamilyDef = {
   /** What the field covers and how Skif thinks about it. No statistics:
    * nothing here is a claim we cannot show (docs/DOCTRINE.md). */
   explainer: readonly string[];
+  /** The field page's photograph; fields without one open with their icon. */
+  photo?: PhotoKey;
 };
 
 export const HARM_FAMILIES = [
@@ -25,6 +29,7 @@ export const HARM_FAMILIES = [
     label: "Physical",
     short: "Physical",
     slug: "physical",
+    photo: "oldTownNight",
     description: "Violence, stalking, break-ins, being followed.",
     headline: "Your body, your home, the way between them.",
     explainer: [
@@ -37,6 +42,7 @@ export const HARM_FAMILIES = [
     label: "Cyber and digital",
     short: "Digital",
     slug: "digital",
+    photo: "phoneDark",
     description: "Accounts, devices, phishing, crypto keys.",
     headline: "Most break-ins now start with a password.",
     explainer: [
@@ -49,6 +55,7 @@ export const HARM_FAMILIES = [
     label: "Privacy",
     short: "Privacy",
     slug: "privacy",
+    photo: "nightStreet",
     description: "Being found, tracked or profiled; leaked addresses.",
     headline: "Being hard to find is a form of safety.",
     explainer: [
@@ -73,6 +80,7 @@ export const HARM_FAMILIES = [
     label: "Family and loved ones",
     short: "Family",
     slug: "family",
+    photo: "familyPath",
     description: "Children, partners, vulnerable relatives.",
     headline: "The people you love are part of your threat model.",
     explainer: [
@@ -85,6 +93,7 @@ export const HARM_FAMILIES = [
     label: "Health and emergencies",
     short: "Health",
     slug: "health",
+    photo: "cprTraining",
     description: "First aid and preparedness — never instead of medical care.",
     headline: "The first minutes are yours.",
     explainer: [
@@ -109,6 +118,7 @@ export const HARM_FAMILIES = [
     label: "Places and surroundings",
     short: "Places",
     slug: "places",
+    photo: "skiTouring",
     description: "Hazards at home or work, the area around you, occasions.",
     headline: "Every place has its own risks.",
     explainer: [
@@ -133,6 +143,7 @@ export const HARM_FAMILIES = [
     label: "When things go wrong",
     short: "Resilience",
     slug: "resilience",
+    photo: "doorway",
     description: "Backup access, trusted contacts, what to do next.",
     headline: "Prevention fails sometimes. Plan for that.",
     explainer: [
