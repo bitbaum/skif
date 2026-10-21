@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Account } from "@/components/account";
 import { AppNav, type AppNavLink } from "@/components/app-nav";
+import { DevelopmentFooter } from "@/components/development-footer";
 import { isLokiWatcher, requireViewer } from "@/server/viewer";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -27,6 +28,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </nav>
       </header>
       <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+      <DevelopmentFooter />
     </div>
   );
 }

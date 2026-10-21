@@ -204,8 +204,8 @@ export type ConcernKey = (typeof CONCERNS)[number]["key"];
 export const CONCERN_KEYS = CONCERNS.map((c) => c.key) as [ConcernKey, ...ConcernKey[]];
 
 /** The concerns a person can tick for this kind of place. */
-export function concernsFor(env: EnvironmentType): ConcernDef[] {
-  return (CONCERNS as readonly ConcernDef[]).filter((c) => !c.derived && c.environments.includes(env));
+export function concernsFor(env: EnvironmentType): (typeof CONCERNS)[number][] {
+  return CONCERNS.filter((c) => !c.derived && (c.environments as readonly EnvironmentType[]).includes(env));
 }
 
 export function concernFamily(key: string): HarmFamily | undefined {

@@ -80,6 +80,39 @@
   min-height: var(--ck-target);
 }
 
+/* Public pages render their sections with @bitbaum/sitekit, whose markup
+   emits semantic classes only (text-fg-*, border-subtle, font-heading …).
+   They are mapped below onto the same tokens, so sitekit draws in Skif's
+   colours and flips with `.dark`. */
+@source "../../node_modules/@bitbaum/sitekit/dist";
+
+@theme inline {
+  --color-fg-primary: hsl(var(--text-primary));
+  --color-fg-secondary: hsl(var(--text-secondary));
+  --color-fg-tertiary: hsl(var(--text-tertiary));
+  /* sitekit sets its smallest mono metadata in fg-muted; the fleet's muted
+     grey falls under AA there, so Skif lifts it to tertiary (as for chatkit). */
+  --color-fg-muted: hsl(var(--text-tertiary));
+  --color-surface-page: hsl(var(--surface-page));
+  --color-surface-raised: hsl(var(--surface-raised));
+  --color-subtle: hsl(var(--border-subtle));
+  --color-strong: hsl(var(--border-strong));
+  --color-status-positive: hsl(var(--status-positive));
+  --color-status-warning: hsl(var(--status-warning));
+  --color-status-negative: hsl(var(--status-negative));
+  /* Headlines are the sans, as on OrangeCat, Loki and Solon. */
+  --font-heading: var(--font-sans);
+  --tracking-caps: var(--tracking-caps);
+  --tracking-display: var(--tracking-display);
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @theme inline {
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
