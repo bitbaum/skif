@@ -160,11 +160,12 @@ body {
   color: var(--ink);
 }
 
-/* bip-kit's roadmap/changelog renderer (src/components/development-records.tsx)
-   themes itself through --bp-* variables. Set on its own root element, they
+/* bip-kit's renderers — roadmap/changelog (src/components/development-records.tsx)
+   and blog posts (bp-article) — theme themselves through --bp-* variables. Set on its own root element, they
    follow Skif's tokens — including the `.dark` flip — instead of bip-kit's
    neutral defaults and its own OS-preference dark block. */
-.bp-development {
+.bp-development,
+.bp-article {
   --bp-font-sans: var(--font-sans);
   --bp-font-mono: var(--font-mono);
   --bp-radius: var(--radius-surface);

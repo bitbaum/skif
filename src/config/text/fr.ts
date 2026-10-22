@@ -193,6 +193,7 @@ export const FR: SiteWords = {
   footer: {
     more: "Skif",
     privacy: "Ce que Skif garde",
+    blog: "Blog",
     roadmap: "Feuille de route",
     changelog: "Nouveautés",
     credits: "Crédits photo",
@@ -306,6 +307,13 @@ export const FR: SiteWords = {
       ifNot: "Si tu n'as pas de nouvelles d'ici là",
       ifNotDefault: "Si tu n'as pas de nouvelles d'ici là, appelle-moi, et si je ne réponds pas, appelle la police.",
     },
+  },
+  blog: {
+    eyebrow: "Blog",
+    statement: "Ce que nous construisons, et pourquoi.",
+    lead: "Les notes de celles et ceux qui construisent Skif : ce qui est sorti, ce que nous avons raté, et ce que nous avons appris en route. En anglais.",
+    minutes: (n: number) => `${n} min de lecture`,
+    all: "Tous les articles",
   },
   notTranslated: "Une partie de cette page est encore en anglais. La traduction arrive.",
 };

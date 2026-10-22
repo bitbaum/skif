@@ -199,6 +199,7 @@ export function siteText(locale: Locale) {
         title: w.footer.more,
         links: [
           { href: "/privacy", label: w.footer.privacy },
+          { href: "/blog", label: w.footer.blog },
           { href: "/roadmap", label: w.footer.roadmap },
           { href: "/changelog", label: w.footer.changelog },
           { href: "/credits", label: w.footer.credits },
@@ -206,6 +207,7 @@ export function siteText(locale: Locale) {
       },
       stage: w.stageLine,
     },
+    BLOG: w.blog,
     NOT_TRANSLATED: w.notTranslated,
   };
 }
@@ -232,6 +234,7 @@ export const {
   LIBRARY,
   PEOPLE_TEASER,
   FOOTER,
+  BLOG,
 } = siteText("en");
 
 /** DOCTRINE.md "The loop", shown on the Method page. */

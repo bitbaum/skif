@@ -15,7 +15,8 @@ import { HARM_FAMILIES } from "@/config/harm-families";
 import type { PhotoKey } from "@/config/photos";
 import { DEFAULT_LOCALE, LOCALE_TAGS, LOCALES, localizedPath, type Locale } from "@/i18n/locales";
 import { RESEARCH } from "@/config/research";
-import { ACADEMY_HERO, ACT, EMERGENCY_PAGE, HOME, LIBRARY } from "@/config/site";
+import { ACADEMY_HERO, ACT, BLOG, EMERGENCY_PAGE, HOME, LIBRARY } from "@/config/site";
+import { BLOG_POSTS } from "./blog";
 import { businessPage } from "./business";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
@@ -63,6 +64,8 @@ export const SHARE_CARDS: readonly ShareCard[] = [
   fromSitePage("/join", joinPage(), "Work with Skif as a Protector, a school or a specialist.", "parkour"),
   fromSitePage("/method", methodPage(), "The most proportionate step, what every step costs, hard limits, and how a Protector is chosen."),
   fromSitePage("/privacy", privacyPage(), "Every record Skif stores about you, who sees it, and what Skif never collects."),
+  { path: "/blog", title: "Blog", description: BLOG.lead, eyebrow: "Blog", headline: BLOG.statement, photo: "books" },
+  ...BLOG_POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: p.title, description: p.summary, eyebrow: `Blog · ${BLOG.minutes(p.minutes)}`, headline: p.title, photo: p.photo })),
   ...GUIDES.map((g) => ({ path: `/guides/${g.slug}`, title: g.title, description: g.summary, eyebrow: "Guide", headline: g.title, photo: g.photo })),
   ...RESEARCH.map((r) => ({ path: `/research/${r.slug}`, title: r.title, description: r.summary, eyebrow: `Research · ${r.sources.length} sources`, headline: r.title, photo: r.photo })),
   ...CHECKLISTS.map((c) => ({
@@ -105,7 +108,7 @@ export function shareMetadata(path: string, locale: Locale = DEFAULT_LOCALE): Me
     description: card.description,
     alternates: { canonical: here, languages },
     openGraph: {
-      type: path.startsWith("/guides/") || path.startsWith("/research/") ? "article" : "website",
+      type: path.startsWith("/guides/") || path.startsWith("/research/") || path.startsWith("/blog/") ? "article" : "website",
       siteName: "Skif",
       url: here,
       locale: LOCALE_TAGS[locale].replace("-", "_"),
