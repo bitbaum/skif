@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { DISPLAY_LOCALE, TIME_ZONE } from "@/config/locale";
-import { ACTION } from "./site/shell";
+import { ACTION, CARD } from "./site/shell";
 
 export function PageHeader({ title, lead, children }: { title: string; lead?: ReactNode; children?: ReactNode }) {
   return (
@@ -27,7 +27,7 @@ export function Card({
   id?: string;
 }) {
   return (
-    <section id={id} className={`rounded-card border border-line bg-surface p-5 ${className}`}>
+    <section id={id} className={`${CARD} p-5 ${className}`}>
       {title && <h2 className="mb-3 text-lg font-semibold">{title}</h2>}
       {children}
     </section>
@@ -108,7 +108,7 @@ export function ButtonLink({ variant = "primary", ...props }: ComponentProps<typ
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-card border border-dashed border-line p-6 text-center text-muted">{children}</p>;
+  return <p className="rounded-card border border-dashed border-subtle p-6 text-center text-muted">{children}</p>;
 }
 
 export function DefinitionList({ items }: { items: [string, ReactNode][] }) {

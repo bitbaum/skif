@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Cards look the same everywhere now: your bookings, preferences and training are drawn exactly like the cards on the public pages, from one definition, and a test refuses a second look.",
+    },
+    {
+      date: "2026-10-22",
       done: "The rest of the site now speaks German, French and Italian too: how Skif decides, Protectors, places and businesses, joining, privacy, both research articles and every Academy course. Only the blog, the roadmap and the changelog stay in English, and they say so.",
     },
     {

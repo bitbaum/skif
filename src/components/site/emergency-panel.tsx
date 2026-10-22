@@ -6,7 +6,7 @@ import { COUNTRIES, countryByCode, countryForTimeZone, EU_112_SOURCE, type Count
 import { wordsFor, type SiteWords } from "@/config/text";
 import { LOCALE_TAGS, type Locale } from "@/i18n/locales";
 import { locationMessage, planMessage, smsLink, type Plan, type Position } from "@/lib/share-text";
-import { ACTION, LABEL } from "./shell";
+import { ACTION, LABEL, PANEL } from "./shell";
 
 /**
  * The emergency page's three jobs, in the order they are needed: call the
@@ -187,7 +187,7 @@ function ShareLocation({ w }: { w: Words }) {
     );
   };
   return (
-    <section aria-labelledby="where-title" className="rounded-card border border-subtle p-5 sm:p-8">
+    <section aria-labelledby="where-title" className={`${PANEL} p-5 sm:p-8`}>
       <h2 id="where-title" className="flex items-center gap-2 font-heading text-2xl font-semibold tracking-display text-fg-primary">
         <MapPin aria-hidden className="size-6 text-fg-tertiary" /> {w.whereTitle}
       </h2>
@@ -224,7 +224,7 @@ function SharePlan({ w }: { w: Words }) {
   const set = (k: keyof Plan) => (e: React.ChangeEvent<HTMLInputElement>) => setPlan((p) => ({ ...p, [k]: e.target.value }));
   const input = "min-h-11 w-full rounded-lg border border-subtle bg-surface-page px-3 text-fg-primary";
   return (
-    <section aria-labelledby="plan-title" className="rounded-card border border-subtle p-5 sm:p-8">
+    <section aria-labelledby="plan-title" className={`${PANEL} p-5 sm:p-8`}>
       <h2 id="plan-title" className="flex items-center gap-2 font-heading text-2xl font-semibold tracking-display text-fg-primary">
         <Route aria-hidden className="size-6 text-fg-tertiary" /> {w.planTitle}
       </h2>

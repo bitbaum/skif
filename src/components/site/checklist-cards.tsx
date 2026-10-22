@@ -4,6 +4,7 @@ import type { Checklist } from "@/config/checklists";
 import { wordsFor } from "@/config/text";
 import { checklistWords } from "@/config/text/checklists";
 import type { Locale } from "@/i18n/locales";
+import { CARD } from "./shell";
 
 export function checklistHref(c: Checklist): string {
   return `/act/${c.slug}`;
@@ -18,7 +19,7 @@ export function ChecklistCards({ checklists, locale }: { checklists: readonly Ch
         <li key={c.slug}>
           <Link
             href={checklistHref(c)}
-            className="group flex h-full min-h-11 flex-col rounded-card border border-subtle bg-surface-raised p-5 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className={`group flex h-full min-h-11 flex-col ${CARD} p-5 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
           >
             <span className="flex items-center gap-2 text-xs text-fg-tertiary">
               <Clock aria-hidden className="size-3.5" />
