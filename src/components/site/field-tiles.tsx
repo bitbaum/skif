@@ -1,14 +1,16 @@
 import { Link } from "@/i18n/navigation";
 import { HARM_FAMILIES } from "@/config/harm-families";
+import { fieldWords } from "@/config/text/fields";
+import type { Locale } from "@/i18n/locales";
 import { fieldHref, fieldNumber } from "@/site/fields";
 import { FieldIcon } from "./field-icon";
 
 /** The ten fields as tiles: icon, name, one line. Two across on a phone,
  * five across on a wide screen — every field named, at every width. */
-export function FieldTiles() {
+export function FieldTiles({ locale }: { locale: Locale }) {
   return (
     <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-      {HARM_FAMILIES.map((f) => (
+      {HARM_FAMILIES.map((f) => ({ f, w: fieldWords(f.key, locale) })).map(({ f, w }) => (
         <li key={f.key}>
           <Link
             href={fieldHref(f)}
@@ -20,8 +22,8 @@ export function FieldTiles() {
               </span>
               <span className="font-mono text-xs tabular-nums text-fg-tertiary">{fieldNumber(f)}</span>
             </span>
-            <span className="mt-4 font-heading font-semibold text-fg-primary group-hover:text-accent">{f.short}</span>
-            <span className="mt-1 text-sm leading-snug text-fg-secondary">{f.description}</span>
+            <span className="mt-4 font-heading font-semibold text-fg-primary group-hover:text-accent">{w.short}</span>
+            <span className="mt-1 text-sm leading-snug text-fg-secondary">{w.description}</span>
           </Link>
         </li>
       ))}

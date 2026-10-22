@@ -1,6 +1,6 @@
 import type { SiteWords } from "./en";
 
-/** Skif auf Deutsch. Schweizer Rechtschreibung (ss, nie ß), «du» wie auf den
+/** Skif auf Deutsch. Schweizer Rechtschreibung (immer ss, kein Eszett), «du» wie auf den
  * anderen Seiten der Flotte. */
 export const DE: SiteWords = {
   stage: "Beta",
@@ -205,6 +205,50 @@ export const DE: SiteWords = {
     ambulance: "Ambulanz",
     fire: "Feuerwehr",
     european: "Europäische Notrufnummer",
+  },
+  steps: {
+    free: "Gratis",
+    privacyCost: "Preis für die Privatsphäre",
+    freedomCost: "Preis für die Freiheit",
+    benefit: "Nutzen",
+    answers: "Hilft bei",
+    providers: {
+      PROTECTOR: "Ein Skif-Protector",
+      INSTALLER: "Ein Schlosser oder Installateur",
+      RETAILER: "Jedes Geschäft, nichts zu installieren",
+      ALARM_MONITORING: "Eine Alarmzentrale",
+      DEESCALATION_TRAINER: "Eine Trainerin oder ein Trainer für Deeskalation",
+      CYBER_SPECIALIST: "Eine Fachperson für Cybersicherheit",
+      PRIVACY_SPECIALIST: "Eine Fachperson für Privatsphäre und Datenlöschung",
+      REPUTATION_RESPONSE: "Eine Fachperson für Ruf- und Krisenkommunikation",
+      PREPAREDNESS_TRAINER: "Eine Trainerin oder ein Trainer für Erste Hilfe und Vorsorge",
+      LEGAL: "Eine unabhängige Anwältin oder ein Anwalt: Skif vermittelt, berät aber nie rechtlich",
+    },
+  },
+  checklist: {
+    meta: (minutes: number, steps: number) => `${minutes} Min. · ${steps} Schritte`,
+    eyebrow: (minutes: number, fields: string) => `Checkliste · ${minutes} Min. · ${fields}`,
+    stepsDone: "Erledigte Schritte",
+    done: "Erledigt. Komm zurück, wenn sich etwas ändert.",
+    again: "Von vorn beginnen",
+    privacy: "Deine Häkchen bleiben nur in diesem Browser. Skif sieht sie nie.",
+    why: "Das Warum",
+    properly: "Lieber gründlich?",
+    properlyBody: "Ein Sicherheitsplan schaut deine ganze Lage an und wägt jeden Schritt gegen deine Grenzen und dein Budget ab.",
+    start: "Einschätzung starten",
+  },
+  fieldPage: {
+    eyebrow: (n: string, total: number, label: string) => `Feld ${n} von ${total} · ${label}`,
+    check: "Selbst prüfen",
+    concerns: "Was schiefgehen kann",
+    steps: "Was hilft, das am wenigsten Einschneidende zuerst",
+    stepsLead: "Jeder Schritt, den ein Sicherheitsplan hier empfehlen kann. Gratis-Schritte kommen zuerst; die Kosten für Privatsphäre und Freiheit folgen der Vierer-Skala, erklärt unter",
+    method: "Wie Skif entscheidet",
+    act: "Danach handeln",
+    read: "Weiterlesen",
+    previous: "Voriges Feld",
+    next: "Nächstes Feld",
+    others: "Andere Felder",
   },
   emergencyPanel: {
     guessed: "Aus der Zeitzone deines Telefons",

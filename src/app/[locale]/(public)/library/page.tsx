@@ -27,7 +27,7 @@ export default async function LibraryPage({ params }: { params: LocaleParams }) 
           <h2 id="fields-title" className="mb-6 font-heading text-2xl font-semibold tracking-display text-fg-primary">
             {LIBRARY.fieldsTitle}
           </h2>
-          <FieldTiles />
+          <FieldTiles locale={locale} />
         </section>
 
         <section aria-labelledby="research-title">
@@ -55,7 +55,7 @@ export default async function LibraryPage({ params }: { params: LocaleParams }) 
           <h2 id="guides-title" className="mb-6 font-heading text-2xl font-semibold tracking-display text-fg-primary">
             {LIBRARY.guidesTitle}
           </h2>
-          <GuideList guides={GUIDES} />
+          <GuideList guides={GUIDES} locale={locale} />
         </section>
 
         <section aria-labelledby="method-title" className="rounded-card border border-subtle p-6 sm:p-8">

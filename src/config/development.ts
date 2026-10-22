@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "The home page, Act, every checklist, the Quick check and the safety fields are now in German, French and Italian too, down to each step's cost and what it answers. Only the long guides and research are still in English, and those pages say so.",
+    },
+    {
+      date: "2026-10-22",
       done: "Skif now speaks German, French and Italian as well as English: pick a language at the top or the bottom of any page, and Skif keeps it, signed in or not. The menus, the footer, the Emergency page and sign-in are fully translated; the home, Act, Library and Academy pages have their headings translated, and the longer guides say plainly that they are still in English while their translation is done.",
     },
     {

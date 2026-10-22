@@ -52,7 +52,7 @@ export default async function Home({ params }: { params: LocaleParams }) {
       <section aria-labelledby="fields-title" className="border-y border-subtle bg-surface-raised">
         <div className={`${SHELL} py-20`}>
           <SectionIntro id="fields-title" eyebrow={FIELDS_SECTION.eyebrow} title={FIELDS_SECTION.title} lede={FIELDS_SECTION.lede} />
-          <FieldTiles />
+          <FieldTiles locale={locale} />
         </div>
       </section>
 
@@ -68,7 +68,7 @@ export default async function Home({ params }: { params: LocaleParams }) {
 
       <section aria-labelledby="lists-title" className={`${SHELL} pb-20`}>
         <SectionIntro id="lists-title" eyebrow={MENU[0].label} title={HOME.checklistsTitle} />
-        <ChecklistCards checklists={CHECKLISTS.slice(0, 3)} />
+        <ChecklistCards checklists={CHECKLISTS.slice(0, 3)} locale={locale} />
         <Link href="/act" className={`${ACTION.secondary} mt-8`}>
           {HOME.allChecklists}
         </Link>
