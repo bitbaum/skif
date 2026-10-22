@@ -4,6 +4,7 @@ import { AiFormAssistant, type AiFormAssistantLabels, type UseAiForm } from "@bi
 import type { ReactNode } from "react";
 import { AI_MESSAGES } from "@/config/ai";
 import { buttonClass } from "./ui";
+import { CARD } from "./site/shell";
 
 const CLASSES = {
   root: "space-y-3",
@@ -42,12 +43,12 @@ export function AiAssist({
   children?: ReactNode;
 }) {
   if (!configured) {
-    return <p className="rounded-card border border-dashed border-line p-4 text-sm text-muted">{AI_MESSAGES.unconfigured}</p>;
+    return <p className="rounded-card border border-dashed border-subtle p-4 text-sm text-muted">{AI_MESSAGES.unconfigured}</p>;
   }
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted">{disclosure}</p>
-      <div className="space-y-4 rounded-card border border-line bg-bg p-4">
+      <div className={`space-y-4 ${CARD} p-4`}>
         <AiFormAssistant form={form} classNames={CLASSES} labels={labels} />
         {children}
       </div>

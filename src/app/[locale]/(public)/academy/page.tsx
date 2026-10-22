@@ -3,7 +3,7 @@ import { shareMetadata } from "@/site/share";
 import { Link } from "@/i18n/navigation";
 import { AcademyBrowser } from "@/components/site/academy-browser";
 import { PageHero } from "@/components/site/page-hero";
-import { ACTION, SHELL } from "@/components/site/shell";
+import { ACTION, PANEL, SHELL } from "@/components/site/shell";
 import { COURSES } from "@/config/academy";
 import { PHOTOS } from "@/config/photos";
 import { partnerMailto, siteText } from "@/config/site";
@@ -33,7 +33,7 @@ export default async function AcademyPage({ params }: { params: LocaleParams }) 
       />
       <div className={`${SHELL} space-y-20 pt-14`}>
         <AcademyBrowser locale={locale} />
-        <section aria-labelledby="capability-title" className="grid gap-6 rounded-card border border-subtle p-6 sm:p-8 lg:grid-cols-12">
+        <section aria-labelledby="capability-title" className={`grid gap-6 ${PANEL} p-6 sm:p-8 lg:grid-cols-12`}>
           <div className="lg:col-span-5">
             <h2 id="capability-title" className="font-heading text-2xl font-semibold tracking-display text-fg-primary">
               {ACADEMY_HERO.capabilityTitle}

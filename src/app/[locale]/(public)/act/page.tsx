@@ -5,7 +5,7 @@ import { ChecklistCards } from "@/components/site/checklist-cards";
 import { PageHero } from "@/components/site/page-hero";
 import { QuickCheck } from "@/components/site/quick-check";
 import { SectionIntro } from "@/components/site/section-intro";
-import { ACTION, SHELL } from "@/components/site/shell";
+import { ACTION, CARD, SHELL } from "@/components/site/shell";
 import { CHECKLISTS } from "@/config/checklists";
 import { PHOTOS } from "@/config/photos";
 import { siteText } from "@/config/site";
@@ -28,7 +28,7 @@ export default async function ActPage({ params }: { params: LocaleParams }) {
           </h2>
           <ul className="grid gap-3 md:grid-cols-3">
             {ACT.help.items.map((h, i) => (
-              <li key={h.key} className="flex flex-col rounded-card border border-subtle bg-surface-raised p-6">
+              <li key={h.key} className={`flex flex-col ${CARD} p-6`}>
                 <h3 className="font-heading text-xl font-semibold text-fg-primary">{h.title}</h3>
                 <p className="mt-2 flex-1 leading-relaxed text-fg-secondary">{h.body}</p>
                 <Link href={h.href} className={`${i === 0 ? ACTION.primary : ACTION.secondary} mt-6 self-start`}>

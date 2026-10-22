@@ -4,6 +4,7 @@ import { fieldWords } from "@/config/text/fields";
 import type { Locale } from "@/i18n/locales";
 import { fieldHref, fieldNumber } from "@/site/fields";
 import { FieldIcon } from "./field-icon";
+import { CARD } from "./shell";
 
 /** The ten fields as tiles: icon, name, one line. Two across on a phone,
  * five across on a wide screen — every field named, at every width. */
@@ -14,7 +15,7 @@ export function FieldTiles({ locale }: { locale: Locale }) {
         <li key={f.key}>
           <Link
             href={fieldHref(f)}
-            className="group flex h-full min-h-11 flex-col rounded-card border border-subtle bg-surface-raised p-4 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:p-5"
+            className={`group flex h-full min-h-11 flex-col ${CARD} p-4 transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:p-5`}
           >
             <span className="flex items-center justify-between">
               <span className="grid size-10 place-items-center rounded-lg bg-accent-soft text-accent">

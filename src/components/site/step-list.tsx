@@ -3,6 +3,7 @@ import { wordsFor } from "@/config/text";
 import { costText, kindText, levelWord, stepText } from "@/config/text/assessment";
 import type { Locale } from "@/i18n/locales";
 import { Meter } from "./meter";
+import { CARD } from "./shell";
 
 /** What a step takes, in words: "Something you do", or who delivers it. */
 function takes(i: Intervention, locale: Locale): string {
@@ -25,7 +26,7 @@ export function StepList({ steps, locale }: { steps: readonly Intervention[]; lo
         const free = i.cost === "FREE" && !needsPurchase(i.kind);
         const text = stepText(i, locale);
         return (
-          <li key={i.key} className="flex flex-col rounded-card border border-subtle bg-surface-raised p-5">
+          <li key={i.key} className={`flex flex-col ${CARD} p-5`}>
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className={`rounded-full px-2.5 py-1 font-medium ${free ? "bg-accent-soft text-accent" : "border border-subtle text-fg-secondary"}`}>
                 {i.cost === "FREE" ? t.free : costText(i.cost, locale)}

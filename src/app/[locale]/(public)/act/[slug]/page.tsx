@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ChecklistView } from "@/components/site/checklist";
 import { FieldIcon } from "@/components/site/field-icon";
 import { PageHero } from "@/components/site/page-hero";
-import { ACTION, LABEL, SHELL } from "@/components/site/shell";
+import { ACTION, LABEL, PANEL, SHELL } from "@/components/site/shell";
 import { checklistBySlug, CHECKLISTS } from "@/config/checklists";
 import { guideBySlug } from "@/config/guides";
 import { guideIn } from "@/config/guides/translations";
@@ -52,7 +52,7 @@ export default async function ChecklistPage({ params }: { params: Params }) {
         </div>
         <aside className="space-y-6 lg:col-span-4">
           {guide && (
-            <div className="rounded-card border border-subtle p-5">
+            <div className={`${PANEL} p-5`}>
               <p className={LABEL}>{t.why}</p>
               <Link href={guideHref(guide)} className="mt-2 flex min-h-11 items-center font-heading text-lg font-semibold text-fg-primary hover:text-accent">
                 {guide.title} →
@@ -60,7 +60,7 @@ export default async function ChecklistPage({ params }: { params: Params }) {
               <p className="mt-2 text-sm leading-relaxed text-fg-secondary">{guide.summary}</p>
             </div>
           )}
-          <div className="rounded-card border border-subtle p-5">
+          <div className={`${PANEL} p-5`}>
             <p className={LABEL}>{t.properly}</p>
             <p className="mt-2 text-sm leading-relaxed text-fg-secondary">{t.properlyBody}</p>
             <Link href={signInTo("/assessments")} className={`${ACTION.secondary} mt-4`}>

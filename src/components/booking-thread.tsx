@@ -3,6 +3,7 @@ import { DISPLAY_LOCALE, TIME_ZONE } from "@/config/locale";
 import type { ThreadClosed, ThreadView } from "@/domain/booking-thread";
 import { ThreadChat } from "./thread-chat";
 import { Badge } from "./ui";
+import { CARD } from "./site/shell";
 
 const CLOSED_NOTES: Record<Exclude<ThreadClosed, null>, string> = {
   ENDED: "This booking has ended. The conversation stays here, read-only.",
@@ -36,7 +37,7 @@ export function BookingThread({
   return (
     <section
       aria-labelledby="thread-title"
-      className={`rounded-card border border-line bg-surface p-5 ${className}`}
+      className={`${CARD} p-5 ${className}`}
     >
       <div className="mb-1 flex flex-wrap items-center gap-3">
         <h2 id="thread-title" className="text-lg font-semibold">

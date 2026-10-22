@@ -7,6 +7,7 @@ import { areaText, capabilityText, courseText, deliveryText } from "@/config/tex
 import { wordsFor } from "@/config/text";
 import type { Locale } from "@/i18n/locales";
 import { signInTo } from "@/config/site";
+import { CARD } from "./shell";
 
 /**
  * The Academy one area at a time: a row of areas (one line that scrolls on a
@@ -43,7 +44,7 @@ export function AcademyBrowser({ locale }: { locale: Locale }) {
         <p className="max-w-prose text-lg leading-relaxed text-fg-secondary">{areaText(current.key, locale).intro}</p>
         <ul className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {courses.map((c) => (
-            <li key={c.key} className="flex flex-col rounded-card border border-subtle bg-surface-raised p-5">
+            <li key={c.key} className={`flex flex-col ${CARD} p-5`}>
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="rounded-full border border-subtle px-2.5 py-1 text-fg-secondary">{w.planned}</span>
                 <span className="rounded-full bg-accent-soft px-2.5 py-1 text-accent">{deliveryText(c.delivery, locale)}</span>

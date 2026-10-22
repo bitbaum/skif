@@ -3,6 +3,7 @@ import { serviceLabel, type ServiceKey } from "@/config/services";
 import { comingAndPast, type BookingStatus } from "@/domain/lifecycle";
 import { StatusBadge } from "./booking";
 import { formatWhen } from "./ui";
+import { CARD } from "./site/shell";
 
 type Listed = { id: string; service: ServiceKey; status: BookingStatus; startsAt: Date; area: string };
 type Href = (id: string) => string;
@@ -12,7 +13,7 @@ function Section({ title, bookings, href, heading: H }: { title: string; booking
   return (
     <section className="space-y-2">
       <H className="text-sm font-semibold uppercase tracking-wide text-muted">{title}</H>
-      <ul className="divide-y divide-line rounded-card border border-line bg-surface">
+      <ul className={`divide-y divide-subtle ${CARD}`}>
         {bookings.map((b) => (
           <li key={b.id}>
             <Link href={href(b.id)} className="block space-y-1 p-4 hover:bg-bg">

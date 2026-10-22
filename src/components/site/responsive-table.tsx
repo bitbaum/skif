@@ -1,6 +1,6 @@
 import type { SiteSection } from "@bitbaum/sitekit";
 import { Blurb } from "@bitbaum/sitekit/react";
-import { LABEL } from "./shell";
+import { CARD, LABEL } from "./shell";
 
 type Table = Extract<SiteSection, { kind: "table" }>;
 
@@ -22,7 +22,7 @@ export function ResponsiveTable({ section }: { section: Table }) {
 
       <ul className="mt-5 space-y-3 md:hidden">
         {section.rows.map((row, r) => (
-          <li key={r} className="rounded-card border border-subtle bg-surface-raised p-4">
+          <li key={r} className={`${CARD} p-4`}>
             <p className="font-medium text-fg-primary">{row[0]}</p>
             <dl className="mt-3 space-y-2">
               {rest.map((col, c) => (

@@ -3,6 +3,13 @@
  * line up to the pixel. */
 export const SHELL = "mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8";
 
+/** The one card: anything that sits in a list or grid, signed in or out.
+ * Padding is the caller's; the shape, fill and border are this. */
+export const CARD = "rounded-card border border-subtle bg-surface-raised";
+
+/** A framed section with no fill: a box around part of a page. */
+export const PANEL = "rounded-card border border-subtle";
+
 /** Mono caps label: eyebrows, indices, small metadata. */
 export const LABEL = "font-mono text-xs uppercase tracking-caps text-fg-tertiary";
 

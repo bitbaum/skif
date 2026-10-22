@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { FieldTiles } from "@/components/site/field-tiles";
 import { GuideList } from "@/components/site/guide-list";
 import { PageHero } from "@/components/site/page-hero";
-import { ACTION, LABEL, SHELL } from "@/components/site/shell";
+import { ACTION, CARD, LABEL, PANEL, SHELL } from "@/components/site/shell";
 import { GUIDES } from "@/config/guides";
 import { PHOTOS } from "@/config/photos";
 import { RESEARCH } from "@/config/research";
@@ -41,7 +41,7 @@ export default async function LibraryPage({ params }: { params: LocaleParams }) 
               <li key={r.slug}>
                 <Link
                   href={researchHref(r)}
-                  className="group flex h-full min-h-11 flex-col rounded-card border border-subtle bg-surface-raised p-6 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className={`group flex h-full min-h-11 flex-col ${CARD} p-6 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent`}
                 >
                   <span className={LABEL}>{LIBRARY.sources(r.sources.length)}</span>
                   <span className="mt-3 font-heading text-xl font-semibold text-fg-primary group-hover:text-accent">{r.title}</span>
@@ -59,7 +59,7 @@ export default async function LibraryPage({ params }: { params: LocaleParams }) 
           <GuideList guides={GUIDES} locale={locale} />
         </section>
 
-        <section aria-labelledby="method-title" className="rounded-card border border-subtle p-6 sm:p-8">
+        <section aria-labelledby="method-title" className={`${PANEL} p-6 sm:p-8`}>
           <h2 id="method-title" className="font-heading text-2xl font-semibold tracking-display text-fg-primary">
             {LIBRARY.method.title}
           </h2>
