@@ -22,7 +22,7 @@ export const METHOD_FR: SitePage = {
         { label: "Le pas le plus proportionné", anchor: "proportionality" },
         { label: "Ce que coûte chaque mesure", anchor: "costs" },
         { label: "D'où vient une note", anchor: "evidence" },
-        { label: "Les limites que vous pouvez fixer", anchor: "limits" },
+        { label: "Les limites strictes que vous pouvez fixer", anchor: "limits" },
         { label: "Comment un Protector est choisi", anchor: "protectors" },
         { label: "Ce que Skif garde", anchor: "data" },
       ],
@@ -86,7 +86,7 @@ export const METHOD_FR: SitePage = {
     },
     {
       kind: "definitions",
-      heading: "Les limites que vous pouvez fixer",
+      heading: "Les limites strictes que vous pouvez fixer",
       blurb: "Une limite n'est jamais marchandée. Une mesure qui en enfreindrait une est exclue de votre plan, et le plan vous dit quelle limite l'a exclue.",
       anchor: "limits",
       items: [

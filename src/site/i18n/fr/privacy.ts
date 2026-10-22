@@ -21,7 +21,7 @@ export const PRIVACY_FR: SitePage = {
       rows: [
         ["Votre compte", "Un identifiant anonyme issu de votre compte. Pas d'adresse e-mail, pas de mot de passe.", "Les systèmes de Skif"],
         ["Votre profil", "Le nom par lequel un Protector doit vous appeler, si vous en donnez un.", "Le Protector de votre réservation, une fois qu'il a accepté"],
-        ["Vos préférences", "Vos limites, vos préférences entre les compromis, votre style de présence et vos langues.", "Vous ; elles servent à classer les mesures et à attribuer les Protectors"],
+        ["Vos préférences", "Vos limites strictes, vos préférences entre les compromis, votre style de présence et vos langues.", "Vous ; elles servent à classer les mesures et à attribuer les Protectors"],
         ["Évaluations", "Les lieux que vous décrivez (un nom que vous choisissez et un quartier), ce qui vous inquiète, une occasion dans vos propres mots, votre budget, et le plan.", "Vous"],
         ["Réservations", "Le service, l'heure, le quartier et le lieu de rendez-vous, vos remarques, les messages de la réservation, le rapport et votre évaluation.", "Vous, les opérations et le Protector — le lieu de rendez-vous seulement après qu'il a accepté"],
         ["Plaintes", "Ce que vous soulevez, la réponse et la décision.", "Vous, les opérations et le Protector concerné"],
