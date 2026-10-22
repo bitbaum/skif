@@ -10,7 +10,21 @@
  * ./emergency.ts; the Swiss row here agrees with it (emergency-world.test.ts).
  */
 
-export type ExtraNumber = { number: string; label: string };
+/** What an extra number is for; each language words it (src/config/text). */
+export type ExtraKind =
+  | "european"
+  | "poison"
+  | "airRescue"
+  | "talk"
+  | "deaf"
+  | "policeToo"
+  | "traffic"
+  | "touristPolice"
+  | "fromMobile"
+  | "gendarmerie"
+  | "general";
+
+export type ExtraNumber = { number: string; kind: ExtraKind };
 
 export type CountryNumbers = {
   /** ISO 3166-1 alpha-2. */
@@ -20,10 +34,10 @@ export type CountryNumbers = {
   ambulance: string;
   fire: string;
   extra?: readonly ExtraNumber[];
-  /** One sentence under the numbers; empty when there is nothing to add. */
-  note: string;
-  /** Where the note's claim comes from, when it is not `source`. */
-  noteSource?: string;
+  /** A second number that also works ("999 works too"). */
+  alsoWorks?: string;
+  /** An EU member: 112 reaches the emergency services free of charge. */
+  eu?: boolean;
   source: string;
 };
 
@@ -32,11 +46,10 @@ const fcdo = (slug: string) => `https://www.gov.uk/foreign-travel-advice/${slug}
 /** The European Commission: "112 is the European emergency phone number,
  * available everywhere in the EU, free of charge." */
 export const EU_112_SOURCE = "https://digital-strategy.ec.europa.eu/en/policies/112";
-const EU_NOTE = "112 reaches the emergency services anywhere in the EU, free of charge.";
 
 /** Countries whose official source lists one number for everything. */
-function one(code: string, name: string, number: string, source: string, note = "", extra?: readonly ExtraNumber[]): CountryNumbers {
-  return { code, name, police: number, ambulance: number, fire: number, note, source, extra };
+function one(code: string, name: string, number: string, source: string, more: Pick<CountryNumbers, "eu" | "alsoWorks"> = {}): CountryNumbers {
+  return { code, name, police: number, ambulance: number, fire: number, source, ...more };
 }
 
 const ROWS: readonly CountryNumbers[] = [
@@ -47,22 +60,21 @@ const ROWS: readonly CountryNumbers[] = [
     ambulance: "144",
     fire: "118",
     extra: [
-      { number: "112", label: "European emergency number" },
-      { number: "145", label: "Poison information, day and night" },
-      { number: "1414", label: "Rega, air rescue" },
-      { number: "143", label: "Die Dargebotene Hand, someone to talk to (up to CHF 0.20)" },
+      { number: "112", kind: "european" },
+      { number: "145", kind: "poison" },
+      { number: "1414", kind: "airRescue" },
+      { number: "143", kind: "talk" },
     ],
-    note: "",
     source: "https://www.bakom.admin.ch/en/other-numbers-free-of-charge-or-not",
   },
-  { code: "LI", name: "Liechtenstein", police: "117", ambulance: "144", fire: "118", note: "", source: fcdo("liechtenstein") },
+  { code: "LI", name: "Liechtenstein", police: "117", ambulance: "144", fire: "118", source: fcdo("liechtenstein") },
   {
     code: "DE",
     name: "Germany",
     police: "110",
     ambulance: "112",
     fire: "112",
-    note: EU_NOTE,
+    eu: true,
     source: fcdo("germany"),
   },
   {
@@ -71,8 +83,8 @@ const ROWS: readonly CountryNumbers[] = [
     police: "133",
     ambulance: "144",
     fire: "122",
-    extra: [{ number: "112", label: "European emergency number" }],
-    note: EU_NOTE,
+    extra: [{ number: "112", kind: "european" }],
+    eu: true,
     source: fcdo("austria"),
   },
   {
@@ -82,68 +94,67 @@ const ROWS: readonly CountryNumbers[] = [
     ambulance: "15",
     fire: "18",
     extra: [
-      { number: "112", label: "European emergency number" },
-      { number: "114", label: "By SMS, chat or video, for deaf callers" },
+      { number: "112", kind: "european" },
+      { number: "114", kind: "deaf" },
     ],
-    note: EU_NOTE,
+    eu: true,
     source: fcdo("france"),
   },
-  { code: "IT", name: "Italy", police: "112", ambulance: "118", fire: "115", note: EU_NOTE, source: fcdo("italy") },
-  one("ES", "Spain", "112", fcdo("spain"), EU_NOTE),
-  one("PT", "Portugal", "112", fcdo("portugal"), EU_NOTE),
-  one("NL", "Netherlands", "112", fcdo("netherlands"), EU_NOTE),
-  one("BE", "Belgium", "112", fcdo("belgium"), EU_NOTE),
-  { code: "LU", name: "Luxembourg", police: "113", ambulance: "112", fire: "112", note: EU_NOTE, source: fcdo("luxembourg") },
+  { code: "IT", name: "Italy", police: "112", ambulance: "118", fire: "115", eu: true, source: fcdo("italy") },
+  one("ES", "Spain", "112", fcdo("spain"), { eu: true }),
+  one("PT", "Portugal", "112", fcdo("portugal"), { eu: true }),
+  one("NL", "Netherlands", "112", fcdo("netherlands"), { eu: true }),
+  one("BE", "Belgium", "112", fcdo("belgium"), { eu: true }),
+  { code: "LU", name: "Luxembourg", police: "113", ambulance: "112", fire: "112", eu: true, source: fcdo("luxembourg") },
   one(
     "GB",
     "United Kingdom",
     "999",
     "https://assets.publishing.service.gov.uk/media/65fbfca4aa9b76dfc3fbda57/public_emergency_call_service_disruption_sunday_25_june_2023_post_incident_review.pdf",
-    "112 works too.",
+    { alsoWorks: "112" },
   ),
-  one("IE", "Ireland", "112", fcdo("ireland"), "999 works too. " + EU_NOTE),
-  one("DK", "Denmark", "112", fcdo("denmark"), EU_NOTE),
-  one("SE", "Sweden", "112", fcdo("sweden"), EU_NOTE),
-  { code: "NO", name: "Norway", police: "112", ambulance: "113", fire: "110", note: "", source: fcdo("norway") },
-  one("FI", "Finland", "112", fcdo("finland"), EU_NOTE),
-  { code: "PL", name: "Poland", police: "997", ambulance: "999", fire: "998", note: EU_NOTE, source: fcdo("poland") },
-  one("CZ", "Czechia", "112", fcdo("czechia"), EU_NOTE),
-  one("HR", "Croatia", "112", fcdo("croatia"), EU_NOTE),
-  one("GR", "Greece", "112", fcdo("greece"), EU_NOTE),
+  one("IE", "Ireland", "112", fcdo("ireland"), { eu: true, alsoWorks: "999" }),
+  one("DK", "Denmark", "112", fcdo("denmark"), { eu: true }),
+  one("SE", "Sweden", "112", fcdo("sweden"), { eu: true }),
+  { code: "NO", name: "Norway", police: "112", ambulance: "113", fire: "110", source: fcdo("norway") },
+  one("FI", "Finland", "112", fcdo("finland"), { eu: true }),
+  { code: "PL", name: "Poland", police: "997", ambulance: "999", fire: "998", eu: true, source: fcdo("poland") },
+  one("CZ", "Czechia", "112", fcdo("czechia"), { eu: true }),
+  one("HR", "Croatia", "112", fcdo("croatia"), { eu: true }),
+  one("GR", "Greece", "112", fcdo("greece"), { eu: true }),
   one("TR", "Türkiye", "112", fcdo("turkey")),
   one("US", "United States", "911", fcdo("usa")),
   one("CA", "Canada", "911", fcdo("canada")),
   one("MX", "Mexico", "911", fcdo("mexico")),
-  { code: "BR", name: "Brazil", police: "190", ambulance: "192", fire: "193", extra: [{ number: "911", label: "Police too" }], note: "", source: fcdo("brazil") },
+  { code: "BR", name: "Brazil", police: "190", ambulance: "192", fire: "193", extra: [{ number: "911", kind: "policeToo" }], source: fcdo("brazil") },
   one("AU", "Australia", "000", fcdo("australia")),
   one("NZ", "New Zealand", "111", fcdo("new-zealand")),
-  { code: "JP", name: "Japan", police: "110", ambulance: "119", fire: "119", note: "", source: fcdo("japan") },
-  { code: "KR", name: "South Korea", police: "112", ambulance: "119", fire: "119", note: "", source: fcdo("south-korea") },
-  { code: "CN", name: "China", police: "110", ambulance: "120", fire: "119", extra: [{ number: "122", label: "Traffic police" }], note: "", source: fcdo("china") },
+  { code: "JP", name: "Japan", police: "110", ambulance: "119", fire: "119", source: fcdo("japan") },
+  { code: "KR", name: "South Korea", police: "112", ambulance: "119", fire: "119", source: fcdo("south-korea") },
+  { code: "CN", name: "China", police: "110", ambulance: "120", fire: "119", extra: [{ number: "122", kind: "traffic" }], source: fcdo("china") },
   one("HK", "Hong Kong", "999", fcdo("hong-kong")),
-  { code: "SG", name: "Singapore", police: "999", ambulance: "995", fire: "995", note: "", source: fcdo("singapore") },
-  { code: "TH", name: "Thailand", police: "191", ambulance: "1669", fire: "199", extra: [{ number: "1155", label: "Tourist police" }], note: "", source: fcdo("thailand") },
+  { code: "SG", name: "Singapore", police: "999", ambulance: "995", fire: "995", source: fcdo("singapore") },
+  { code: "TH", name: "Thailand", police: "191", ambulance: "1669", fire: "199", extra: [{ number: "1155", kind: "touristPolice" }], source: fcdo("thailand") },
   one("IN", "India", "112", fcdo("india")),
-  { code: "AE", name: "United Arab Emirates", police: "999", ambulance: "998", fire: "997", note: "", source: fcdo("united-arab-emirates") },
-  { code: "IL", name: "Israel", police: "100", ambulance: "101", fire: "102", note: "", source: fcdo("israel") },
-  { code: "EG", name: "Egypt", police: "122", ambulance: "123", fire: "180", extra: [{ number: "126", label: "Tourist police" }], note: "", source: fcdo("egypt") },
+  { code: "AE", name: "United Arab Emirates", police: "999", ambulance: "998", fire: "997", source: fcdo("united-arab-emirates") },
+  { code: "IL", name: "Israel", police: "100", ambulance: "101", fire: "102", source: fcdo("israel") },
+  { code: "EG", name: "Egypt", police: "122", ambulance: "123", fire: "180", extra: [{ number: "126", kind: "touristPolice" }], source: fcdo("egypt") },
   {
     code: "ZA",
     name: "South Africa",
     police: "10111",
     ambulance: "10177",
     fire: "10177",
-    extra: [{ number: "112", label: "From a mobile" }],
-    note: "",
+    extra: [{ number: "112", kind: "fromMobile" }],
     source: fcdo("south-africa"),
   },
-  { code: "MA", name: "Morocco", police: "190", ambulance: "150", fire: "150", extra: [{ number: "177", label: "Gendarmerie, outside towns" }], note: "", source: fcdo("morocco") },
-  { code: "RS", name: "Serbia", police: "192", ambulance: "194", fire: "193", extra: [{ number: "112", label: "General emergency number" }], note: "", source: fcdo("serbia") },
-  { code: "AL", name: "Albania", police: "112", ambulance: "127", fire: "128", note: "", source: fcdo("albania") },
-  { code: "UA", name: "Ukraine", police: "102", ambulance: "103", fire: "101", note: "", source: fcdo("ukraine") },
+  { code: "MA", name: "Morocco", police: "190", ambulance: "150", fire: "150", extra: [{ number: "177", kind: "gendarmerie" }], source: fcdo("morocco") },
+  { code: "RS", name: "Serbia", police: "192", ambulance: "194", fire: "193", extra: [{ number: "112", kind: "general" }], source: fcdo("serbia") },
+  { code: "AL", name: "Albania", police: "112", ambulance: "127", fire: "128", source: fcdo("albania") },
+  { code: "UA", name: "Ukraine", police: "102", ambulance: "103", fire: "101", source: fcdo("ukraine") },
 ];
 
-export const COUNTRIES: readonly CountryNumbers[] = ROWS.map((c) => (c.note.includes(EU_NOTE) ? { ...c, noteSource: EU_112_SOURCE } : c));
+export const COUNTRIES: readonly CountryNumbers[] = ROWS;
 
 export function countryByCode(code: string): CountryNumbers | undefined {
   return COUNTRIES.find((c) => c.code === code);

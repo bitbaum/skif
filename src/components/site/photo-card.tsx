@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { Photo } from "@/config/photos";
 
 /** A large link with a photograph behind it: the two halves of the site, the

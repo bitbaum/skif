@@ -1,5 +1,8 @@
 import { execSync } from "node:child_process";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 /** The commit this build was made from, inlined at build time so /api/health
  * can say what production is serving. The deploy checks out the exact commit
@@ -37,4 +40,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

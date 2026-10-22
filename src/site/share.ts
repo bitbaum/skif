@@ -13,6 +13,7 @@ import { CHECKLISTS } from "@/config/checklists";
 import { GUIDES } from "@/config/guides";
 import { HARM_FAMILIES } from "@/config/harm-families";
 import type { PhotoKey } from "@/config/photos";
+import { DEFAULT_LOCALE, LOCALE_TAGS, LOCALES, localizedPath, type Locale } from "@/i18n/locales";
 import { RESEARCH } from "@/config/research";
 import { ACADEMY_HERO, ACT, EMERGENCY_PAGE, HOME, LIBRARY } from "@/config/site";
 import { businessPage } from "./business";
@@ -91,19 +92,23 @@ export function shareImagePath(path: string): string {
   return path === "/" ? "/og/home" : `/og${path}`;
 }
 
-/** The page's metadata, including what a chat app shows for a shared link. */
-export function shareMetadata(path: string): Metadata {
+/** The page's metadata, including what a chat app shows for a shared link,
+ * its address in `locale` and its addresses in the other languages. */
+export function shareMetadata(path: string, locale: Locale = DEFAULT_LOCALE): Metadata {
   const card = shareCard(path);
   if (!card) return {};
+  const here = localizedPath(path, locale);
+  const languages = Object.fromEntries([...LOCALES.map((l) => [LOCALE_TAGS[l], localizedPath(path, l)]), ["x-default", path]]);
   const image = { url: shareImagePath(path), width: 1200, height: 630, alt: card.headline };
   return {
     title: path === "/" ? { absolute: `Skif · ${HOME.statement}` } : card.title,
     description: card.description,
-    alternates: { canonical: path },
+    alternates: { canonical: here, languages },
     openGraph: {
       type: path.startsWith("/guides/") || path.startsWith("/research/") ? "article" : "website",
       siteName: "Skif",
-      url: path,
+      url: here,
+      locale: LOCALE_TAGS[locale].replace("-", "_"),
       title: path === "/" ? `Skif · ${HOME.statement}` : card.title,
       description: card.description,
       images: [image],

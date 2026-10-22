@@ -1,10 +1,21 @@
 /**
  * The messages the emergency page lets someone send from their own phone.
- * Pure, so the exact words are tested. Nothing here reaches Skif: the text is
- * built in the browser and handed to the phone's share sheet or SMS app.
+ * Pure, so the exact words are tested; the words themselves come from the
+ * page's language (src/config/text, `emergencyPanel.messages`). Nothing here
+ * reaches Skif: the text is built in the browser and handed to the phone's
+ * share sheet or SMS app.
  */
 
 export type Position = { latitude: number; longitude: number; accuracy: number };
+
+export type MessageWords = {
+  location: (metres: number, time: string, link: string) => string;
+  plan: string;
+  with: string;
+  backBy: string;
+  ifNot: string;
+  ifNotDefault: string;
+};
 
 /** An OpenStreetMap link to a point: opens in any browser, needs no account,
  * and tells no map company who asked. */
@@ -14,18 +25,18 @@ export function mapLink({ latitude, longitude }: Pick<Position, "latitude" | "lo
   return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}`;
 }
 
-export function locationMessage(pos: Position, at: Date, timeZone?: string): string {
+export function locationMessage(words: MessageWords, pos: Position, at: Date, timeZone?: string): string {
   const time = at.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone });
-  return `I need help. I am here, give or take ${Math.max(1, Math.round(pos.accuracy))} m, as of ${time}: ${mapLink(pos)}`;
+  return words.location(Math.max(1, Math.round(pos.accuracy)), time, mapLink(pos));
 }
 
 export type Plan = { where: string; with?: string; backBy?: string; ifNot?: string };
 
-export function planMessage(plan: Plan): string {
-  const lines = [`My plan: ${plan.where.trim()}.`];
-  if (plan.with?.trim()) lines.push(`With: ${plan.with.trim()}.`);
-  if (plan.backBy?.trim()) lines.push(`Back by: ${plan.backBy.trim()}.`);
-  lines.push(plan.ifNot?.trim() ? `If you have not heard from me by then: ${plan.ifNot.trim()}` : "If you have not heard from me by then, call me, and if I do not answer, call the police.");
+export function planMessage(words: MessageWords, plan: Plan): string {
+  const lines = [`${words.plan}: ${plan.where.trim()}.`];
+  if (plan.with?.trim()) lines.push(`${words.with}: ${plan.with.trim()}.`);
+  if (plan.backBy?.trim()) lines.push(`${words.backBy}: ${plan.backBy.trim()}.`);
+  lines.push(plan.ifNot?.trim() ? `${words.ifNot}: ${plan.ifNot.trim()}` : words.ifNotDefault);
   return lines.join("\n");
 }
 
