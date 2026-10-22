@@ -6,6 +6,8 @@ import { ACADEMY_AREAS, COURSES, coursesIn } from "@/config/academy";
 import { postBySlug } from "./blog";
 import { CHECKLISTS } from "@/config/checklists";
 import { guideBySlug, GUIDES } from "@/config/guides";
+import { GUIDE_TRANSLATIONS } from "@/config/guides/translations";
+import type { Locale } from "@/i18n/locales";
 import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
 import { PHOTOS } from "@/config/photos";
@@ -40,7 +42,8 @@ function pageExists(href: string): boolean {
   return [join("[locale]", "(public)"), "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map((g) => guidePage(g)),
+  ...Object.entries(GUIDE_TRANSLATIONS).flatMap(([locale, byslug]) => Object.values(byslug).map((g) => guidePage(g, locale as Locale))), ...RESEARCH.map(researchPage)];
 
 function heroLinks(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));

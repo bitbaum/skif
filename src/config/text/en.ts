@@ -343,6 +343,20 @@ export const EN = {
     tryAgain: "Try again",
     home: "Back to the start",
   },
+  guides: {
+    indexEyebrow: "Library · Guides",
+    indexStatement: "Read deeper. Act today.",
+    indexLead: "Each guide covers one subject in depth and ends in steps you can take this week. Filter by the field of safety you care about.",
+    eyebrow: "Guide",
+    sources: (n: number) => `${n} sources`,
+    check: "Check your own situation",
+    all: "All guides",
+    inThis: "In this guide",
+  },
+  sourceList: {
+    title: "Sources",
+    checked: (date: string) => `Read and checked on ${date}. Quotes are from the sources as published.`,
+  },
   notTranslated: "Parts of this page are still in English. The translation is on its way.",
 };
 

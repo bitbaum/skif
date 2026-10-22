@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import type { Guide } from "@/config/guides";
+import { guideIn } from "@/config/guides/translations";
 import { fieldWords } from "@/config/text/fields";
 import type { Locale } from "@/i18n/locales";
 import { guideHref } from "@/site/guides";
@@ -9,7 +10,7 @@ import { LABEL } from "./shell";
 export function GuideList({ guides, locale }: { guides: readonly Guide[]; locale: Locale }) {
   return (
     <ul className="grid border-t border-subtle md:grid-cols-2 md:gap-x-10">
-      {guides.map((g) => (
+      {guides.map((en) => guideIn(en, locale)).map((g) => (
         <li key={g.slug} className="border-b border-subtle">
           <Link
             href={guideHref(g)}

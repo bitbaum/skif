@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SiteSectionsView } from "@/components/site/site-sections";
 import { SourceList } from "@/components/site/source-list";
 import { guideBySlug, GUIDES } from "@/config/guides";
+import { guideIn } from "@/config/guides/translations";
 import { PHOTOS } from "@/config/photos";
 import { guidePage } from "@/site/guides";
 import { pageLocale } from "@/i18n/page";
@@ -21,12 +22,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function GuidePage({ params }: { params: Params }) {
-  await pageLocale(params);
-  const guide = guideBySlug((await params).slug);
-  if (!guide) notFound();
+  const locale = await pageLocale(params);
+  const found = guideBySlug((await params).slug);
+  if (!found) notFound();
+  const guide = guideIn(found, locale);
   return (
-    <SiteSectionsView sections={guidePage(guide).sections} photo={guide.photo ? PHOTOS[guide.photo] : undefined}>
-      {guide.sources && guide.checked ? <SourceList sources={guide.sources} checked={guide.checked} /> : null}
+    <SiteSectionsView sections={guidePage(guide, locale).sections} photo={guide.photo ? PHOTOS[guide.photo] : undefined}>
+      {guide.sources && guide.checked ? <SourceList sources={guide.sources} checked={guide.checked} locale={locale} /> : null}
     </SiteSectionsView>
   );
 }
