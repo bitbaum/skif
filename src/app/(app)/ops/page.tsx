@@ -17,6 +17,8 @@ import { complaintCategoryLabel } from "@/config/complaints";
 import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import { listProtectors } from "@/server/protectors";
 import { interestCounts } from "@/server/academy";
+import { listInbox, skifAddress } from "@/server/mail";
+import { MAIL_KIND_LABELS, MAIL_RETENTION_DAYS } from "@/config/mail";
 import { COURSES, type Course } from "@/config/academy";
 import { severityLabel } from "@/config/reports";
 import { REVIEW_LABELS } from "@/domain/incidents";
@@ -38,12 +40,13 @@ export default async function OpsPage({ searchParams }: { searchParams: Promise<
   if (canonical) redirect(canonical);
 
   const db = getDb();
-  const [queue, protectors, incidents, openComplaints, training] = await Promise.all([
+  const [queue, protectors, incidents, openComplaints, training, inbox] = await Promise.all([
     listOpsQueue(db, query),
     listProtectors(db),
     listOpenIncidents(db),
     listOpenComplaints(db),
     interestCounts(db),
+    listInbox(db),
   ]);
   if (queue.page.clamped) redirect(pageHref(params, query, queue.page.page));
   const { waiting } = queue;
@@ -87,6 +90,45 @@ export default async function OpsPage({ searchParams }: { searchParams: Promise<
           </ul>
         </Card>
       )}
+      <Card id="mail" title={`Mail to ${skifAddress()}${inbox.open.length ? ` (${inbox.open.length} open)` : ""}`} className="mb-6">
+        {inbox.open.length === 0 ? (
+          <Empty>Nothing waiting for an answer.</Empty>
+        ) : (
+          <ul className="divide-y divide-line text-sm">
+            {inbox.open.map((m) => (
+              <li key={m.id} className="space-y-1 py-3">
+                <p className="flex flex-wrap items-center gap-2">
+                  {m.urgency === "urgent" && <Badge tone="danger">Urgent</Badge>}
+                  <Badge>{MAIL_KIND_LABELS[m.kind]}</Badge>
+                  <Link href={`/ops/mail/${encodeURIComponent(m.id)}`} className="min-w-0 font-medium text-accent underline [overflow-wrap:anywhere]">
+                    {m.subject || "(no subject)"}
+                  </Link>
+                </p>
+                <p className="text-muted">
+                  {m.summary} · {formatWhen(m.receivedAt)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-4 text-sm text-muted">
+          {counted(inbox.handled.length, "answered or sorted message", "answered or sorted messages")} in the last {MAIL_RETENTION_DAYS} days
+          {inbox.handled.length > 0 && (
+            <>
+              {": "}
+              {inbox.handled.slice(0, 5).map((m, i) => (
+                <span key={m.id}>
+                  {i > 0 && ", "}
+                  <Link href={`/ops/mail/${encodeURIComponent(m.id)}`} className="text-accent underline">
+                    {m.subject || "(no subject)"}
+                  </Link>
+                </span>
+              ))}
+            </>
+          )}
+          . Spam and automated notices are sorted out without anyone opening them.
+        </p>
+      </Card>
       <Card title="Bookings" className="mb-6">
         <QueueControls params={params} query={query} counts={queue.counts} />
         <QueueTable rows={queue.rows} narrowed={isNarrowed(query)} clear={clearHref(params, query)} />

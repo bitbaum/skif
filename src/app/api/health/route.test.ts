@@ -9,6 +9,7 @@ describe("GET /api/health", () => {
     vi.stubEnv("SKIF_BUILD_COMMIT", "abc123");
     vi.stubEnv("DATABASE_URL", "");
     vi.stubEnv("RESEND_API_KEY", "");
+    vi.stubEnv("MAIL_INBOUND_SECRET", "");
     for (const key of MODEL_KEYS) vi.stubEnv(key, "");
     const { GET } = await import("./route");
     const res = await GET();
@@ -19,6 +20,7 @@ describe("GET /api/health", () => {
       commit: "abc123",
       database: "unconfigured",
       mail: "unconfigured",
+      inbox: "unconfigured",
       ai: "unconfigured",
       speech: "unconfigured",
     });

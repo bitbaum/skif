@@ -6,7 +6,9 @@ import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
 import { BOOKING_LIMITS } from "@/config/services";
 import { complaintActionInput, describeIssue, formFields, idInput, incidentReviewInput } from "@/domain/inputs";
+import { audit } from "@/server/audit";
 import { actOnComplaint } from "@/server/complaints";
+import { replyToMail, setHandled } from "@/server/mail";
 import { reviewIncident } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { PROTECTOR_STATUSES } from "@/domain/protector-status";
@@ -103,6 +105,31 @@ export async function opsComplaintAction(_: ActionState, form: FormData): Promis
   const result = await actOnComplaint(getDb(), id.data, { role: "OPS", sub: viewer.sub }, parsed.data);
   if (!result.success) return { error: result.error };
   revalidatePath(`/ops/complaints/${id.data}`);
+  revalidatePath("/ops");
+  return null;
+}
+
+const MAIL_ID = z.string().min(1).max(200);
+
+export async function replyMailAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const id = MAIL_ID.safeParse(form.get("mailId"));
+  if (!id.success) return { error: "Message not found" };
+  const text = form.get("text");
+  const result = await replyToMail(getDb(), id.data, viewer.sub, typeof text === "string" ? text : "");
+  if (!result.ok) return { error: result.error };
+  await audit(getDb(), viewer.sub, "REPLY_MAIL", { type: "MAIL", id: id.data });
+  revalidatePath(`/ops/mail/${encodeURIComponent(id.data)}`);
+  revalidatePath("/ops");
+  return null;
+}
+
+export async function mailHandledAction(_: ActionState, form: FormData): Promise<ActionState> {
+  const viewer = await requireOps();
+  const id = MAIL_ID.safeParse(form.get("mailId"));
+  if (!id.success) return { error: "Message not found" };
+  await setHandled(getDb(), id.data, viewer.sub, form.get("handled") === "true");
+  revalidatePath(`/ops/mail/${encodeURIComponent(id.data)}`);
   revalidatePath("/ops");
   return null;
 }

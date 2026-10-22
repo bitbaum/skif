@@ -13,6 +13,7 @@ import { COMPLAINT_CATEGORY_KEYS } from "@/config/complaints";
 import { COMPLAINT_STATUSES } from "@/domain/complaints";
 import { AUDIT_ACTIONS, AUDIT_SUBJECTS } from "@/domain/audit";
 import { ENVIRONMENT_TYPE_KEYS } from "@/config/environments";
+import { MAIL_KINDS, MAIL_URGENCIES } from "@bitbaum/mail-kit";
 
 export const bookingStatus = pgEnum("booking_status", BOOKING_STATUSES);
 export const paymentStatus = pgEnum("payment_status", PAYMENT_STATUSES);
@@ -32,3 +33,5 @@ export const complaintCategory = pgEnum("complaint_category", COMPLAINT_CATEGORY
 export const auditAction = pgEnum("audit_action", AUDIT_ACTIONS);
 export const auditSubject = pgEnum("audit_subject", AUDIT_SUBJECTS);
 export const environmentType = pgEnum("environment_type", ENVIRONMENT_TYPE_KEYS);
+export const mailKind = pgEnum("mail_kind", MAIL_KINDS);
+export const mailUrgency = pgEnum("mail_urgency", MAIL_URGENCIES);

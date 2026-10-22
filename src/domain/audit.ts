@@ -10,10 +10,12 @@ export const AUDIT_ACTIONS = [
   "CHANGE_PROTECTOR_STATUS",
   "ASSESS_CAPABILITY",
   "OVERRIDE_MATCH",
+  "VIEW_MAIL",
+  "REPLY_MAIL",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
-export const AUDIT_SUBJECTS = ["BOOKING", "COMPLAINT", "PROTECTOR", "CAPABILITY"] as const;
+export const AUDIT_SUBJECTS = ["BOOKING", "COMPLAINT", "PROTECTOR", "CAPABILITY", "MAIL"] as const;
 export type AuditSubject = (typeof AUDIT_SUBJECTS)[number];
 
 export const AUDIT_LABELS: Record<AuditAction, string> = {
@@ -23,6 +25,8 @@ export const AUDIT_LABELS: Record<AuditAction, string> = {
   CHANGE_PROTECTOR_STATUS: "Changed a Protector's status",
   ASSESS_CAPABILITY: "Verified or rejected a capability",
   OVERRIDE_MATCH: "Assigned a Protector the matcher excluded",
+  VIEW_MAIL: "Opened a message sent to Skif",
+  REPLY_MAIL: "Answered a message sent to Skif",
 };
 
 /** How many entries the Operations audit page shows. */
