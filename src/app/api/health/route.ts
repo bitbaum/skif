@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db/client";
 import { aiStatus } from "@/server/ai";
 import { opsMailStatus } from "@/server/ops-alerts";
+import { speechConfigured } from "@/server/speech";
 
 /**
  * Liveness for the deploy check and the box watchdog: which app answered,
@@ -11,7 +12,8 @@ import { opsMailStatus } from "@/server/ops-alerts";
  * so it says nothing more than that.
  *
  * `ai` says whether any model key is set: read from the environment, never
- * probed, so polling this spends nobody's model allowance.
+ * probed, so polling this spends nobody's model allowance. `speech` the same,
+ * for the microphone on AI-assisted forms.
  *
  * Always 200 while the process is up: a restart cannot fix a database that is
  * down, so the answer goes in the body for a person or a deploy log to read.
@@ -33,7 +35,7 @@ async function database(): Promise<Database> {
 export async function GET() {
   const db = await database();
   return NextResponse.json(
-    { ok: db === "ok", app: "skif", commit: process.env.SKIF_BUILD_COMMIT || null, database: db, mail: opsMailStatus(), ai: aiStatus() },
+    { ok: db === "ok", app: "skif", commit: process.env.SKIF_BUILD_COMMIT || null, database: db, mail: opsMailStatus(), ai: aiStatus(), speech: speechConfigured() ? "configured" : "unconfigured" },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

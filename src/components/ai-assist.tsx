@@ -1,11 +1,12 @@
 "use client";
 
 import { AiFormAssistant, type AiFormAssistantLabels, type UseAiForm } from "@bitbaum/ai-kit/react";
+import type { ReactNode } from "react";
 import { AI_MESSAGES } from "@/config/ai";
 import { buttonClass } from "./ui";
 
 const CLASSES = {
-  root: "space-y-3 rounded-card border border-line bg-bg p-4",
+  root: "space-y-3",
   header: "flex flex-wrap items-center justify-between gap-3",
   title: "text-sm font-semibold",
   hint: "text-sm text-muted",
@@ -31,11 +32,14 @@ export function AiAssist({
   configured,
   disclosure,
   labels,
+  children,
 }: {
   form: UseAiForm;
   configured: boolean;
   disclosure: string;
   labels: Partial<AiFormAssistantLabels>;
+  /** More ways in, drawn inside the same box (the microphone). */
+  children?: ReactNode;
 }) {
   if (!configured) {
     return <p className="rounded-card border border-dashed border-line p-4 text-sm text-muted">{AI_MESSAGES.unconfigured}</p>;
@@ -43,7 +47,10 @@ export function AiAssist({
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted">{disclosure}</p>
-      <AiFormAssistant form={form} classNames={CLASSES} labels={labels} />
+      <div className="space-y-4 rounded-card border border-line bg-bg p-4">
+        <AiFormAssistant form={form} classNames={CLASSES} labels={labels} />
+        {children}
+      </div>
     </div>
   );
 }

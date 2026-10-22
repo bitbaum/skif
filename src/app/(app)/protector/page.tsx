@@ -10,6 +10,7 @@ import { listAvailability } from "@/server/availability";
 import { PROTECTOR_STATUS_LABELS } from "@/domain/protector-status";
 import { applicationValues } from "@/domain/protector-form";
 import { aiStatus } from "@/server/ai";
+import { speechConfigured } from "@/server/speech";
 import { listProtectorJobs } from "@/server/bookings";
 import { listCapabilities, type Protector } from "@/server/protectors";
 import { requireViewer } from "@/server/viewer";
@@ -73,6 +74,7 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
       initial={applicationValues(protector, held)}
       held={held}
       aiConfigured={aiStatus() === "configured"}
+      speechConfigured={speechConfigured()}
     />
   );
 
