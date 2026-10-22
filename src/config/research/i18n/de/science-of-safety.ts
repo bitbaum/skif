@@ -133,7 +133,7 @@ export const SCIENCE_OF_SAFETY_DE: Research = {
         },
         {
           title: "Lern Herz-Lungen-Wiederbelebung und Blutstillung",
-          body: "Menschen vor Ort verdoppeln die Überlebenschance bei einem Herzstillstand mehr als [24].",
+          body: "Wer vor Ort hilft, steigert die Überlebenschance bei einem Herzstillstand auf mehr als das Doppelte [24].",
         },
         {
           title: "Miss ein Risiko, bevor du es beurteilst",
