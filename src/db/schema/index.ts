@@ -8,6 +8,7 @@ export * from "./assessments";
 export * from "./audit";
 export * from "./bookings";
 export * from "./complaints";
+export * from "./mail";
 export * from "./people";
 export * from "./shared";
 export * from "./threads";

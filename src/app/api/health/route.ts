@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db/client";
 import { aiStatus } from "@/server/ai";
+import { inboundMailStatus } from "@/server/mail";
 import { opsMailStatus } from "@/server/ops-alerts";
 import { speechConfigured } from "@/server/speech";
 
@@ -11,7 +12,8 @@ import { speechConfigured } from "@/server/speech";
  * Operations alerts can go out and a model is set (config only; no network). Public,
  * so it says nothing more than that.
  *
- * `ai` says whether any model key is set: read from the environment, never
+ * `inbox` says whether the mail gateway can deliver here (its signing secret
+ * is set). `ai` says whether any model key is set: read from the environment, never
  * probed, so polling this spends nobody's model allowance. `speech` the same,
  * for the microphone on AI-assisted forms.
  *
@@ -35,7 +37,7 @@ async function database(): Promise<Database> {
 export async function GET() {
   const db = await database();
   return NextResponse.json(
-    { ok: db === "ok", app: "skif", commit: process.env.SKIF_BUILD_COMMIT || null, database: db, mail: opsMailStatus(), ai: aiStatus(), speech: speechConfigured() ? "configured" : "unconfigured" },
+    { ok: db === "ok", app: "skif", commit: process.env.SKIF_BUILD_COMMIT || null, database: db, mail: opsMailStatus(), inbox: inboundMailStatus(), ai: aiStatus(), speech: speechConfigured() ? "configured" : "unconfigured" },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

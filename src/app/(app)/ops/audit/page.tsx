@@ -12,6 +12,7 @@ const SUBJECT_LINK: Partial<Record<AuditSubject, (id: string) => string>> = {
   BOOKING: (id) => `/ops/bookings/${id}`,
   COMPLAINT: (id) => `/ops/complaints/${id}`,
   PROTECTOR: (id) => `/ops/protectors/${id}`,
+  MAIL: (id) => `/ops/mail/${encodeURIComponent(id)}`,
 };
 
 type AuditEvent = Awaited<ReturnType<typeof listAudit>>[number];

@@ -21,8 +21,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       '@bitbaum/mail-kit':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.2.0
+        version: 0.2.0
       '@bitbaum/sitekit':
         specifier: 0.3.1
         version: 0.3.1(react@19.3.0)
@@ -229,8 +229,8 @@ packages:
     resolution: {integrity: sha512-sDVplKP4jKe0WHCOnW7xk75RC46JsAYqUngcVlctyAs9f1TQqZqbYTfbmyYipYCOaCIHMflnzAneQTbqrQbtBw==}
     engines: {node: '>=20'}
 
-  '@bitbaum/mail-kit@0.1.1':
-    resolution: {integrity: sha512-3JfaeuwkI+8TVGeSDrr8/esaWkv2d7UAcNg1Xu5HHu6k3cBzuSaLGhuzHp0KlAJgGa2QEQIqtE7W1+PosKFOjw==}
+  '@bitbaum/mail-kit@0.2.0':
+    resolution: {integrity: sha512-YkgMFRQ6HuzIB0q/Ao4FB4zb/YxVc0iKyVdRkFe2psJ4CQJvGxBfDlURomZMkgQfpBQox4QiT/iN9IGRz6SeTg==}
     engines: {node: '>=20'}
 
   '@bitbaum/sitekit@0.3.1':
@@ -3618,7 +3618,7 @@ snapshots:
 
   '@bitbaum/design-tokens@1.1.0': {}
 
-  '@bitbaum/mail-kit@0.1.1': {}
+  '@bitbaum/mail-kit@0.2.0': {}
 
   '@bitbaum/sitekit@0.3.1(react@19.3.0)':
     dependencies:
