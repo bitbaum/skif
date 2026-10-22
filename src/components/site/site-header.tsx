@@ -2,23 +2,27 @@
 
 import { ChevronDown, Menu, Siren, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { DEFAULT_LOCALE, isLocale, unlocalizedPath } from "@/i18n/locales";
 import { useEffect, useRef, useState } from "react";
 import { PHOTOS } from "@/config/photos";
 import { Account } from "@/components/account";
-import { CREATE_ACCOUNT, EMERGENCY_PAGE, MENU, MY_SKIF, SIGN_IN, STAGE } from "@/config/site";
+import { siteText, type SiteText } from "@/config/site";
+import { LanguageSwitch } from "./language-switch";
 import { ACTION, LABEL, SHELL } from "./shell";
 import { SkifMark } from "./skif-mark";
 
-type Section = (typeof MENU)[number];
+type Section = SiteText["MENU"][number];
 
 /**
  * The public header, to the fleet navigation contract (bitbaum/fleet
  * SHARED.md): every section is a button with aria-expanded that opens a
  * full-width panel — its pages with one line each and a featured page — on
  * click (hover menus flicker and fail on touch); Escape, a click outside or
- * navigating closes it; the current section carries aria-current. Below lg the
+ * navigating closes it; the current section carries aria-current. Below xl (1280px) the
  * whole map is one full-screen menu. Every link comes from MENU.
  *
  * Why not a package: the fleet decided against shared navigation markup
@@ -34,6 +38,9 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
   // and ask once in the browser.
   const asked = useSessionName(!account);
   const who = account ?? asked;
+  const found = useLocale();
+  const t = siteText(isLocale(found) ? found : DEFAULT_LOCALE);
+  const { MENU, EMERGENCY_PAGE, HEADER, STAGE } = t;
 
   // Navigating closes whatever was open (derived during render, not in an effect).
   const [lastPath, setLastPath] = useState(pathname);
@@ -70,16 +77,17 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
     };
   }, [phoneOpen]);
 
-  const first = pathname.split("/")[1] ?? "";
+  const here = unlocalizedPath(pathname);
+  const first = here.split("/")[1] ?? "";
   const current = MENU.find((m) => (m.covers as readonly string[]).includes(first))?.key;
 
   return (
     <>
       <header ref={header} className="sticky top-0 z-40 border-b border-subtle bg-surface-page/90 backdrop-blur">
-        <div className={`${SHELL} flex h-16 items-center gap-2 lg:gap-6`}>
+        <div className={`${SHELL} flex h-16 items-center gap-2 xl:gap-6`}>
           <Link
             href="/"
-            aria-label="Skif, home"
+            aria-label={HEADER.home}
             className="inline-flex min-h-11 items-center gap-2 rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <SkifMark className="size-8 text-gold" />
@@ -87,7 +95,7 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
             <span className={`${LABEL} hidden rounded-full border border-subtle px-2 py-0.5 sm:inline`}>{STAGE}</span>
           </Link>
 
-          <nav aria-label="Main" className="hidden lg:block">
+          <nav aria-label={HEADER.main} className="hidden xl:block">
             <ul className="flex items-center gap-1">
               {MENU.map((m) => {
                 const isOpen = open === m.key;
@@ -119,25 +127,26 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
 
           <Link
             href={EMERGENCY_PAGE.href}
-            aria-current={pathname === EMERGENCY_PAGE.href ? "page" : undefined}
+            aria-current={here === EMERGENCY_PAGE.href ? "page" : undefined}
             className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border-2 border-danger px-3 text-sm font-medium text-danger hover:bg-danger-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger"
           >
             <Siren aria-hidden className="size-4" />
             <span className="sr-only sm:not-sr-only">{EMERGENCY_PAGE.label}</span>
           </Link>
-          <div className="hidden items-center gap-2 lg:flex">
-            <AccountLinks who={who} />
+          <div className="hidden items-center gap-2 xl:flex">
+            <LanguageSwitch label={HEADER.language} />
+            <AccountLinks who={who} t={t} />
           </div>
 
           {who ? (
-            <div className="lg:hidden">
+            <div className="xl:hidden">
               <Account name={who.name} />
             </div>
           ) : null}
           <button
             type="button"
-            className={`inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent lg:hidden`}
-            aria-label={phoneOpen ? "Close menu" : "Open menu"}
+            className={`inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent xl:hidden`}
+            aria-label={phoneOpen ? HEADER.closeMenu : HEADER.openMenu}
             aria-expanded={phoneOpen}
             aria-controls="phone-menu"
             onClick={() => setPhoneOpen((o) => !o)}
@@ -151,10 +160,10 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
       {/* Outside <header>: its backdrop-filter makes it the containing block
         for fixed children, which squeezed a full-screen menu into 64px. */}
       {phoneOpen && (
-        <div id="phone-menu" className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-surface-page lg:hidden">
-          <nav aria-label="Main" className={`${SHELL} space-y-8 py-6`}>
+        <div id="phone-menu" className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-surface-page xl:hidden">
+          <nav aria-label={HEADER.main} className={`${SHELL} space-y-8 py-6`}>
             <div className="grid grid-cols-2 gap-2">
-              <AccountLinks who={who} stretch />
+              <AccountLinks who={who} t={t} stretch />
             </div>
 
             {MENU.map((m) => (
@@ -179,6 +188,7 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
                 </ul>
               </section>
             ))}
+            <LanguageSwitch label={HEADER.language} />
           </nav>
         </div>
       )}
@@ -191,7 +201,7 @@ function Panel({ section }: { section: Section }) {
   return (
     <div
       id={`panel-${section.key}`}
-      className="absolute inset-x-0 top-full hidden border-b border-subtle bg-surface-page shadow-sm lg:block"
+      className="absolute inset-x-0 top-full hidden border-b border-subtle bg-surface-page shadow-sm xl:block"
     >
       <div className={`${SHELL} grid grid-cols-12 gap-8 py-8`}>
         <div className="col-span-3">
@@ -238,14 +248,16 @@ function Panel({ section }: { section: Section }) {
 /** Signed out: Sign in and Create account. Signed in: the way to My Skif,
  * and (on a wide screen) the fleet account menu beside it. On a phone the
  * account menu sits in the bar itself, so the full-screen menu only links. */
-function AccountLinks({ who, stretch = false }: { who: { name: string } | null; stretch?: boolean }) {
+function AccountLinks({ who, t, stretch = false }: { who: { name: string } | null; t: SiteText; stretch?: boolean }) {
+  const { MY_SKIF, SIGN_IN, CREATE_ACCOUNT } = t;
   const w = stretch ? "w-full" : "";
   if (who) {
     return (
       <>
-        <Link href={MY_SKIF.href} className={`${ACTION.secondary} ${w} ${stretch ? "col-span-2" : ""}`}>
+        {/* My Skif has no language in its URL: a plain link, not the localizing one. */}
+        <NextLink href={MY_SKIF.href} className={`${ACTION.secondary} ${w} ${stretch ? "col-span-2" : ""}`}>
           {MY_SKIF.label}
-        </Link>
+        </NextLink>
         {stretch ? null : <Account name={who.name} />}
       </>
     );

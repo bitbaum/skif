@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Skif now speaks German, French and Italian as well as English: pick a language at the top or the bottom of any page, and Skif keeps it, signed in or not. The menus, the footer, the Emergency page and sign-in are fully translated; the home, Act, Library and Academy pages have their headings translated, and the longer guides say plainly that they are still in English while their translation is done.",
+    },
+    {
+      date: "2026-10-22",
       done: "The languages you can ask to be spoken to in are now the ones Skif will actually meet: Switzerland's languages, English, Spanish and Portuguese, with Arabic, Chinese, Japanese, Korean and Russian one tap further.",
     },
     {

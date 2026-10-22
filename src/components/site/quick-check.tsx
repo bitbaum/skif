@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useMemo, useState } from "react";
 import { buttonClass, segmentClass } from "@/components/ui";
 import { costLabel } from "@/config/assessment";
 import { concernLabel, concernsFor, type ConcernKey } from "@/config/concerns";
 import { ENVIRONMENT_TYPES, type EnvironmentType } from "@/config/environments";
 import { findIntervention, kindLabel } from "@/config/interventions";
-import { QUICK_CHECK } from "@/config/site";
+import { useLocale } from "next-intl";
+import { siteText } from "@/config/site";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/locales";
 import { buildSafetyPlan, planSteps } from "@/domain/safety-plan";
 import { ACTION, LABEL } from "./shell";
 
@@ -32,6 +34,8 @@ function freeSteps(environment: EnvironmentType, concerns: ConcernKey[]) {
 }
 
 export function QuickCheck() {
+  const found = useLocale();
+  const { QUICK_CHECK } = siteText(isLocale(found) ? found : DEFAULT_LOCALE);
   const [environment, setEnvironment] = useState<EnvironmentType>("PERSON");
   const [concerns, setConcerns] = useState<ConcernKey[]>([]);
   const [showAll, setShowAll] = useState(false);
@@ -91,7 +95,7 @@ export function QuickCheck() {
           </ul>
           {options.length > shown.length && (
             <button type="button" className={`${buttonClass.link} mt-2`} onClick={() => setShowAll(true)}>
-              Show all {options.length}
+              {QUICK_CHECK.showAll(options.length)}
             </button>
           )}
         </fieldset>

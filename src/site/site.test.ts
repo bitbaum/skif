@@ -29,13 +29,13 @@ function pageExists(href: string): boolean {
   const from = new URLSearchParams(query).get("from");
   if (from && !pageExists(from)) return false;
   const path = route.replace(/^\/+|\/+$/g, "");
-  if (path === "") return existsSync(join(APP, "(public)", "page.tsx"));
+  if (path === "") return existsSync(join(APP, "[locale]", "(public)", "page.tsx"));
   const [first, second] = path.split("/");
   if (second && first === "safety") return Boolean(familyBySlug(second));
   if (second && first === "guides") return GUIDES.some((g) => g.slug === second);
   if (second && first === "research") return RESEARCH.some((r) => r.slug === second);
   if (second && first === "act") return CHECKLISTS.some((c) => c.slug === second);
-  return ["(public)", "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
+  return [join("[locale]", "(public)"), "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
 const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map(guidePage), ...RESEARCH.map(researchPage)];

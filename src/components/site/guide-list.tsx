@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { Guide } from "@/config/guides";
 import { familyLabel } from "@/config/harm-families";
 import { guideHref } from "@/site/guides";

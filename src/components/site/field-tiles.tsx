@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { HARM_FAMILIES } from "@/config/harm-families";
 import { fieldHref, fieldNumber } from "@/site/fields";
 import { FieldIcon } from "./field-icon";
