@@ -9,6 +9,7 @@ export * from "./audit";
 export * from "./bookings";
 export * from "./complaints";
 export * from "./mail";
+export * from "./outcomes";
 export * from "./people";
 export * from "./shared";
 export * from "./threads";

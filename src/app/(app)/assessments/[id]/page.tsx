@@ -11,7 +11,9 @@ import { idInput } from "@/domain/inputs";
 import { readPlan } from "@/domain/plan-versions";
 import { describeLeans } from "@/domain/preference-fit";
 import { getAssessment } from "@/server/assessments";
+import { outcomesOf } from "@/server/step-outcomes";
 import { requireViewer } from "@/server/viewer";
+import { stepOutcomeAction } from "../actions";
 
 export const metadata: Metadata = { title: "Safety Plan" };
 
@@ -24,6 +26,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ id:
   const assessment = await getAssessment(getDb(), viewer.sub, id.data);
   if (!assessment) notFound();
   const plan = readPlan(assessment.plan);
+  const outcomes = await outcomesOf(getDb(), viewer.sub);
 
   return (
     <>
@@ -32,7 +35,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ id:
         lead={`${environmentTypeLabel(assessment.environment.type)} · ${formatWhen(assessment.createdAt)}`}
       />
       <PlanSummary plan={plan} />
-      <PlanSteps plan={plan} />
+      <PlanSteps plan={plan} outcomes={outcomes} answer={stepOutcomeAction} />
       {/* What the plan rests on: there to check, not to act on, so folded. */}
       <FoldCard
         title="What this plan is based on"

@@ -28,15 +28,6 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
       ],
     },
     {
-      title: "“Did it help?” after every step",
-      status: "Next",
-      progress: null,
-      targetDate: null,
-      milestones: [
-        "A short follow-up on each step you took, so your next plan is built on what worked for you.",
-      ],
-    },
-    {
       title: "Pay for a booking inside Skif",
       status: "Planned",
       progress: null,
@@ -61,6 +52,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
     },
   ],
   changelog: [
+    {
+      date: "2026-10-22",
+      done: "“Did it help?” under every step of your Safety Plan: say you did it, or that it is not for you, and then whether it helped. Your next plan learns from it: a step that helped counts as something you already have, and one that did not is set aside, with the next option in its place and a line saying why.",
+    },
     {
       date: "2026-10-22",
       done: "Cards look the same everywhere now: your bookings, preferences and training are drawn exactly like the cards on the public pages, from one definition, and a test refuses a second look.",

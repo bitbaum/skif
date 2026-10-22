@@ -6,13 +6,16 @@ import type { AssessmentInput } from "@/domain/inputs";
 import { fail, ok, type Result } from "@/domain/result";
 import { leansOf } from "@/domain/preference-fit";
 import { buildSafetyPlan } from "@/domain/safety-plan";
+import { lessonsFrom } from "@/domain/step-outcomes";
 import { getEnvironment, type Environment } from "./environments";
 import { getPreferences } from "./preferences";
+import { outcomesOf } from "./step-outcomes";
 
 export type Assessment = typeof assessments.$inferSelect;
 
 /** Run an assessment against the person's current hard constraints and save
- * the answers and the resulting Safety Plan, constraints included, as decided. */
+ * the answers and the resulting Safety Plan, constraints included, as decided.
+ * What the person said about earlier steps ("Did it help?") shapes it too. */
 export async function createAssessment(
   db: Db,
   customerSub: string,
@@ -28,6 +31,7 @@ export async function createAssessment(
     environment: environment.type,
     constraints: prefs.hardConstraints,
     leans: leansOf(prefs.axes, prefs.presenceStyle),
+    lessons: lessonsFrom(await outcomesOf(db, customerSub)),
   });
   const [row] = await db
     .insert(assessments)

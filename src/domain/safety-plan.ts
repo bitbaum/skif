@@ -11,7 +11,9 @@
  *  - for a high-priority finding (a known threat), the *most effective* one,
  *    because proportionality cuts both ways;
  *  - nothing new when what the person already does covers it — unless the
- *    finding is high priority.
+ *    finding is high priority;
+ *  - learning from "Did it help?": a step that helped counts as covered, and
+ *    one that did not (or was "not for me") is set aside for the next option.
  * "Nothing to buy" is a first-class outcome, not a fallback.
  */
 import type { HardConstraintKey } from "@/config/constraints";
@@ -26,6 +28,7 @@ import {
   type Level,
 } from "@/config/interventions";
 import { preferenceFit } from "./preference-fit";
+import type { PlanLessons } from "./step-outcomes";
 import { deriveFindings, type Finding, type FindingInput } from "./findings";
 
 export type PlanInput = FindingInput & {
@@ -34,6 +37,8 @@ export type PlanInput = FindingInput & {
   budget: CostTier;
   /** The person's trade-off leans; DISCRETION comes from their presence style. */
   leans: Leans;
+  /** What the person said about earlier steps. Absent: nothing said yet. */
+  lessons?: PlanLessons;
 };
 
 export type ExcludedIntervention = { key: string; constraints: HardConstraintKey[] };
@@ -49,6 +54,8 @@ export type FindingPlan = Finding & {
   alternatives: string[];
   overBudget: string[];
   excluded: ExcludedIntervention[];
+  /** Tried and did not help, or "not for me". Absent on older plans. */
+  setAside?: string[];
 };
 
 export type SafetyPlan = {
@@ -88,11 +95,15 @@ function ordering(high: boolean, leans: Leans) {
     high ? benefit(a, b) || byLeans(a, b) || leastIntrusive(a, b) : byLeans(a, b) || leastIntrusive(a, b);
 }
 
-function whyRecommended(i: Intervention, finding: Finding, covered: boolean, leans: Leans): string[] {
+function whyRecommended(i: Intervention, finding: Finding, covered: boolean, leans: Leans, setAside: string[]): string[] {
   const why =
     finding.priority === "HIGH"
       ? ["The most effective option within your limits and budget — this is a high priority."]
       : ["The least intrusive option within your limits and budget that addresses this."];
+  if (setAside.length) {
+    const titles = setAside.map((k) => findIntervention(k)?.title ?? k).join(", ");
+    why.push(`You said ${titles} didn't help or wasn't for you, so this is the next option.`);
+  }
   if (covered) why.push("What you already do helps, but a known threat justifies more.");
   const fit = preferenceFit(i, leans);
   if (fit.with.length) why.push(`Fits your lean towards ${fit.with.join(", ")}.`);
@@ -112,17 +123,21 @@ function planFinding(finding: Finding, input: PlanInput): FindingPlan {
   const excluded: ExcludedIntervention[] = [];
   const alreadyCovered: string[] = [];
   const overBudget: string[] = [];
+  const setAside: string[] = [];
   const eligible: Intervention[] = [];
+  const worked = input.lessons?.worked ?? [];
+  const notAgain = input.lessons?.setAside ?? [];
   for (const i of candidates) {
     const broken = i.conflictsWith.filter((c) => input.constraints.includes(c));
     if (broken.length > 0) excluded.push({ key: i.key, constraints: broken });
-    else if (i.coveredBy && input.measures.includes(i.coveredBy)) alreadyCovered.push(i.key);
+    else if ((i.coveredBy && input.measures.includes(i.coveredBy)) || worked.includes(i.key)) alreadyCovered.push(i.key);
+    else if (notAgain.includes(i.key)) setAside.push(i.key);
     else if (costRank(i.cost) > costRank(input.budget)) overBudget.push(i.key);
     else eligible.push(i);
   }
 
   const covered = alreadyCovered.length > 0;
-  const base = { ...finding, alreadyCovered, overBudget, excluded };
+  const base = { ...finding, alreadyCovered, overBudget, excluded, ...(setAside.length ? { setAside } : {}) };
   if (covered && !high) {
     return { ...base, outcome: "COVERED", recommended: null, alternatives: eligible.map((i) => i.key) };
   }
@@ -131,7 +146,7 @@ function planFinding(finding: Finding, input: PlanInput): FindingPlan {
   return {
     ...base,
     outcome: "RECOMMENDED",
-    recommended: { key: best.key, why: whyRecommended(best, finding, covered, input.leans) },
+    recommended: { key: best.key, why: whyRecommended(best, finding, covered, input.leans, setAside) },
     alternatives: rest.map((i) => i.key),
   };
 }
