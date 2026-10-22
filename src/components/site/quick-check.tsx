@@ -3,10 +3,11 @@
 import { Link } from "@/i18n/navigation";
 import { useMemo, useState } from "react";
 import { buttonClass, segmentClass } from "@/components/ui";
-import { costLabel } from "@/config/assessment";
-import { concernLabel, concernsFor, type ConcernKey } from "@/config/concerns";
+import { concernsFor, type ConcernKey } from "@/config/concerns";
 import { ENVIRONMENT_TYPES, type EnvironmentType } from "@/config/environments";
-import { findIntervention, kindLabel } from "@/config/interventions";
+import { findIntervention } from "@/config/interventions";
+import { wordsFor } from "@/config/text";
+import { concernText, costText, environmentText, kindText, stepText } from "@/config/text/assessment";
 import { useLocale } from "next-intl";
 import { siteText } from "@/config/site";
 import { DEFAULT_LOCALE, isLocale } from "@/i18n/locales";
@@ -35,7 +36,9 @@ function freeSteps(environment: EnvironmentType, concerns: ConcernKey[]) {
 
 export function QuickCheck() {
   const found = useLocale();
-  const { QUICK_CHECK } = siteText(isLocale(found) ? found : DEFAULT_LOCALE);
+  const locale = isLocale(found) ? found : DEFAULT_LOCALE;
+  const { QUICK_CHECK } = siteText(locale);
+  const answers = wordsFor(locale).steps.answers;
   const [environment, setEnvironment] = useState<EnvironmentType>("PERSON");
   const [concerns, setConcerns] = useState<ConcernKey[]>([]);
   const [showAll, setShowAll] = useState(false);
@@ -70,7 +73,7 @@ export function QuickCheck() {
                   checked={environment === env.key}
                   onChange={() => choosePlace(env.key)}
                 />
-                {env.label}
+                {environmentText(env.key, locale).label}
               </label>
             ))}
           </div>
@@ -88,7 +91,7 @@ export function QuickCheck() {
                     checked={concerns.includes(c.key)}
                     onChange={() => toggle(c.key)}
                   />
-                  {c.label}
+                  {concernText(c.key, locale)}
                 </label>
               </li>
             ))}
@@ -116,9 +119,9 @@ export function QuickCheck() {
                     <li key={s.key} className="grid grid-cols-[2rem_1fr] gap-x-2">
                       <span className="pt-0.5 font-mono text-xs tabular-nums text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
                       <div>
-                        <p className="text-fg-primary">{step.title}</p>
+                        <p className="text-fg-primary">{stepText(step, locale).title}</p>
                         <p className="mt-1 font-mono text-xs text-fg-tertiary">
-                          {kindLabel(step.kind)} · {costLabel(step.cost)} · Answers: {s.concerns.map(concernLabel).join("; ").toLowerCase()}
+                          {kindText(step.kind, locale)} · {costText(step.cost, locale)} · {answers}: {s.concerns.map((c) => concernText(c as ConcernKey, locale)).join("; ").toLowerCase()}
                         </p>
                       </div>
                     </li>

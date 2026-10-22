@@ -43,7 +43,7 @@ export default async function ActPage({ params }: { params: LocaleParams }) {
           <h2 id="lists-title" className="mb-6 font-heading text-2xl font-semibold tracking-display text-fg-primary">
             {ACT.checklistsTitle}
           </h2>
-          <ChecklistCards checklists={CHECKLISTS} />
+          <ChecklistCards checklists={CHECKLISTS} locale={locale} />
         </section>
 
         <section id="check" aria-labelledby="check-title" className="scroll-mt-20">

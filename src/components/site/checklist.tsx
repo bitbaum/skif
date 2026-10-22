@@ -46,7 +46,9 @@ function subscribe(onChange: () => void) {
   };
 }
 
-export function ChecklistView({ slug, steps }: { slug: string; steps: readonly ChecklistStep[] }) {
+export type ChecklistViewWords = { stepsDone: string; done: string; again: string; privacy: string };
+
+export function ChecklistView({ slug, steps, words }: { slug: string; steps: readonly ChecklistStep[]; words: ChecklistViewWords }) {
   const raw = useSyncExternalStore(subscribe, () => read(slug), () => "[]");
   const done = parse(raw);
 
@@ -63,7 +65,7 @@ export function ChecklistView({ slug, steps }: { slug: string; steps: readonly C
           aria-valuemin={0}
           aria-valuemax={steps.length}
           aria-valuenow={count}
-          aria-label="Steps done"
+          aria-label={words.stepsDone}
           className="h-2 flex-1 overflow-hidden rounded-full bg-subtle"
         >
           <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${(count / steps.length) * 100}%` }} />
@@ -100,15 +102,15 @@ export function ChecklistView({ slug, steps }: { slug: string; steps: readonly C
       </ol>
       {count === steps.length && (
         <p role="status" className="mt-6 rounded-card bg-accent-soft p-4 text-accent">
-          Done. Come back to it when something changes.
+          {words.done}
         </p>
       )}
       {count > 0 && (
         <button type="button" className="mt-4 inline-flex min-h-11 items-center text-sm text-fg-tertiary underline-offset-4 hover:underline" onClick={() => write(slug, [])}>
-          Start again
+          {words.again}
         </button>
       )}
-      <p className="mt-6 text-xs text-fg-tertiary">Your ticks are remembered in this browser only. Skif never sees them.</p>
+      <p className="mt-6 text-xs text-fg-tertiary">{words.privacy}</p>
     </div>
   );
 }

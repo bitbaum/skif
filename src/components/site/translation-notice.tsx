@@ -9,7 +9,7 @@ import { SHELL } from "./shell";
 
 /** Pages whose every word is already in German, French and Italian. The rest
  * say so, rather than pass off English as a translation. */
-const TRANSLATED: readonly string[] = ["/emergency", "/signin"];
+const TRANSLATED: readonly string[] = ["/", "/act", "/emergency", "/signin"];
 
 export function TranslationNotice() {
   const found = useLocale();

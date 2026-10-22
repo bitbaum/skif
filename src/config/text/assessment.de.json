@@ -1,0 +1,415 @@
+{
+  "interventions": {
+    "NEIGHBOUR_ARRANGEMENT": {
+      "title": "Vereinbare mit einer Nachbarin oder einem Nachbarn, dass sie ein Auge auf die Wohnung haben und den Briefkasten leeren, wenn du weg bist",
+      "tradeoffs": "Hängt von der Aufmerksamkeit anderer ab; sie erfahren, wann du weg bist."
+    },
+    "DOOR_POLICY": {
+      "title": "Öffne unangemeldetem Besuch nicht; sprich durch die geschlossene Tür oder die Gegensprechanlage",
+      "tradeoffs": "Kann bei Lieferungen oder Behörden unangenehm sein; verlange den Ausweis durch die Tür."
+    },
+    "LIVED_IN_ROUTINE": {
+      "title": "Lass die Wohnung bewohnt aussehen: eine Lampe mit Zeitschaltuhr, die du schon hast, Storen wie gewohnt",
+      "tradeoffs": "Schreckt Gelegenheitstäter ab, nicht aber entschlossene Eindringlinge."
+    },
+    "DOOR_VIEWER_FIT": {
+      "title": "Bring einen Türspion oder eine Türkette an",
+      "tradeoffs": "Mieterinnen und Mieter brauchen fürs Bohren die Zustimmung der Vermieterschaft."
+    },
+    "ENTRANCE_LIGHT": {
+      "title": "Bewegungsmelder-Licht beim Eingang (ohne Kamera)",
+      "tradeoffs": "Braucht eventuell die Zustimmung der Verwaltung; kann Nachbarn stören."
+    },
+    "LOCK_UPGRADE": {
+      "title": "Rüste auf einen Sicherheitszylinder und ein Sicherheitsschliessblech auf",
+      "tradeoffs": "Echte Kosten; Mieterinnen und Mieter brauchen die Zustimmung der Vermieterschaft."
+    },
+    "LOCAL_SIREN_ALARM": {
+      "title": "Lokaler Sirenenalarm an der Tür, ohne Alarmzentrale",
+      "tradeoffs": "Niemand wird alarmiert; Fehlalarme ärgern die Nachbarn."
+    },
+    "LOCAL_DOORBELL_CAMERA": {
+      "title": "Türklingelkamera, die auf eine Speicherkarte bei dir zu Hause aufzeichnet und nur auf deine Tür gerichtet ist",
+      "tradeoffs": "Zeichnet Nachbarn und Passanten auf; in gemeinsam genutzten Bereichen gilt das Schweizer Datenschutzrecht."
+    },
+    "CLOUD_DOORBELL_CAMERA": {
+      "title": "Cloud-Türklingelkamera mit Gesichtserkennung",
+      "tradeoffs": "Videos und Gesichter liegen bei einem Anbieter, der sie weitergeben kann, ohne dass du entscheidest."
+    },
+    "INDOOR_CAMERA": {
+      "title": "Innenkamera",
+      "tradeoffs": "Filmt dein Privatleben und alle, die zu Besuch kommen."
+    },
+    "MONITORED_ALARM": {
+      "title": "Überwachte Alarmanlage mit automatischer Alarmierung der Polizei",
+      "tradeoffs": "Abonnement; Alarme gehen an die Polizei, ohne dass du entscheidest."
+    },
+    "CHECK_IN_ROUTINE": {
+      "title": "Schreib einer Vertrauensperson, wenn du losgehst und wenn du zu Hause bist",
+      "tradeoffs": "Eine Vertrauensperson kennt deine Zeiten; vereinbart, was sie tut, wenn du dich nicht meldest."
+    },
+    "ADDRESS_BLOCK": {
+      "title": "Lass deine Adresse aus öffentlichen Verzeichnissen entfernen und beantrage beim Personenmeldeamt eine Datensperre",
+      "tradeoffs": "Etwas Papierkram; berechtigte Absender erreichen dich womöglich schwerer."
+    },
+    "ACCOMPANIED_HOME": {
+      "title": "Buche einen Skif-Protector, der dich in den Nächten, die dir Sorgen machen, nach Hause begleitet",
+      "tradeoffs": "Jedes Mal ein bezahlter Dienst; ein Protector erfährt deine Adresse."
+    },
+    "DIGITAL_FOOTPRINT_CLEANUP": {
+      "title": "Entferne persönliche Angaben aus öffentlichen Profilen und Personensuchseiten; halte öffentliche und private Konten getrennt",
+      "tradeoffs": "Ein Nachmittag Arbeit, und ab und zu wiederholen."
+    },
+    "HOLDINGS_DISCRETION": {
+      "title": "Halte dein Vermögen aus dem Blickfeld: Verbinde Wallets oder Beträge nicht mit deinem Namen, weder in der Öffentlichkeit noch online",
+      "tradeoffs": "Verlangt, dass du weniger über etwas sprichst, auf das du vielleicht stolz bist."
+    },
+    "PRIVACY_REVIEW": {
+      "title": "Eine professionelle Überprüfung, wie exponiert du physisch und digital bist",
+      "tradeoffs": "Du teilst Angaben mit der prüfenden Person, damit sie findet, was andere finden könnten."
+    },
+    "ROUTE_VARIATION": {
+      "title": "Wechsle Weg und Zeiten; bleib auf beleuchteten, belebten Strassen",
+      "tradeoffs": "Manchmal ein längerer Heimweg."
+    },
+    "PERSONAL_ALARM": {
+      "title": "Ein persönlicher Alarm – laut, ohne App, ohne Tracking",
+      "tradeoffs": "Zieht Aufmerksamkeit auf sich; hilft nur, wenn Leute in der Nähe sind."
+    },
+    "LIVE_LOCATION_SHARING": {
+      "title": "Teile unterwegs deinen Live-Standort mit einer Vertrauensperson",
+      "tradeoffs": "Während du ihn teilst, läuft dein Standort über die Server eines App-Anbieters."
+    },
+    "PLAN_SHARED": {
+      "title": "Teile den Plan – wo, wann, mit wem – mit einer Vertrauensperson und vereinbart eine Zeit, zu der du dich meldest",
+      "tradeoffs": "Eine Vertrauensperson kennt deine Pläne für den Tag."
+    },
+    "EVENT_PROTECTOR": {
+      "title": "Buche einen Protector für diesen Anlass",
+      "tradeoffs": "Ein bezahlter Dienst; ein Protector erfährt, wo du sein wirst."
+    },
+    "HOUSE_RULES_BRIEFING": {
+      "title": "Klare Hausregeln am Eingang und vor jedem Abend ein kurzes Deeskalations-Briefing fürs Personal",
+      "tradeoffs": "Jemand muss jeden Abend dafür verantwortlich sein."
+    },
+    "DEESCALATION_TRAINING": {
+      "title": "Deeskalationstraining für dein Personal",
+      "tradeoffs": "Das Personal fehlt in dieser Zeit im Service; lohnt sich zu wiederholen, wenn das Team wechselt."
+    },
+    "VENUE_PROTECTORS": {
+      "title": "Buche Skif-Deeskalationspersonal für deine stärksten Abende",
+      "tradeoffs": "Jeden Abend ein bezahlter Dienst; Gäste bemerken mehr Personal."
+    },
+    "VENUE_CCTV": {
+      "title": "Videoüberwachung der öffentlichen Bereiche des Lokals, vor Ort aufgezeichnet",
+      "tradeoffs": "Filmt alle Gäste; hilft mehr im Nachhinein als im Moment. Es gelten Datenschutzpflichten."
+    },
+    "ACCOUNT_BASICS": {
+      "title": "Nutze einen Passwortmanager und aktiviere die Zwei-Faktor-Authentifizierung für E-Mail, Mobilfunkanbieter und Bank – mit App oder Schlüssel, nicht per SMS",
+      "tradeoffs": "Ein Abend Einrichtung, und ein Schritt mehr, wenn du dich irgendwo neu anmeldest."
+    },
+    "SIM_SWAP_LOCK": {
+      "title": "Verlange von deinem Mobilfunkanbieter eine PIN oder Sperre, bevor deine Nummer auf eine neue SIM übertragen wird",
+      "tradeoffs": "Ein Wechsel von Telefon oder Anbieter braucht einen zusätzlichen Schritt."
+    },
+    "HARDWARE_SECURITY_KEYS": {
+      "title": "Zwei Hardware-Sicherheitsschlüssel – einer als Reserve – für E-Mail, Börsen und deinen Passwortmanager",
+      "tradeoffs": "Verlierst du beide, ist die Wiederherstellung langsam; bewahre die Reserve an einem anderen Ort auf."
+    },
+    "DEVICE_HYGIENE": {
+      "title": "Lass Telefon und Laptop sich selbst aktualisieren, entferne Apps, die du nicht nutzt, und verwende einen langen Code mit aktivierter Verschlüsselung",
+      "tradeoffs": "Neustarts für Updates in ungünstigen Momenten."
+    },
+    "DEVICE_CHECK": {
+      "title": "Eine Cybersecurity-Fachperson prüft deine Geräte und Konten auf Kompromittierung und richtet sie mit dir ein",
+      "tradeoffs": "Jemand, den du beauftragst, sieht in dein Telefon und deinen Laptop; wähle jemanden, der an Vertraulichkeit gebunden ist."
+    },
+    "SEED_BACKUP": {
+      "title": "Schreib deine Seed-Phrase auf Papier oder Metall – nie als Foto oder Cloud-Notiz –, bewahre sie an zwei Orten auf und teste eine Wiederherstellung",
+      "tradeoffs": "Zwei physische Kopien, die du sicher aufbewahren musst, statt keiner."
+    },
+    "CUSTODY_REVIEW": {
+      "title": "Eine Fachperson überprüft, wie du deine Schlüssel verwahrst: Cold Storage, Multi-Signatur, Erbschaft und was unter Zwang geschieht",
+      "tradeoffs": "Die prüfende Person erfährt, wie dein Vermögen aufgeteilt ist, wenn auch nicht die Schlüssel selbst."
+    },
+    "LOCATION_AUDIT": {
+      "title": "Prüfe, welche Apps und Personen deinen Standort sehen, schalte ab, was du nicht brauchst, und such Auto und Taschen nach unbekannten Trackern ab",
+      "tradeoffs": "Manche Apps sind ohne deinen Standort weniger bequem."
+    },
+    "DATA_BROKER_REMOVAL": {
+      "title": "Eine Datenschutz-Fachperson entfernt deine Angaben von Personensuchseiten und bei Datenhändlern und prüft laufend nach",
+      "tradeoffs": "Du gibst der Fachperson genau die Angaben, die du entfernen lassen willst."
+    },
+    "CLAIM_YOUR_NAME": {
+      "title": "Sichere dir deinen Namen auf den wichtigsten Plattformen, verifiziere offizielle Konten und sag öffentlich, welche Konten wirklich deine sind",
+      "tradeoffs": "Konten, die du pflegen musst, auch wenn du nie etwas postest."
+    },
+    "HARASSMENT_PLAYBOOK": {
+      "title": "Leg jetzt fest, was du tust, wenn es anfängt: nicht antworten, mit Datum dokumentieren, melden und einschränken, wer kommentieren kann",
+      "tradeoffs": "Nicht zurückzuschlagen kann sich wie Verlieren anfühlen."
+    },
+    "REPUTATION_RESPONDER": {
+      "title": "Eine Fachperson für Reputation und Krisenkommunikation auf Abruf: Löschungsanträge, Eskalation bei Plattformen, was wann zu sagen ist",
+      "tradeoffs": "Du erzählst ihr die ganze Geschichte und vereinbarst, wer für dich spricht."
+    },
+    "FAMILY_RULES": {
+      "title": "Vereinbare mit deinen Kindern einfache Regeln – mit wem sie mitgehen dürfen, was sie online nie teilen – und dass sie dich immer anrufen können, ohne Fragen",
+      "tradeoffs": "Ein Gespräch, das sich wiederholt, während sie älter werden; Vertrauen statt Überwachung."
+    },
+    "FAMILY_WORKSHOP": {
+      "title": "Ein Sicherheitsworkshop für die Familie: Eltern und Kinder üben, was zu tun ist, wenn sie sich verirren, angesprochen oder online gemobbt werden",
+      "tradeoffs": "Ein gemeinsamer Nachmittag; Kinder merken sich, was sie geübt haben."
+    },
+    "FAMILY_CODE_WORD": {
+      "title": "Vereinbart ein Familien-Codewort, und ruf auf einer Nummer zurück, die du schon hast, bevor du jemandem Geld schickst, der sagt, er gehöre zur Familie",
+      "tradeoffs": "Etwas unangenehm, wenn zum ersten Mal ein echter Verwandter danach gefragt wird."
+    },
+    "EMERGENCY_BASICS": {
+      "title": "Kenne 144 (Sanität), 117 (Polizei), 118 (Feuerwehr) und 112; hinterlege einen Notfallkontakt auf deinem Telefon; finde heraus, wo der nächste Defibrillator ist",
+      "tradeoffs": "Dein Notfallkontakt ist auf dem Sperrbildschirm lesbar."
+    },
+    "FIRST_AID_COURSE": {
+      "title": "Ein Erste-Hilfe-Kurs für dich, deinen Haushalt oder dein Personal",
+      "tradeoffs": "Ein oder zwei Tage deiner Zeit; lohnt sich, alle paar Jahre aufzufrischen."
+    },
+    "PAUSE_BEFORE_PAYING": {
+      "title": "Handle nie auf einen dringenden Anruf oder eine Nachricht hin, die Geld, Codes oder Schlüssel verlangt: Leg auf und ruf auf einer Nummer zurück, die du schon hast",
+      "tradeoffs": "Ein echter Notfall wartet ein paar Minuten länger."
+    },
+    "SMALL_AMOUNTS_REACHABLE": {
+      "title": "Halte im Alltag nur kleine Beträge griffbereit; versieh den Rest mit Verzögerungen oder einer zweiten Unterschrift",
+      "tradeoffs": "Grössere Summen zu bewegen braucht Planung oder eine weitere Person."
+    },
+    "HAZARD_WALKTHROUGH": {
+      "title": "Teste die Rauchmelder, finde die Absperrungen für Gas und Wasser und halte zwei Fluchtwege frei",
+      "tradeoffs": "Eine halbe Stunde, ein- oder zweimal im Jahr."
+    },
+    "SMOKE_ALARMS_FIT": {
+      "title": "Eigenständige Rauchmelder (ohne App) und eine Löschdecke",
+      "tradeoffs": "Ab und zu ein Fehlalarm beim Kochen."
+    },
+    "KNOW_THE_AREA": {
+      "title": "Kenne den nächsten Polizeiposten, das nächste Spital, die nächste Apotheke und einen Ort, der spät offen hat und in den du hineingehen könntest; speichere sie offline",
+      "tradeoffs": "Etwas Vorbereitung vor einer Reise oder einem Umzug."
+    },
+    "MEET_THE_NEIGHBOURS": {
+      "title": "Stell dich zwei Nachbarn vor und tritt der Haus- oder Quartiergruppe bei",
+      "tradeoffs": "Leute in der Nähe wissen etwas mehr über dich."
+    },
+    "DATA_ACCESS_REQUEST": {
+      "title": "Frag jede Schweizer Firma oder Behörde, was sie über dich gespeichert hat – kostenlos nach dem Datenschutzgesetz – und lass falsche oder unnötige Daten berichtigen oder löschen",
+      "tradeoffs": "Briefe schreiben, und bis zu 30 Tage für jede Antwort."
+    },
+    "RIGHTS_GUIDE": {
+      "title": "Lies einen leicht verständlichen Leitfaden einer Rechtsberatungsstelle zu deinen Rechten gegenüber Polizei, Behörden und Arbeitgebern, und schreib direkt nach jeder Begegnung auf, was passiert ist",
+      "tradeoffs": "Ein Leitfaden ist keine Beratung zu deinem Fall."
+    },
+    "LAWYER_REFERRAL": {
+      "title": "Eine Erstberatung bei einer unabhängigen Anwältin oder einem unabhängigen Anwalt – Skif vermittelt, gibt aber selbst nie Rechtsberatung",
+      "tradeoffs": "Stundenweise bezahlt; was du einer Anwältin oder einem Anwalt sagst, unterliegt dem Anwaltsgeheimnis."
+    },
+    "RECOVERY_KIT": {
+      "title": "Druck die Wiederherstellungscodes deiner Konten aus, notiere, wo Schlüssel und Dokumente sind, und bewahre alles versiegelt in einem Tresor oder bei einer Vertrauensperson auf",
+      "tradeoffs": "Wer den Umschlag hat, muss jemand sein, dem du alles darin anvertrauen würdest."
+    },
+    "EMERGENCY_PLAN": {
+      "title": "Schreib einen einseitigen Notfallplan: wer wen anruft, wo ihr euch trefft, ein Kontakt ausserhalb der Stadt und was ihr mitnehmt",
+      "tradeoffs": "Eine gemeinsame Stunde; die Personen darauf kennen gegenseitig ihre Nummern."
+    },
+    "PREPAREDNESS_SESSION": {
+      "title": "Eine Vorsorge-Session mit einer Trainerin oder einem Trainer: dein Plan einmal geübt, mit Erster Hilfe und sicherem Hinausgelangen",
+      "tradeoffs": "Ein paar Stunden; einmal üben macht einen Plan real."
+    },
+    "INCIDENT_RESPONDER": {
+      "title": "Ein Kontakt für Cyber-Incident-Response unter Vertrag, für den Fall, dass ein Konto, ein Gerät oder ein Schlüssel kompromittiert wird",
+      "tradeoffs": "Eine laufende Gebühr für etwas, das du hoffentlich nie brauchst."
+    },
+    "UNREST_FOLLOW_NOTICES": {
+      "title": "Verfolge die Mitteilungen der Stadtpolizei für den Tag: die Route, die Zeit, allfällige Strassensperrungen",
+      "tradeoffs": "Routen ändern sich am Tag selbst; jemand muss laufend nachschauen."
+    },
+    "UNREST_CLOSE_EARLY": {
+      "title": "Schliess früher und schick das Personal nach Hause, bevor die Demonstration deine Strasse erreicht",
+      "tradeoffs": "Ein Abend ohne Umsatz. Niemand wird verletzt, weil er Ware verteidigt."
+    },
+    "UNREST_CLEAR_WINDOW": {
+      "title": "Nimm Wertsachen, Bargeld und Ware aus dem Schaufenster und von der Verkaufsfläche, und fotografiere, was du hast",
+      "tradeoffs": "Einen Tag lang ein leeres Schaufenster. Die Fotos erleichtern eine Versicherungsmeldung erheblich."
+    },
+    "UNREST_NEIGHBOURS": {
+      "title": "Vereinbare mit den benachbarten Geschäften, wer 117 anruft, wie ihr euch erreicht und wer bei wem nachschaut",
+      "tradeoffs": "Deine Nummer geht an ein paar Nachbarn."
+    },
+    "UNREST_CHECK_INSURANCE": {
+      "title": "Prüfe, ob deine Versicherung Schäden durch Unruhen deckt und was sie von dir braucht, um zu zahlen",
+      "tradeoffs": "Eine Stunde mit der Police. Manche Policen schliessen Unruhen aus oder brauchen eine Zusatzdeckung."
+    },
+    "UNREST_SHUTTERS": {
+      "title": "Rollläden, Sicherheitsfolie oder Bretter vor dem Glas für den Tag",
+      "tradeoffs": "Kostet Geld und muss vor dem Tag angebracht werden; verbrettertes Glas signalisiert, dass du Ärger erwartest."
+    },
+    "UNREST_PROTECTORS": {
+      "title": "Buche Skif-Protectors, die bei dir sind, während du schliesst und gehst: Sie beobachten die Strasse, halten dich und dein Personal aus der Gefahr, dokumentieren, was passiert, und rufen 117 an",
+      "tradeoffs": "Ein bezahlter Dienst. Ein Protector schützt Menschen, nicht Ware: Er stellt sich keiner Menge entgegen und trägt nichts als Waffe, und wird es gefährlich, gehen alle."
+    }
+  },
+  "concerns": {
+    "BURGLARY": {
+      "label": "Ein Einbruch, während niemand da ist"
+    },
+    "UNWANTED_VISITORS": {
+      "label": "Unerwünschte Leute an der Tür"
+    },
+    "ARRIVING_AT_NIGHT": {
+      "label": "Mich unsicher fühlen, wenn ich nachts ankomme"
+    },
+    "BEING_FOUND": {
+      "label": "Dass jemand herausfindet, wo ich wohne oder bin"
+    },
+    "FOLLOWED": {
+      "label": "Unterwegs verfolgt oder belästigt werden"
+    },
+    "ONLINE_EXPOSURE": {
+      "label": "Dass meine Angaben oder mein Vermögen online auffindbar sind"
+    },
+    "GUEST_CONFLICT": {
+      "label": "Aggression oder Konflikte unter Gästen"
+    },
+    "UNREST_NEARBY": {
+      "label": "Dass eine Demonstration in der Nähe in Unruhen, Plünderungen oder Sachschäden umschlägt"
+    },
+    "ACCOUNT_TAKEOVER": {
+      "label": "Dass jemand in meine E-Mail, meine Telefonnummer oder meine Konten eindringt"
+    },
+    "DEVICE_COMPROMISE": {
+      "label": "Dass mein Telefon oder Laptop gehackt oder ausspioniert wird"
+    },
+    "CRYPTO_KEYS": {
+      "label": "Meine Krypto-Schlüssel verlieren oder bestohlen werden"
+    },
+    "LOCATION_TRACKING": {
+      "label": "Über mein Telefon, mein Auto oder einen versteckten Tracker verfolgt werden"
+    },
+    "IMPERSONATION": {
+      "label": "Dass jemand sich als ich ausgibt, oder gefälschtes Material über mich"
+    },
+    "REPUTATION_ATTACK": {
+      "label": "Eine Welle von Angriffen oder eine Kampagne gegen meinen Namen"
+    },
+    "CHILDREN_SAFETY": {
+      "label": "Die Sicherheit meiner Kinder, online oder unterwegs"
+    },
+    "RELATIVE_TARGETED": {
+      "label": "Dass ältere oder verletzliche Angehörige ins Visier geraten"
+    },
+    "MEDICAL_EMERGENCY": {
+      "label": "Ein medizinischer Notfall, und niemand weiss, was zu tun ist"
+    },
+    "FRAUD": {
+      "label": "Dass mich ein Betrug Geld kostet"
+    },
+    "COERCION": {
+      "label": "Unter Druck gesetzt oder gezwungen werden, Geld oder Schlüssel herauszugeben"
+    },
+    "HAZARD": {
+      "label": "Feuer, Gas, Wasser oder eine andere Gefahr"
+    },
+    "UNFAMILIAR_AREA": {
+      "label": "Die Gegend nicht kennen – wo es Hilfe gibt, was ich meiden sollte"
+    },
+    "INSTITUTION_DATA": {
+      "label": "Dass eine Firma, ein Arbeitgeber oder eine Behörde Daten über mich speichert oder weitergibt"
+    },
+    "KNOWING_MY_RIGHTS": {
+      "label": "Meine Rechte gegenüber Polizei, Behörden oder Arbeitgeber nicht kennen"
+    },
+    "LOCKED_OUT": {
+      "label": "Mein Telefon oder meine Konten verlieren, ohne wieder hineinzukommen"
+    },
+    "NO_PLAN": {
+      "label": "Dass niemand weiss, was zu tun ist, wenn mir etwas passiert"
+    },
+    "UPCOMING_EVENT": {
+      "label": "Ein bevorstehender Anlass"
+    }
+  },
+  "environments": {
+    "PERSON": {
+      "label": "Mein Leben als Ganzes",
+      "description": "Du und die Menschen, die du liebst: Konten, Identität, Ruf, Geld, Gesundheit, Familie."
+    },
+    "HOME": {
+      "label": "Zuhause",
+      "description": "Eine Wohnung oder ein Haus, in dem du lebst."
+    },
+    "VENUE": {
+      "label": "Lokal",
+      "description": "Ein Club, eine Bar, ein Geschäft oder ein Veranstaltungsort, den du betreibst."
+    },
+    "WORKPLACE": {
+      "label": "Arbeitsplatz",
+      "description": "Wo du oder dein Team arbeitet."
+    },
+    "VEHICLE": {
+      "label": "Fahrzeug",
+      "description": "Ein Auto, das du fährst oder in dem du gefahren wirst."
+    },
+    "JOURNEY": {
+      "label": "Weg",
+      "description": "Eine Strecke, die du regelmässig zurücklegst, z. B. von der Arbeit nach Hause."
+    },
+    "EVENT": {
+      "label": "Anlass",
+      "description": "Ein einmaliger Anlass: eine Party, eine Reise, ein öffentlicher Auftritt."
+    }
+  },
+  "costTiers": {
+    "FREE": {
+      "label": "Kostenlos",
+      "budget": "Nichts – nur kostenlose Schritte"
+    },
+    "LOW": {
+      "label": "Unter CHF 100",
+      "budget": "Bis CHF 100"
+    },
+    "MEDIUM": {
+      "label": "CHF 100–500",
+      "budget": "Bis CHF 500"
+    },
+    "HIGH": {
+      "label": "Über CHF 500 oder ein Abonnement",
+      "budget": "Mehr, wenn es sich klar lohnt"
+    }
+  },
+  "kinds": {
+    "BEHAVIOURAL": "Etwas, das du tust",
+    "ENVIRONMENTAL": "Eine Änderung am Ort",
+    "PRODUCT": "Braucht ein Produkt",
+    "PROFESSIONAL_SERVICE": "Braucht eine Fachdienstleistung",
+    "PROTECTOR": "Braucht einen Protector"
+  },
+  "levels": {
+    "LOW": "Tief",
+    "MEDIUM": "Mittel",
+    "HIGH": "Hoch"
+  },
+  "privacyImpact": [
+    "Keine Daten, keine Geräte, die beobachten",
+    "Teilt wenig mit Personen, die du wählst",
+    "Zeichnet auf oder sendet über dein Zuhause hinaus",
+    "Beobachtet Menschen oder entzieht sich deiner Kontrolle"
+  ],
+  "autonomyImpact": [
+    "Ändert nichts daran, wie du lebst",
+    "Verlangt eine kleine Routine von dir",
+    "Etwas anderes entscheidet oder handelt für dich",
+    "Schränkt ein, was du tun kannst"
+  ],
+  "evidenceBases": {
+    "RESEARCH": "Veröffentlichte Forschung",
+    "INTERNAL_OBSERVATION": "Beobachtet in Skif-Einsätzen",
+    "EXPERT_OPINION": "Meinung einer namentlich genannten Fachperson",
+    "SKIF_JUDGMENT": "Skifs eigene Einschätzung – noch keine Forschung zitiert",
+    "VENDOR_CLAIM": "Herstellerangabe, nicht überprüft"
+  }
+}

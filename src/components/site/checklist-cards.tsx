@@ -1,16 +1,20 @@
 import { Clock } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Checklist } from "@/config/checklists";
+import { wordsFor } from "@/config/text";
+import { checklistWords } from "@/config/text/checklists";
+import type { Locale } from "@/i18n/locales";
 
 export function checklistHref(c: Checklist): string {
   return `/act/${c.slug}`;
 }
 
 /** Checklists as cards: the situation, how long it takes, how many steps. */
-export function ChecklistCards({ checklists }: { checklists: readonly Checklist[] }) {
+export function ChecklistCards({ checklists, locale }: { checklists: readonly Checklist[]; locale: Locale }) {
+  const t = wordsFor(locale).checklist;
   return (
     <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {checklists.map((c) => (
+      {checklists.map((c) => ({ c, w: checklistWords(c, locale) })).map(({ c, w }) => (
         <li key={c.slug}>
           <Link
             href={checklistHref(c)}
@@ -18,10 +22,10 @@ export function ChecklistCards({ checklists }: { checklists: readonly Checklist[
           >
             <span className="flex items-center gap-2 text-xs text-fg-tertiary">
               <Clock aria-hidden className="size-3.5" />
-              {c.minutes} min · {c.steps.length} steps
+              {t.meta(c.minutes, c.steps.length)}
             </span>
-            <span className="mt-3 font-heading text-lg font-semibold text-fg-primary group-hover:text-accent">{c.title}</span>
-            <span className="mt-2 text-sm leading-relaxed text-fg-secondary">{c.when}</span>
+            <span className="mt-3 font-heading text-lg font-semibold text-fg-primary group-hover:text-accent">{w.title}</span>
+            <span className="mt-2 text-sm leading-relaxed text-fg-secondary">{w.when}</span>
           </Link>
         </li>
       ))}
