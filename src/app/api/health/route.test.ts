@@ -20,6 +20,7 @@ describe("GET /api/health", () => {
       database: "unconfigured",
       mail: "unconfigured",
       ai: "unconfigured",
+      speech: "unconfigured",
     });
   });
 

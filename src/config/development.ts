@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Applying to be a Protector: you can now say your background out loud instead of typing it, and the form fills in from what you said. The recording becomes text and is thrown away; you check every field before you send it.",
+    },
+    {
+      date: "2026-10-22",
       done: "Skif has a blog: notes on what we build and why, starting with how every safety step is priced in privacy and freedom as well as money. It sits in the footer of every page.",
     },
     {

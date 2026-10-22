@@ -10,10 +10,11 @@ import { ActionForm, type FormAction } from "./action-form";
 import { AiAssist } from "./ai-assist";
 import { CapabilityFields } from "./capability-fields";
 import { CheckboxGroup, Field, TextArea, TextInput } from "./fields";
+import { SpeakToForm } from "./speak-to-form";
 
 /** Says exactly what leaves Skif, and that nothing is decided by it. */
 const DISCLOSURE =
-  "What you type in this box, together with what the form already holds, is sent to an external AI provider only to fill in the form — nothing is saved until you submit, and Operations still reviews your application.";
+  "What you type in this box or say aloud, together with what the form already holds, is sent to an external AI provider only to fill in the form. A recording is turned into text and thrown away; nothing is saved until you submit, and Operations still reviews your application.";
 
 const LABELS = {
   fillTitle: "Describe your experience, and the form fills in",
@@ -36,12 +37,14 @@ export function ProtectorApplication({
   initial,
   held,
   aiConfigured,
+  speechConfigured,
 }: {
   action: FormAction;
   submitLabel: string;
   initial: Record<string, string | string[]>;
   held: ProtectorCapability[];
   aiConfigured: boolean;
+  speechConfigured: boolean;
 }) {
   const form = useAiForm({
     target: PROTECTOR_APPLICATION_FORM.key,
@@ -56,7 +59,9 @@ export function ProtectorApplication({
 
   return (
     <div className="space-y-6">
-      <AiAssist form={form} configured={aiConfigured} disclosure={DISCLOSURE} labels={LABELS} />
+      <AiAssist form={form} configured={aiConfigured} disclosure={DISCLOSURE} labels={LABELS}>
+        {speechConfigured && <SpeakToForm form={form} />}
+      </AiAssist>
       <ActionForm action={action} submitLabel={submitLabel}>
         <Field label="Name shown to customers" hint={note("displayName")}>
           <TextInput
