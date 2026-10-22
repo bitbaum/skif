@@ -6,6 +6,8 @@ import { CHECKLIST_TRANSLATIONS } from "./checklists";
 import { CONCERNS } from "../concerns";
 import { ENVIRONMENT_TYPES } from "../environments";
 import { ASSESSMENT_TRANSLATIONS, INTERVENTION_KEYS } from "./assessment";
+import { ACADEMY_KEYS, ACADEMY_TRANSLATIONS } from "./academy";
+import { CAPABILITIES } from "../capabilities";
 
 describe("translations", () => {
   it("give every checklist the same steps as English, with a detail exactly where English has one", () => {
@@ -27,7 +29,16 @@ describe("translations", () => {
     }
   });
 
+  it("translate every Academy area, course, capability and delivery", () => {
+    for (const [locale, t] of Object.entries(ACADEMY_TRANSLATIONS)) {
+      for (const k of ACADEMY_KEYS.areas) expect(t.areas[k]?.title && t.areas[k]?.intro, `${locale} area ${k}`).toBeTruthy();
+      for (const k of ACADEMY_KEYS.courses) expect(t.courses[k]?.title && t.courses[k]?.outcome, `${locale} course ${k}`).toBeTruthy();
+      for (const c of CAPABILITIES) expect(t.capabilities[c.key], `${locale} capability ${c.key}`).toBeTruthy();
+      for (const k of ACADEMY_KEYS.delivery) expect(t.delivery[k], `${locale} delivery ${k}`).toBeTruthy();
+    }
+  });
+
   it("writes German the Swiss way: no ß anywhere", () => {
-    for (const f of ["de.ts", "fields.ts", "checklists.ts", "assessment.de.json"]) expect(readFileSync(join(__dirname, f), "utf8"), f).not.toContain("ß");
+    for (const f of ["de.ts", "fields.ts", "checklists.ts", "assessment.de.json", "academy.de.ts"]) expect(readFileSync(join(__dirname, f), "utf8"), f).not.toContain("ß");
   });
 });

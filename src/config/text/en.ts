@@ -107,6 +107,17 @@ export const EN = {
     notYet: "No course runs yet. This is the curriculum Skif is building: some courses with its own exams, others with partner schools.",
     teach: "Teach with Skif",
     become: "Become a Protector",
+    areasLabel: "Academy areas",
+    planned: "Planned",
+    builds: "Builds",
+    notify: "Tell me when it starts",
+    guide: "Start free: read the guide",
+    capabilityTitle: "From course to capability",
+    capabilityBody: [
+      "Every Protector carries a capability graph rather than a star rating: each skill with a level, the evidence for it, and a certificate's expiry where there is one. A skill counts fully in matching only once it is verified, and an expired certificate stops counting.",
+      "A Skif exam, or a partner's certificate Skif recognises, is how a declared skill becomes a verified one.",
+    ],
+    aboutProtectors: "About Protectors",
   },
   home: {
     statement: "Safety and freedom, from every side.",
@@ -356,6 +367,12 @@ export const EN = {
   sourceList: {
     title: "Sources",
     checked: (date: string) => `Read and checked on ${date}. Quotes are from the sources as published.`,
+  },
+  research: {
+    eyebrow: "Research",
+    sources: (n: number) => `${n} sources`,
+    library: "The Library",
+    inThis: "In this article",
   },
   notTranslated: "Parts of this page are still in English. The translation is on its way.",
 };

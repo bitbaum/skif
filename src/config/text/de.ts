@@ -100,6 +100,17 @@ export const DE: SiteWords = {
     notYet: "Noch läuft kein Kurs. Das ist der Lehrplan, den Skif aufbaut: manche Kurse mit eigenen Prüfungen, andere mit Partnerschulen.",
     teach: "Mit Skif unterrichten",
     become: "Protector werden",
+    areasLabel: "Bereiche der Akademie",
+    planned: "Geplant",
+    builds: "Baut auf",
+    notify: "Sag mir, wenn er startet",
+    guide: "Gratis anfangen: den Ratgeber lesen",
+    capabilityTitle: "Vom Kurs zur Fähigkeit",
+    capabilityBody: [
+      "Jeder Protector hat statt einer Sternebewertung ein Fähigkeitsprofil: jede Fähigkeit mit einer Stufe, dem Nachweis dafür und, wo es eines gibt, dem Ablaufdatum des Zertifikats. Eine Fähigkeit zählt beim Matching erst voll, wenn sie geprüft ist, und ein abgelaufenes Zertifikat zählt nicht mehr.",
+      "Eine Skif-Prüfung oder ein Zertifikat einer Partnerschule, das Skif anerkennt, macht aus einer angegebenen Fähigkeit eine geprüfte.",
+    ],
+    aboutProtectors: "Über Protectors",
   },
   home: {
     statement: "Sicherheit und Freiheit, von allen Seiten.",
@@ -348,6 +359,12 @@ export const DE: SiteWords = {
   sourceList: {
     title: "Quellen",
     checked: (date: string) => `Gelesen und geprüft am ${date}. Zitate stammen aus den Quellen, wie veröffentlicht.`,
+  },
+  research: {
+    eyebrow: "Forschung",
+    sources: (n: number) => `${n} Quellen`,
+    library: "Die Bibliothek",
+    inThis: "In diesem Artikel",
   },
   notTranslated: "Teile dieser Seite sind noch auf Englisch. Die Übersetzung folgt.",
 };
