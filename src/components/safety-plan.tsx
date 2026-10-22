@@ -15,6 +15,8 @@ import {
 } from "@/config/interventions";
 import { PRIORITY_LABELS } from "@/domain/findings";
 import { planSteps, planVerdict, type FindingPlan, type PlanVerdict, type SafetyPlan } from "@/domain/safety-plan";
+import type { StepOutcome } from "@/domain/step-outcomes";
+import { StepOutcomeControls } from "./step-outcome";
 import { Badge, Card } from "./ui";
 
 export function InterventionCard({ id, why, emphasis = false }: { id: string; why?: string[]; emphasis?: boolean }) {
@@ -159,6 +161,7 @@ export function FindingSection({ finding, shownAbove = false }: { finding: Findi
             </div>
           </details>
         )}
+        <KeyList title="You said these didn't help or weren't for you" keys={finding.setAside ?? []} mark="·" />
         <KeyList title="Over your budget" keys={finding.overBudget} mark="·" folded />
         <KeyList
           title="Ruled out by your limits"
@@ -246,8 +249,17 @@ export function FindingsByFamily({ plan, wholeLife }: { plan: SafetyPlan; wholeL
 }
 
 /** The plan as a to-do list, before the detail: each step once, with the
- * worries it answers. Nothing here when there is nothing to do. */
-export function PlanSteps({ plan }: { plan: SafetyPlan }) {
+ * worries it answers and, when `answer` is given, "Did it help?" under it.
+ * Nothing here when there is nothing to do. */
+export function PlanSteps({
+  plan,
+  outcomes,
+  answer,
+}: {
+  plan: SafetyPlan;
+  outcomes?: ReadonlyMap<string, StepOutcome>;
+  answer?: (form: FormData) => Promise<void>;
+}) {
   const steps = planSteps(plan);
   if (steps.length === 0) return null;
   return (
@@ -259,13 +271,14 @@ export function PlanSteps({ plan }: { plan: SafetyPlan }) {
           return (
             <li key={step.key} className="flex gap-3 text-sm">
               <span className="font-semibold text-muted">{n + 1}.</span>
-              <span className="space-y-1">
+              <div className="min-w-0 flex-1 space-y-1">
                 <span className="block font-medium">{i.title}</span>
                 <span className="flex flex-wrap gap-2">
                   {needsPurchase(i.kind) ? <Badge>{costLabel(i.cost)}</Badge> : <Badge tone="accent">Nothing to buy</Badge>}
                 </span>
                 <span className="block text-muted">For: {step.concerns.map(concernLabel).join(" · ")}</span>
-              </span>
+                {answer && <StepOutcomeControls stepKey={step.key} outcome={outcomes?.get(step.key)} action={answer} />}
+              </div>
             </li>
           );
         })}
