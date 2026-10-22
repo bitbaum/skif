@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Skif has a blog: notes on what we build and why, starting with how every safety step is priced in privacy and freedom as well as money. It sits in the footer of every page.",
+    },
+    {
+      date: "2026-10-22",
       done: "The home page, Act, every checklist, the Quick check and the safety fields are now in German, French and Italian too, down to each step's cost and what it answers. Only the long guides and research are still in English, and those pages say so.",
     },
     {

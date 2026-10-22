@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { validateSite, type SitePage } from "@bitbaum/sitekit";
 import { describe, expect, it } from "vitest";
 import { ACADEMY_AREAS, COURSES, coursesIn } from "@/config/academy";
+import { postBySlug } from "./blog";
 import { CHECKLISTS } from "@/config/checklists";
 import { guideBySlug, GUIDES } from "@/config/guides";
 import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
@@ -35,6 +36,7 @@ function pageExists(href: string): boolean {
   if (second && first === "guides") return GUIDES.some((g) => g.slug === second);
   if (second && first === "research") return RESEARCH.some((r) => r.slug === second);
   if (second && first === "act") return CHECKLISTS.some((c) => c.slug === second);
+  if (second && first === "blog") return Boolean(postBySlug(second));
   return [join("[locale]", "(public)"), "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 

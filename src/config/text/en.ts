@@ -201,6 +201,7 @@ export const EN = {
   footer: {
     more: "Skif",
     privacy: "What Skif keeps",
+    blog: "Blog",
     roadmap: "Roadmap",
     changelog: "Changelog",
     credits: "Photo credits",
@@ -316,6 +317,13 @@ export const EN = {
     },
   },
   /** Shown above a page whose body is not yet in the reader's language. */
+  blog: {
+    eyebrow: "Blog",
+    statement: "What we are building, and why.",
+    lead: "Notes from the people building Skif: what shipped, what we got wrong, and what we learned on the way. In English.",
+    minutes: (n: number) => `${n} min read`,
+    all: "All posts",
+  },
   notTranslated: "Parts of this page are still in English. The translation is on its way.",
 };
 
