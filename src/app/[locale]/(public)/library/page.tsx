@@ -8,6 +8,7 @@ import { ACTION, LABEL, SHELL } from "@/components/site/shell";
 import { GUIDES } from "@/config/guides";
 import { PHOTOS } from "@/config/photos";
 import { RESEARCH } from "@/config/research";
+import { researchIn } from "@/config/research/translations";
 import { siteText } from "@/config/site";
 import { researchHref } from "@/site/research";
 import { pageLocale, type LocaleParams } from "@/i18n/page";
@@ -36,7 +37,7 @@ export default async function LibraryPage({ params }: { params: LocaleParams }) 
           </h2>
           <p className="mt-2 mb-6 max-w-prose text-fg-secondary">{LIBRARY.researchLede}</p>
           <ul className="grid gap-3 md:grid-cols-2">
-            {RESEARCH.map((r) => (
+            {RESEARCH.map((en) => researchIn(en, locale)).map((r) => (
               <li key={r.slug}>
                 <Link
                   href={researchHref(r)}

@@ -11,10 +11,26 @@ import { SHELL } from "./shell";
 
 /** Pages whose every word is already in German, French and Italian. The rest
  * say so, rather than pass off English as a translation. */
-const TRANSLATED: readonly string[] = ["/", "/act", "/emergency", "/signin"];
+const TRANSLATED: readonly string[] = [
+  "/",
+  "/act",
+  "/emergency",
+  "/signin",
+  "/library",
+  "/academy",
+  "/method",
+  "/protectors",
+  "/business",
+  "/join",
+  "/privacy",
+  "/research/science-of-safety",
+  "/research/protective-methods",
+];
 
 function isTranslated(path: string, locale: Locale): boolean {
   if (TRANSLATED.includes(path)) return true;
+  // Checklists and fields: their own words and the guides they link to.
+  if (/^\/(act|safety)\/[^/]+$/.test(path)) return true;
   if (path === "/guides") return allGuidesTranslated(GUIDES_SLUGS, locale);
   const guide = path.match(/^\/guides\/([^/]+)$/);
   return guide ? isGuideTranslated(guide[1], locale) : false;

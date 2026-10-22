@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "The rest of the site now speaks German, French and Italian too: how Skif decides, Protectors, places and businesses, joining, privacy, both research articles and every Academy course. Only the blog, the roadmap and the changelog stay in English, and they say so.",
+    },
+    {
+      date: "2026-10-22",
       done: "All 16 guides are now in German, French and Italian too, from situational awareness to parkour, with every source kept and cited the same way. The guides list, the sources and their dates follow your language as well.",
     },
     {
