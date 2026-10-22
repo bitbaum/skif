@@ -317,5 +317,23 @@ export const DE: SiteWords = {
     minutes: (n: number) => `${n} Min. Lesezeit`,
     all: "Alle Beiträge",
   },
+  accountMenu: {
+    trigger: "Konto: {name}",
+    menu: "Konto",
+    signOut: "Abmelden",
+    signingOut: "Wird abgemeldet…",
+    signOutFailed: "Die Abmeldung hat nicht geklappt. Versuch es nochmals.",
+  },
+  signInError: {
+    kicker: "Bei Skif anmelden",
+    failedTitle: "Die Anmeldung wurde nicht abgeschlossen",
+    failedBody: "Es wurde nichts geändert. Fang nochmals an: Meist klappt es beim zweiten Mal. Wenn es weiter scheitert, ist OrangeCat vielleicht kurz nicht erreichbar.",
+    deniedTitle: "Mit diesem Konto geht die Anmeldung hier nicht",
+    deniedBody: "OrangeCat hat dich angemeldet, aber Skif konnte das Konto nicht annehmen.",
+    configurationTitle: "Die Anmeldung ist gerade nicht verfügbar",
+    configurationBody: "Die Anmeldung ist auf diesem Server noch nicht eingerichtet. Das liegt nicht an dir.",
+    tryAgain: "Nochmals versuchen",
+    home: "Zurück zum Anfang",
+  },
   notTranslated: "Teile dieser Seite sind noch auf Englisch. Die Übersetzung folgt.",
 };

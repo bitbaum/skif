@@ -317,5 +317,23 @@ export const IT: SiteWords = {
     minutes: (n: number) => `${n} min di lettura`,
     all: "Tutti gli articoli",
   },
+  accountMenu: {
+    trigger: "Account: {name}",
+    menu: "Account",
+    signOut: "Esci",
+    signingOut: "Uscita in corso…",
+    signOutFailed: "L'uscita non è andata a buon fine. Riprova.",
+  },
+  signInError: {
+    kicker: "Accedi a Skif",
+    failedTitle: "L'accesso non è stato completato",
+    failedBody: "Non è cambiato nulla. Ricomincia: di solito funziona la seconda volta. Se continua a non riuscire, OrangeCat potrebbe essere momentaneamente non disponibile.",
+    deniedTitle: "Con questo account non puoi accedere qui",
+    deniedBody: "OrangeCat ti ha fatto accedere, ma Skif non ha potuto accettare l'account.",
+    configurationTitle: "L'accesso non è disponibile in questo momento",
+    configurationBody: "L'accesso non è ancora configurato su questo server. Non dipende da te.",
+    tryAgain: "Riprova",
+    home: "Torna all'inizio",
+  },
   notTranslated: "Parti di questa pagina sono ancora in inglese. La traduzione è in arrivo.",
 };
