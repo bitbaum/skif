@@ -42,8 +42,13 @@ function pageExists(href: string): boolean {
   return [join("[locale]", "(public)"), "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map((g) => guidePage(g)),
-  ...Object.entries(GUIDE_TRANSLATIONS).flatMap(([locale, byslug]) => Object.values(byslug).map((g) => guidePage(g, locale as Locale))), ...RESEARCH.map(researchPage)];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map((g) => guidePage(g)), ...RESEARCH.map(researchPage)];
+
+/** Each language's translated guides, as the site that language shows. */
+const TRANSLATED_GUIDE_PAGES = Object.entries(GUIDE_TRANSLATIONS).map(([locale, byslug]) => ({
+  locale,
+  pages: Object.values(byslug).map((g) => guidePage(g, locale as Locale)),
+}));
 
 function heroLinks(page: SitePage): string[] {
   return page.sections.flatMap((s) => (s.kind === "hero" ? (s.actions ?? []).map((a) => a.href) : []));
@@ -56,6 +61,10 @@ describe("public site", () => {
       pages: CONTENT_PAGES,
     });
     expect(result.success ? [] : result.errors).toEqual([]);
+    for (const { locale, pages } of TRANSLATED_GUIDE_PAGES) {
+      const translated = validateSite({ chrome: { name: "Skif", tagline: "Safety and freedom, from every side.", footerNote: "Beta" }, pages });
+      expect(translated.success ? [] : translated.errors, locale).toEqual([]);
+    }
   });
 
   it("links only to pages that exist", () => {
