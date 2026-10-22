@@ -5,6 +5,7 @@ import { SiteSectionsView } from "@/components/site/site-sections";
 import { SourceList } from "@/components/site/source-list";
 import { PHOTOS } from "@/config/photos";
 import { RESEARCH, researchBySlug } from "@/config/research";
+import { researchIn } from "@/config/research/translations";
 import { researchPage } from "@/site/research";
 import { pageLocale } from "@/i18n/page";
 
@@ -22,10 +23,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ResearchPage({ params }: { params: Params }) {
   const locale = await pageLocale(params);
-  const r = researchBySlug((await params).slug);
-  if (!r) notFound();
+  const found = researchBySlug((await params).slug);
+  if (!found) notFound();
+  const r = researchIn(found, locale);
   return (
-    <SiteSectionsView sections={researchPage(r).sections} photo={r.photo ? PHOTOS[r.photo] : undefined}>
+    <SiteSectionsView sections={researchPage(r, locale).sections} photo={r.photo ? PHOTOS[r.photo] : undefined}>
       <SourceList sources={r.sources} checked={r.checked} locale={locale} />
     </SiteSectionsView>
   );

@@ -7,6 +7,8 @@ import { postBySlug } from "./blog";
 import { CHECKLISTS } from "@/config/checklists";
 import { guideBySlug, GUIDES } from "@/config/guides";
 import { GUIDE_TRANSLATIONS } from "@/config/guides/translations";
+import { RESEARCH_TRANSLATIONS } from "@/config/research/translations";
+import { PAGE_TRANSLATIONS } from "./pages";
 import type { Locale } from "@/i18n/locales";
 import { SELF_DEFENCE_LADDER } from "@/config/guides/self-defence-ladder";
 import { familyBySlug, HARM_FAMILIES } from "@/config/harm-families";
@@ -42,12 +44,16 @@ function pageExists(href: string): boolean {
   return [join("[locale]", "(public)"), "(app)"].some((group) => existsSync(join(APP, group, path, "page.tsx")));
 }
 
-const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map((g) => guidePage(g)), ...RESEARCH.map(researchPage)];
+const CONTENT_PAGES: SitePage[] = [methodPage(), joinPage(), protectorsPage(), privacyPage(), businessPage(), ...GUIDES.map((g) => guidePage(g)), ...RESEARCH.map((r) => researchPage(r))];
 
 /** Each language's translated guides, as the site that language shows. */
 const TRANSLATED_GUIDE_PAGES = Object.entries(GUIDE_TRANSLATIONS).map(([locale, byslug]) => ({
   locale,
-  pages: Object.values(byslug).map((g) => guidePage(g, locale as Locale)),
+  pages: [
+    ...Object.values(byslug).map((g) => guidePage(g, locale as Locale)),
+    ...Object.values(PAGE_TRANSLATIONS[locale as keyof typeof PAGE_TRANSLATIONS]).filter((p) => p !== undefined),
+    ...Object.values(RESEARCH_TRANSLATIONS[locale as keyof typeof RESEARCH_TRANSLATIONS]).map((r) => researchPage(r, locale as Locale)),
+  ],
 }));
 
 function heroLinks(page: SitePage): string[] {
