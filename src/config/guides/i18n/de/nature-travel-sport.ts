@@ -51,7 +51,7 @@ export const BEYOND_PEOPLE_DE: Guide = {
       anchor: "sport",
       paragraphs: [
         "Risikoforschende nutzen das Micromort, eine Wahrscheinlichkeit von eins zu einer Million zu sterben, um Tätigkeiten auf einer Skala zu vergleichen. Ein Fallschirmsprung in den Vereinigten Staaten bringt etwa 4,6; ein BASE-Sprung vom Kjerag in Norwegen etwa 430; eine Vollnarkose etwa 10. Die Quellen stehen in der Forschung der Bibliothek zur Wissenschaft der Sicherheit.",
-        "Der Tod ist nicht die einzigen Kosten. Kampfsport birgt das langsamere Risiko wiederholter Treffer am Kopf; Ausdauersport birgt Risiken durch Hitze und fürs Herz; Bergsport birgt Gelände und Wetter. Jedes davon verringerst du auf dieselbe Weise: Training, die richtige Ausrüstung, die Verhältnisse lesen und Partnerinnen und Partner, die Nein sagen.",
+        "Der Tod ist nicht der einzige Preis. Kampfsport birgt das langsamere Risiko wiederholter Treffer am Kopf; Ausdauersport birgt Risiken durch Hitze und fürs Herz; Bergsport birgt Gelände und Wetter. Jedes davon verringerst du auf dieselbe Weise: Training, die richtige Ausrüstung, die Verhältnisse lesen und Partnerinnen und Partner, die Nein sagen.",
         "Skif sagt niemandem, welche Risiken es wert sind. Skif hilft dir, ihre Grösse zu sehen, damit die Wahl deine ist, und eine informierte.",
       ],
     },
