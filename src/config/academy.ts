@@ -101,6 +101,8 @@ type CourseDef = {
    * are for anyone and verify nothing in Skif's capability graph. */
   builds: readonly CapabilityKey[];
   delivery: Delivery;
+  /** A Skif guide that teaches the basics of the course for free. */
+  guide?: string;
 };
 
 export const COURSES = [
@@ -172,6 +174,7 @@ export const COURSES = [
       "See a street as routes, move over and around obstacles safely, and sprint, climb and vault when it counts.",
     builds: ["ENDURANCE"],
     delivery: "PARTNER",
+    guide: "parkour",
   },
   {
     key: "RUNNING",
@@ -364,7 +367,7 @@ export const COURSES = [
   },
 ] as const satisfies readonly CourseDef[];
 
-export type Course = (typeof COURSES)[number];
+export type Course = (typeof COURSES)[number] & Pick<CourseDef, "guide">;
 
 export function coursesIn(area: AcademyArea): Course[] {
   return COURSES.filter((c) => c.area === area);

@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Parkour has its own guide: why getting away is the most useful physical skill, how to start without getting hurt (with what the injury research actually says), and where to train in Zürich, including a free public parkour park. And every Academy course now has \"Tell me when it starts\": Skif counts who is waiting and schedules the most-wanted courses first. Your list is under Training in My Skif.",
+    },
+    {
+      date: "2026-10-22",
       done: "Fixed: for most of a day every English page answered with an error while the German, French and Italian ones worked. The way English addresses were routed failed behind the server's front door, and nothing in testing stood in front of it. English is now routed inside the app, and a test refuses the old way.",
     },
     {

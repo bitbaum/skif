@@ -20,5 +20,5 @@ export default function proxy(request: NextRequest) {
 export const config = {
   // Only the public pages are translated by URL. Signed-in pages, the API,
   // auth, share pictures and files are not touched.
-  matcher: ["/((?!api|og|auth|_next|_vercel|assessments|bookings|ops|preferences|protector|.*\\..*).*)"],
+  matcher: ["/((?!api|og|auth|_next|_vercel|assessments|bookings|ops|preferences|protector|training|.*\\..*).*)"],
 };

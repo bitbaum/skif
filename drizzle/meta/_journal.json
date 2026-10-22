@@ -99,6 +99,13 @@
       "when": 1790333260732,
       "tag": "0013_booking_thread",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792653608012,
+      "tag": "0014_course_interests",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,7 @@
  * identity is the OrangeCat OIDC `sub`, stored as text wherever a row belongs
  * to a person.
  */
+export * from "./academy";
 export * from "./assessments";
 export * from "./audit";
 export * from "./bookings";

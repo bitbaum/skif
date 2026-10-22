@@ -16,6 +16,8 @@ import { listOpenComplaints } from "@/server/complaints";
 import { complaintCategoryLabel } from "@/config/complaints";
 import { STATUS_LABELS as COMPLAINT_STATUS_LABELS } from "@/domain/complaints";
 import { listProtectors } from "@/server/protectors";
+import { interestCounts } from "@/server/academy";
+import { COURSES, type Course } from "@/config/academy";
 import { severityLabel } from "@/config/reports";
 import { REVIEW_LABELS } from "@/domain/incidents";
 import { counted } from "@/domain/plural";
@@ -36,11 +38,12 @@ export default async function OpsPage({ searchParams }: { searchParams: Promise<
   if (canonical) redirect(canonical);
 
   const db = getDb();
-  const [queue, protectors, incidents, openComplaints] = await Promise.all([
+  const [queue, protectors, incidents, openComplaints, training] = await Promise.all([
     listOpsQueue(db, query),
     listProtectors(db),
     listOpenIncidents(db),
     listOpenComplaints(db),
+    interestCounts(db),
   ]);
   if (queue.page.clamped) redirect(pageHref(params, query, queue.page.page));
   const { waiting } = queue;
@@ -118,6 +121,20 @@ export default async function OpsPage({ searchParams }: { searchParams: Promise<
                     className=""
                   />
                 ))}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+      <Card title="Training people are waiting for" className="mt-6">
+        {training.length === 0 ? (
+          <Empty>Nobody has asked for a course yet.</Empty>
+        ) : (
+          <ul className="divide-y divide-line text-sm">
+            {training.map((t) => (
+              <li key={t.courseKey} className="flex items-center justify-between gap-4 py-3">
+                <span className="text-fg-primary">{(COURSES as readonly Course[]).find((c) => c.key === t.courseKey)?.title ?? t.courseKey}</span>
+                <span className="shrink-0 text-muted">{counted(t.people, "person", "people")}</span>
               </li>
             ))}
           </ul>
