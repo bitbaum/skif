@@ -1,6 +1,9 @@
 import { execSync } from "node:child_process";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { englishRewrites } from "./src/i18n/english";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -16,9 +19,25 @@ function buildCommit(): string {
   }
 }
 
+/** The public site's top-level pages, read from the folders that define them. */
+function publicSegments(): string[] {
+  return readdirSync(join(process.cwd(), "src", "app", "[locale]", "(public)"), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name);
+}
+
 const nextConfig: NextConfig = {
   output: "standalone",
+  // The blog's markdown is read from disk (src/site/blog.ts), and the box runs
+  // .next/standalone/server.js from its own folder: without this the posts are
+  // not in the release, and any page rendered on request crashes reading them.
+  outputFileTracingIncludes: { "/**": ["./content/blog/**/*"] },
   env: { SKIF_BUILD_COMMIT: buildCommit() },
+  // English without a prefix. See src/i18n/english.ts for why this is here and
+  // never in the proxy.
+  async rewrites() {
+    return { beforeFiles: englishRewrites(publicSegments()), afterFiles: [], fallback: [] };
+  },
   async headers() {
     // Pages here hold preferences, bookings and incidents: never leak a URL
     // to another site, and never let the app be framed.

@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Fixed: for most of a day every English page answered with an error while the German, French and Italian ones worked. The way English addresses were routed failed behind the server's front door, and nothing in testing stood in front of it. English is now routed inside the app, and a test refuses the old way.",
+    },
+    {
+      date: "2026-10-22",
       done: "Applying to be a Protector: you can now say your background out loud instead of typing it, and the form fills in from what you said. The recording becomes text and is thrown away; you check every field before you send it.",
     },
     {
