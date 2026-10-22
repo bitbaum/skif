@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { EMERGENCY_NUMBERS, NOT_AN_EMERGENCY_SERVICE } from "@/config/emergency";
+import { EMERGENCY_PAGE } from "@/config/site";
 
 /** Shown wherever someone might reach for help through Skif (SPEC §24): the
  * public numbers, one tap each, and a plain statement that Skif is not one. */
@@ -16,6 +18,9 @@ export function EmergencyNotice({ className = "" }: { className?: string }) {
           </li>
         ))}
       </ul>
+      <Link href={EMERGENCY_PAGE.href} className="inline-flex min-h-11 items-center font-medium text-danger underline underline-offset-4">
+        Abroad, or need to send your location?
+      </Link>
     </aside>
   );
 }

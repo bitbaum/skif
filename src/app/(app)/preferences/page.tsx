@@ -3,7 +3,7 @@ import { ActionForm } from "@/components/action-form";
 import { AxisFields } from "@/components/axis-fields";
 import { CheckboxGroup, Field, RadioGroup, TextArea, TextInput } from "@/components/fields";
 import { Card, PageHeader } from "@/components/ui";
-import { HARD_CONSTRAINTS, LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
+import { HARD_CONSTRAINTS, LANGUAGES, LANGUAGES_SHOWN, PRESENCE_STYLES } from "@/config/constraints";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { BOOKING_LIMITS } from "@/config/services";
 import { getDb } from "@/db/client";
@@ -72,7 +72,7 @@ export default async function PreferencesPage({
             hint="Leave empty for no preference. A Protector sharing none of these won't be matched to you."
             name="languages"
             options={LANGUAGES}
-            more={6}
+            more={LANGUAGES_SHOWN}
             selected={prefs?.languages ?? []}
             inline
           />

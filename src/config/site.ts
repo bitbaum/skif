@@ -23,6 +23,16 @@ export function partnerMailto(subject: string): string {
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Skif — ${subject}`)}`;
 }
 
+/** /emergency: the one page someone may open in a hurry, so it says the
+ * least and leads with the numbers. */
+export const EMERGENCY_PAGE = {
+  href: "/emergency",
+  label: "Emergency",
+  eyebrow: "Emergency",
+  statement: "Get help now.",
+  lead: "Call the right number for where you are, send someone your location, or leave someone your plan. All of it stays on your phone until you send it.",
+} as const;
+
 /**
  * The site map: the header's panels, the phone menu and the footer all read
  * it, and every internal link in them comes from here (fleet navigation
@@ -37,6 +47,7 @@ export const MENU = [
     covers: ["act"],
     blurb: "Do something today: a checklist for your situation, a quick check, a full plan or a Protector.",
     links: [
+      { href: EMERGENCY_PAGE.href, label: "Emergency", note: "Numbers wherever you are; send your location or your plan." },
       { href: "/act", label: "Checklists", note: "One situation each, done in one sitting." },
       { href: "/act#check", label: "Quick check", note: "Two questions, your free first steps." },
       { href: signInTo("/assessments"), label: "Safety assessment", note: "A full plan, weighed against your limits." },

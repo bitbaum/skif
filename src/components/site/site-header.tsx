@@ -1,13 +1,13 @@
 "use client";
 
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, Siren, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { PHOTOS } from "@/config/photos";
 import { Account } from "@/components/account";
-import { CREATE_ACCOUNT, MENU, MY_SKIF, SIGN_IN, STAGE } from "@/config/site";
+import { CREATE_ACCOUNT, EMERGENCY_PAGE, MENU, MY_SKIF, SIGN_IN, STAGE } from "@/config/site";
 import { ACTION, LABEL, SHELL } from "./shell";
 import { SkifMark } from "./skif-mark";
 
@@ -76,7 +76,7 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
   return (
     <>
       <header ref={header} className="sticky top-0 z-40 border-b border-subtle bg-surface-page/90 backdrop-blur">
-        <div className={`${SHELL} flex h-16 items-center gap-6`}>
+        <div className={`${SHELL} flex h-16 items-center gap-2 lg:gap-6`}>
           <Link
             href="/"
             aria-label="Skif, home"
@@ -117,18 +117,26 @@ export function SiteHeader({ account }: { account?: { name: string } }) {
             </ul>
           </nav>
 
-          <div className="ml-auto hidden items-center gap-2 lg:flex">
+          <Link
+            href={EMERGENCY_PAGE.href}
+            aria-current={pathname === EMERGENCY_PAGE.href ? "page" : undefined}
+            className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border-2 border-danger px-3 text-sm font-medium text-danger hover:bg-danger-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger"
+          >
+            <Siren aria-hidden className="size-4" />
+            <span className="sr-only sm:not-sr-only">{EMERGENCY_PAGE.label}</span>
+          </Link>
+          <div className="hidden items-center gap-2 lg:flex">
             <AccountLinks who={who} />
           </div>
 
           {who ? (
-            <div className="ml-auto lg:hidden">
+            <div className="lg:hidden">
               <Account name={who.name} />
             </div>
           ) : null}
           <button
             type="button"
-            className={`${who ? "" : "ml-auto"} inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent lg:hidden`}
+            className={`inline-flex size-11 items-center justify-center rounded-full text-fg-primary focus-visible:outline-2 focus-visible:outline-accent lg:hidden`}
             aria-label={phoneOpen ? "Close menu" : "Open menu"}
             aria-expanded={phoneOpen}
             aria-controls="phone-menu"

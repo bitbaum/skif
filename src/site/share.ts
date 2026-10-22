@@ -14,7 +14,7 @@ import { GUIDES } from "@/config/guides";
 import { HARM_FAMILIES } from "@/config/harm-families";
 import type { PhotoKey } from "@/config/photos";
 import { RESEARCH } from "@/config/research";
-import { ACADEMY_HERO, ACT, HOME, LIBRARY } from "@/config/site";
+import { ACADEMY_HERO, ACT, EMERGENCY_PAGE, HOME, LIBRARY } from "@/config/site";
 import { businessPage } from "./business";
 import { joinPage } from "./join";
 import { methodPage } from "./method";
@@ -45,6 +45,7 @@ function fromSitePage(path: string, page: SitePage, description: string, photo?:
 
 export const SHARE_CARDS: readonly ShareCard[] = [
   { path: "/", title: "Skif", description: HOME.lead[0], eyebrow: "Skif · Zürich", headline: HOME.statement, photo: "nightStreet" },
+  { path: "/emergency", title: "Emergency", description: EMERGENCY_PAGE.lead, eyebrow: "Emergency", headline: EMERGENCY_PAGE.statement },
   { path: "/act", title: "Act", description: ACT.lead[0], eyebrow: "Act", headline: ACT.statement, photo: "zurichTram" },
   { path: "/library", title: "Library", description: LIBRARY.lead[0], eyebrow: "Library", headline: LIBRARY.statement, photo: "books" },
   { path: "/academy", title: "Academy", description: ACADEMY_HERO.lead, eyebrow: "Academy", headline: ACADEMY_HERO.statement, photo: "grappling" },
