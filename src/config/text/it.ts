@@ -65,6 +65,7 @@ export const IT: SiteWords = {
     plan: "Piano di sicurezza",
     bookings: "Prenotazioni",
     preferences: "Preferenze",
+    training: "Formazione",
     protector: "Protector",
     jobs: "I miei incarichi",
     ops: "Operazioni",

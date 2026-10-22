@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Link } from "@/i18n/navigation";
 import { ACADEMY_AREAS, COURSE_STATUS, deliveryLabel, type AcademyArea, type Course, COURSES } from "@/config/academy";
 import { capabilityLabel } from "@/config/capabilities";
+import { signInTo } from "@/config/site";
 
 /**
  * The Academy one area at a time: a row of areas (one line that scrolls on a
@@ -50,6 +52,18 @@ export function AcademyBrowser() {
                   Builds: {c.builds.map(capabilityLabel).join(", ").toLowerCase()}
                 </p>
               )}
+              {c.guide && (
+                <Link href={`/guides/${c.guide}`} className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-fg-primary underline-offset-4 hover:underline">
+                  Start free: read the guide →
+                </Link>
+              )}
+              {/* A plain link: /training is outside the language routing. */}
+              <a
+                href={signInTo(`/training?course=${c.key}`)}
+                className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-accent underline-offset-4 hover:underline"
+              >
+                Tell me when it starts →
+              </a>
             </li>
           ))}
         </ul>

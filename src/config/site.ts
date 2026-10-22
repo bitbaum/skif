@@ -124,6 +124,7 @@ export function siteText(locale: Locale) {
         { href: "/assessments", label: w.mySkif.plan },
         { href: "/bookings", label: w.mySkif.bookings },
         { href: "/preferences", label: w.mySkif.preferences },
+        { href: "/training", label: w.mySkif.training },
       ],
       protector: { href: "/protector", label: w.mySkif.protector, jobs: w.mySkif.jobs },
       ops: { href: "/ops", label: w.mySkif.ops },

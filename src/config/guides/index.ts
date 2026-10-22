@@ -10,6 +10,7 @@ import { COMBAT_SPORTS } from "./combat-sports";
 import { DEVICES } from "./devices";
 import { DRIVING } from "./driving";
 import { MONEY } from "./money";
+import { PARKOUR } from "./parkour";
 import { PROFESSIONALS } from "./professionals";
 import { SELF_DEFENCE_LADDER } from "./self-defence-ladder";
 import { SITUATIONAL_AWARENESS } from "./situational-awareness";
@@ -25,6 +26,7 @@ export type { Guide } from "./types";
 export const GUIDES: readonly Guide[] = [
   SITUATIONAL_AWARENESS,
   SELF_DEFENCE_LADDER,
+  PARKOUR,
   WEAPONS,
   COMBAT_SPORTS,
   WOMEN,

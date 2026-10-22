@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
  * the person's own pages, by their layout, and never under /ops.
  */
 const APP = join(__dirname, "..", "app", "(app)");
-const OWN_PAGES = ["preferences", "bookings", "assessments", "protector"];
+const OWN_PAGES = ["preferences", "bookings", "assessments", "protector", "training"];
 const WIDGET_IMPORT = /@\/components\/(loki-watch|feedback-widget)"/;
 
 function filesUnder(dir: string): string[] {

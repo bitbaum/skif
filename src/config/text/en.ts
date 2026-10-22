@@ -72,6 +72,7 @@ export const EN = {
     plan: "Safety plan",
     bookings: "Bookings",
     preferences: "Preferences",
+    training: "Training",
     protector: "Protector",
     jobs: "My jobs",
     ops: "Operations",

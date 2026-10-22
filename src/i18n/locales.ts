@@ -37,7 +37,7 @@ export function unlocalizedPath(path: string): string {
 /** First path segments of the signed-in pages, the API and other routes
  * that carry no language in their URL; src/proxy.ts leaves them alone (its
  * matcher must be a literal, so i18n.test.ts checks the two agree). */
-export const UNLOCALIZED_SEGMENTS = ["api", "og", "auth", "assessments", "bookings", "ops", "preferences", "protector"] as const;
+export const UNLOCALIZED_SEGMENTS = ["api", "og", "auth", "assessments", "bookings", "ops", "preferences", "protector", "training"] as const;
 
 export function isUnlocalizedPath(path: string): boolean {
   const first = path.split(/[/?#]/)[1] ?? "";
