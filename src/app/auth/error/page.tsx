@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SignInError } from "@bitbaum/accountkit";
+import { getLocale } from "next-intl/server";
 import { signIn } from "@/auth";
+import { wordsFor } from "@/config/text";
+import { DEFAULT_LOCALE, isLocale } from "@/i18n/locales";
 import { authConfig } from "@/config/auth";
 import { retryAfter } from "@/server/rate-limit";
 
@@ -20,6 +23,8 @@ export default async function AuthErrorPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  const found = await getLocale();
+  const labels = wordsFor(isLocale(found) ? found : DEFAULT_LOCALE).signInError;
 
   async function retry() {
     "use server";
@@ -34,7 +39,7 @@ export default async function AuthErrorPage({
         error={authConfig.orangecat ? error : "Configuration"}
         retry={retry}
         home="/"
-        labels={{ kicker: "Sign in to Skif" }}
+        labels={labels}
       />
     </main>
   );

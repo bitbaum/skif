@@ -316,5 +316,23 @@ export const FR: SiteWords = {
     minutes: (n: number) => `${n} min de lecture`,
     all: "Tous les articles",
   },
+  accountMenu: {
+    trigger: "Compte : {name}",
+    menu: "Compte",
+    signOut: "Se déconnecter",
+    signingOut: "Déconnexion…",
+    signOutFailed: "La déconnexion n'a pas abouti. Réessayez.",
+  },
+  signInError: {
+    kicker: "Se connecter à Skif",
+    failedTitle: "La connexion n'a pas abouti",
+    failedBody: "Rien n'a été modifié. Recommencez : cela fonctionne généralement la deuxième fois. Si l'échec persiste, OrangeCat est peut-être brièvement indisponible.",
+    deniedTitle: "Ce compte ne peut pas se connecter ici",
+    deniedBody: "OrangeCat vous a connecté, mais Skif n'a pas pu accepter le compte.",
+    configurationTitle: "La connexion n'est pas disponible pour le moment",
+    configurationBody: "La connexion n'est pas encore configurée sur ce serveur. Vous n'y êtes pour rien.",
+    tryAgain: "Réessayer",
+    home: "Retour au début",
+  },
   notTranslated: "Une partie de cette page est encore en anglais. La traduction arrive.",
 };

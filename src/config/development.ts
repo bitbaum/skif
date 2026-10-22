@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "Signing in and out now speaks your language too: the account menu and the page you see if a sign-in does not finish are in German, French and Italian as well as English.",
+    },
+    {
+      date: "2026-10-22",
       done: "Parkour has its own guide: why getting away is the most useful physical skill, how to start without getting hurt (with what the injury research actually says), and where to train in Zürich, including a free public parkour park. And every Academy course now has \"Tell me when it starts\": Skif counts who is waiting and schedules the most-wanted courses first. Your list is under Training in My Skif.",
     },
     {

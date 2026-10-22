@@ -325,6 +325,24 @@ export const EN = {
     minutes: (n: number) => `${n} min read`,
     all: "All posts",
   },
+  accountMenu: {
+    trigger: "Account: {name}",
+    menu: "Account",
+    signOut: "Sign out",
+    signingOut: "Signing out…",
+    signOutFailed: "Sign-out did not complete. Try again.",
+  },
+  signInError: {
+    kicker: "Sign in to Skif",
+    failedTitle: "Sign-in did not finish",
+    failedBody: "Nothing was changed. Start again: it usually works the second time. If it keeps failing, OrangeCat may be briefly unavailable.",
+    deniedTitle: "This account cannot sign in here",
+    deniedBody: "OrangeCat signed you in, but Skif could not accept the account.",
+    configurationTitle: "Sign-in is not available right now",
+    configurationBody: "Sign-in is not set up on this server yet. Nothing you did caused this.",
+    tryAgain: "Try again",
+    home: "Back to the start",
+  },
   notTranslated: "Parts of this page are still in English. The translation is on its way.",
 };
 
