@@ -94,31 +94,28 @@ export const PRESENCE_STYLE_KEYS = PRESENCE_STYLES.map((p) => p.key) as [
 ];
 
 /** Languages a person can ask to be spoken to in, and a Protector can offer.
- * The site itself is English only; this list is about people. Switzerland's
- * own languages and English first, then the languages most spoken in Zürich
- * beside them, alphabetically. Keys are ISO 639 codes ("sh", Serbo-Croatian, covers Bosnian,
- * Croatian, Montenegrin and Serbian, which speakers understand across). */
+ * Switzerland's own languages, English, and the two most likely beside them
+ * (Spanish, Portuguese) are shown; a few widely spoken ones sit behind
+ * "more" (`folded`). The list stays short on purpose: Skif works in
+ * Switzerland. Keys are ISO 639 codes ("gsw" is Swiss German). */
 export const LANGUAGES = [
+  { key: "en", label: "English" },
   { key: "de", label: "German" },
   { key: "gsw", label: "Swiss German" },
-  { key: "en", label: "English" },
   { key: "fr", label: "French" },
   { key: "it", label: "Italian" },
   { key: "rm", label: "Romansh" },
-  { key: "sq", label: "Albanian" },
-  { key: "ar", label: "Arabic" },
-  { key: "sh", label: "Serbo-Croatian" },
-  { key: "zh", label: "Chinese" },
-  { key: "fa", label: "Persian" },
-  { key: "pl", label: "Polish" },
-  { key: "pt", label: "Portuguese" },
-  { key: "ru", label: "Russian" },
   { key: "es", label: "Spanish" },
-  { key: "ta", label: "Tamil" },
-  { key: "ti", label: "Tigrinya" },
-  { key: "tr", label: "Turkish" },
-  { key: "uk", label: "Ukrainian" },
+  { key: "pt", label: "Portuguese" },
+  { key: "ar", label: "Arabic", folded: true },
+  { key: "zh", label: "Chinese", folded: true },
+  { key: "ja", label: "Japanese", folded: true },
+  { key: "ko", label: "Korean", folded: true },
+  { key: "ru", label: "Russian", folded: true },
 ] as const;
+
+/** How many languages show before "more"; the folded ones come last. */
+export const LANGUAGES_SHOWN = LANGUAGES.filter((l) => !("folded" in l)).length;
 
 export type LanguageKey = (typeof LANGUAGES)[number]["key"];
 export const LANGUAGE_KEYS = LANGUAGES.map((l) => l.key) as [LanguageKey, ...LanguageKey[]];

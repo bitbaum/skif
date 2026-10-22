@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EMERGENCY_NUMBERS, NOT_AN_EMERGENCY_SERVICE } from "@/config/emergency";
-import { FOOTER, MENU, PLACE } from "@/config/site";
+import { EMERGENCY_PAGE, FOOTER, MENU, PLACE } from "@/config/site";
 import { LABEL, SHELL } from "./shell";
 import { SkifMark } from "./skif-mark";
 
@@ -16,6 +16,12 @@ export function PublicFooter() {
               In an emergency
             </h2>
             <p className="mt-3 max-w-prose text-sm leading-relaxed text-fg-secondary">{NOT_AN_EMERGENCY_SERVICE}</p>
+            <Link
+              href={EMERGENCY_PAGE.href}
+              className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-danger underline underline-offset-4"
+            >
+              Abroad, or need to send your location? →
+            </Link>
           </div>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4 lg:col-span-8">
             {EMERGENCY_NUMBERS.map((e) => (

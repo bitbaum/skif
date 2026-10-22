@@ -62,6 +62,14 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   ],
   changelog: [
     {
+      date: "2026-10-22",
+      done: "The languages you can ask to be spoken to in are now the ones Skif will actually meet: Switzerland's languages, English, Spanish and Portuguese, with Arabic, Chinese, Japanese, Korean and Russian one tap further.",
+    },
+    {
+      date: "2026-10-21",
+      done: "A new Emergency page, one tap from the red button on every page: the right numbers for where you are (44 countries, each from an official source, guessed from your phone's time zone and easy to change), a message with your location on a map to send by WhatsApp, Signal or SMS, and a plan to leave with someone before a date, a hike or a night out. Nothing on it is sent to Skif.",
+    },
+    {
       date: "2026-10-21",
       done: "Signed in, Skif now looks and moves exactly as it does signed out: the same header and footer, your account menu in the corner, and one row of your own sections (Safety plan, Bookings, Preferences, Protector) that fits a phone. Buttons are one shape everywhere. You can now ask to be spoken to in 19 languages, from Albanian to Ukrainian, and Protectors can offer them.",
     },

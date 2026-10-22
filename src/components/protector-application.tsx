@@ -2,7 +2,7 @@
 
 import { useAiForm } from "@bitbaum/ai-kit/react";
 import { PROTECTOR_APPLICATION_FORM } from "@/config/ai-forms";
-import { LANGUAGES, PRESENCE_STYLES } from "@/config/constraints";
+import { LANGUAGES, LANGUAGES_SHOWN, PRESENCE_STYLES } from "@/config/constraints";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { SERVICES } from "@/config/services";
 import type { ProtectorCapability } from "@/server/protectors";
@@ -88,7 +88,7 @@ export function ProtectorApplication({
           legend="Languages"
           name="languages"
           options={LANGUAGES}
-          more={6}
+          more={LANGUAGES_SHOWN}
           inline
           hint={note("languages")}
           selected={list("languages")}
