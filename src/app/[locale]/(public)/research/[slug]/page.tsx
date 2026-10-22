@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function ResearchPage({ params }: { params: Params }) {
-  await pageLocale(params);
+  const locale = await pageLocale(params);
   const r = researchBySlug((await params).slug);
   if (!r) notFound();
   return (
     <SiteSectionsView sections={researchPage(r).sections} photo={r.photo ? PHOTOS[r.photo] : undefined}>
-      <SourceList sources={r.sources} checked={r.checked} />
+      <SourceList sources={r.sources} checked={r.checked} locale={locale} />
     </SiteSectionsView>
   );
 }

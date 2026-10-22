@@ -335,5 +335,19 @@ export const IT: SiteWords = {
     tryAgain: "Riprova",
     home: "Torna all'inizio",
   },
+  guides: {
+    indexEyebrow: "Biblioteca · Guide",
+    indexStatement: "Leggi a fondo. Agisci oggi.",
+    indexLead: "Ogni guida approfondisce un argomento e si chiude con passi che puoi fare questa settimana. Filtra per l'ambito di sicurezza che ti interessa.",
+    eyebrow: "Guida",
+    sources: (n: number) => `${n} fonti`,
+    check: "Valuta la tua situazione",
+    all: "Tutte le guide",
+    inThis: "In questa guida",
+  },
+  sourceList: {
+    title: "Fonti",
+    checked: (date: string) => `Lette e verificate il ${date}. Le citazioni riportano le fonti come pubblicate.`,
+  },
   notTranslated: "Parti di questa pagina sono ancora in inglese. La traduzione è in arrivo.",
 };

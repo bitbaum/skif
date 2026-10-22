@@ -335,5 +335,19 @@ export const DE: SiteWords = {
     tryAgain: "Nochmals versuchen",
     home: "Zurück zum Anfang",
   },
+  guides: {
+    indexEyebrow: "Bibliothek · Ratgeber",
+    indexStatement: "Tiefer lesen. Heute handeln.",
+    indexLead: "Jeder Ratgeber behandelt ein Thema gründlich und endet mit Schritten, die du diese Woche machen kannst. Filtere nach dem Bereich, der dir wichtig ist.",
+    eyebrow: "Ratgeber",
+    sources: (n: number) => `${n} Quellen`,
+    check: "Deine eigene Lage prüfen",
+    all: "Alle Ratgeber",
+    inThis: "In diesem Ratgeber",
+  },
+  sourceList: {
+    title: "Quellen",
+    checked: (date: string) => `Gelesen und geprüft am ${date}. Zitate stammen aus den Quellen, wie veröffentlicht.`,
+  },
   notTranslated: "Teile dieser Seite sind noch auf Englisch. Die Übersetzung folgt.",
 };

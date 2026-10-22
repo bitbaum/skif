@@ -63,6 +63,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-22",
+      done: "All 16 guides are now in German, French and Italian too, from situational awareness to parkour, with every source kept and cited the same way. The guides list, the sources and their dates follow your language as well.",
+    },
+    {
+      date: "2026-10-22",
       done: "Signing in and out now speaks your language too: the account menu and the page you see if a sign-in does not finish are in German, French and Italian as well as English.",
     },
     {

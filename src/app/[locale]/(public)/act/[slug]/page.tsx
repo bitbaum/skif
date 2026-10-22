@@ -8,6 +8,7 @@ import { PageHero } from "@/components/site/page-hero";
 import { ACTION, LABEL, SHELL } from "@/components/site/shell";
 import { checklistBySlug, CHECKLISTS } from "@/config/checklists";
 import { guideBySlug } from "@/config/guides";
+import { guideIn } from "@/config/guides/translations";
 import { wordsFor } from "@/config/text";
 import { checklistWords } from "@/config/text/checklists";
 import { fieldWords } from "@/config/text/fields";
@@ -34,7 +35,8 @@ export default async function ChecklistPage({ params }: { params: Params }) {
   if (!c) notFound();
   const t = wordsFor(locale).checklist;
   const w = checklistWords(c, locale);
-  const guide = c.guide ? guideBySlug(c.guide) : undefined;
+  const linked = c.guide ? guideBySlug(c.guide) : undefined;
+  const guide = linked ? guideIn(linked, locale) : undefined;
   return (
     <>
       <PageHero
