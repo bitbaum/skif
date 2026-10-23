@@ -3,12 +3,25 @@
 import { redirect } from "next/navigation";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
-import { axisFields, describeIssue, formFields, localPath, preferencesInput, profileInput } from "@/domain/inputs";
+import {
+  axisFields,
+  describeIssue,
+  formFields,
+  localPath,
+  preferencesInput,
+  profileInput,
+} from "@/domain/inputs";
 import { saveCustomerProfile } from "@/server/customers";
-import { savePreferences } from "@/server/preferences";
+import {
+  ensureDefaultPreferences,
+  savePreferences,
+} from "@/server/preferences";
 import { requireViewer } from "@/server/viewer";
 
-export async function savePreferencesAction(_: ActionState, form: FormData): Promise<ActionState> {
+export async function savePreferencesAction(
+  _: ActionState,
+  form: FormData,
+): Promise<ActionState> {
   const viewer = await requireViewer();
   const parsed = preferencesInput.safeParse({
     ...formFields(form, ["hardConstraints", "languages"]),
@@ -19,10 +32,43 @@ export async function savePreferencesAction(_: ActionState, form: FormData): Pro
   redirect(localPath(form.get("next"), "/preferences?saved=1"));
 }
 
-export async function saveProfileAction(_: ActionState, form: FormData): Promise<ActionState> {
+/** Back to the preferences page, still carrying where the person was going. */
+function backWith(form: FormData): string {
+  const next = localPath(form.get("next"), "");
+  return next
+    ? `/preferences?saved=1&next=${encodeURIComponent(next)}`
+    : "/preferences?saved=1";
+}
+
+export async function saveProfileAction(
+  _: ActionState,
+  form: FormData,
+): Promise<ActionState> {
   const viewer = await requireViewer();
   const parsed = profileInput.safeParse(formFields(form));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
   await saveCustomerProfile(getDb(), viewer.sub, parsed.data);
-  redirect("/preferences?saved=1");
+  redirect(backWith(form));
+}
+
+/**
+ * "Start now": the defaults, and the name if they gave one, then straight on
+ * to where they were going. Nothing they have already set is replaced.
+ */
+export async function quickStartAction(
+  _: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const viewer = await requireViewer();
+  const name = String(form.get("preferredName") ?? "").trim();
+  if (name) {
+    const parsed = profileInput.safeParse({ preferredName: name });
+    if (!parsed.success)
+      return {
+        error: describeIssue(parsed.error, { preferredName: "Name to use" }),
+      };
+    await saveCustomerProfile(getDb(), viewer.sub, parsed.data);
+  }
+  await ensureDefaultPreferences(getDb(), viewer.sub);
+  redirect(localPath(form.get("next"), "/assessments"));
 }

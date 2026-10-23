@@ -263,7 +263,7 @@ export function PlanSteps({
   const steps = planSteps(plan);
   if (steps.length === 0) return null;
   return (
-    <Card title="Your steps" className="mb-6">
+    <Card id="steps" title="Your steps" className="mb-6 scroll-mt-4">
       <ol className="space-y-3">
         {steps.map((step, n) => {
           const i = findIntervention(step.key);

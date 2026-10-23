@@ -20,13 +20,35 @@ import {
   LANGUAGE_KEYS,
   PRESENCE_STYLE_KEYS,
 } from "@/config/constraints";
-import { CAPABILITY_KEYS, CAPABILITY_LEVEL_KEYS, CAPABILITY_LIMITS, capabilityFieldName } from "@/config/capabilities";
+import {
+  CAPABILITY_KEYS,
+  CAPABILITY_LEVEL_KEYS,
+  CAPABILITY_LIMITS,
+  capabilityFieldName,
+} from "@/config/capabilities";
 import { PROTECTOR_LIMITS } from "@/config/protectors";
-import { RATING_COMMENT_MAX, RATING_MAX, RATING_MIN, type RatingDimension } from "@/config/ratings";
-import { COMPLAINT_CATEGORY_KEYS, COMPLAINT_TEXT_MAX } from "@/config/complaints";
+import {
+  RATING_COMMENT_MAX,
+  RATING_MAX,
+  RATING_MIN,
+  type RatingDimension,
+} from "@/config/ratings";
+import {
+  COMPLAINT_CATEGORY_KEYS,
+  COMPLAINT_TEXT_MAX,
+} from "@/config/complaints";
 import { COMPLAINT_ACTIONS } from "./complaints";
-import { INCIDENT_SEVERITY_KEYS, OBSERVATION_KEYS, REVIEW_NOTE_MAX } from "@/config/reports";
-import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICE_KEYS } from "@/config/services";
+import {
+  INCIDENT_SEVERITY_KEYS,
+  OBSERVATION_KEYS,
+  REVIEW_NOTE_MAX,
+} from "@/config/reports";
+import {
+  AREAS,
+  BOOKING_LIMITS,
+  REQUIRABLE_CAPABILITIES,
+  SERVICE_KEYS,
+} from "@/config/services";
 import { WEEKDAYS } from "@/config/availability";
 import { THREAD_LIMITS, THREAD_SEATS } from "@/config/thread";
 import { windowFromClock, type AvailabilityWindow } from "./availability";
@@ -66,7 +88,11 @@ export const bookingInput = z.object({
       }),
     ])
     .refine((d) => d.getTime() > Date.now(), "Must be in the future"),
-  hours: z.coerce.number().int().min(BOOKING_LIMITS.minHours).max(BOOKING_LIMITS.maxHours),
+  hours: z.coerce
+    .number()
+    .int()
+    .min(BOOKING_LIMITS.minHours)
+    .max(BOOKING_LIMITS.maxHours),
   area: z.enum(AREAS),
   meetingPoint: required(BOOKING_LIMITS.meetingPointMax),
   notes: trimmed(BOOKING_LIMITS.notesMax),
@@ -88,19 +114,31 @@ export type CapabilityDeclaration = z.infer<typeof capabilityDeclaration>;
 export const protectorApplication = z.object({
   displayName: required(PROTECTOR_LIMITS.displayNameMax),
   bio: required(PROTECTOR_LIMITS.bioMax),
-  experienceYears: z.coerce.number().int().min(0).max(PROTECTOR_LIMITS.experienceYearsMax),
+  experienceYears: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(PROTECTOR_LIMITS.experienceYearsMax),
   languages: z.array(z.enum(LANGUAGE_KEYS)).min(1, "choose at least one"),
   capabilities: z
     .array(capabilityDeclaration)
-    .refine((list) => new Set(list.map((c) => c.key)).size === list.length, "Each capability once"),
+    .refine(
+      (list) => new Set(list.map((c) => c.key)).size === list.length,
+      "Each capability once",
+    ),
   services: z.array(z.enum(SERVICE_KEYS)).min(1, "choose at least one"),
-  presenceStyles: z.array(z.enum(PRESENCE_STYLE_KEYS)).min(1, "choose at least one"),
+  presenceStyles: z
+    .array(z.enum(PRESENCE_STYLE_KEYS))
+    .min(1, "choose at least one"),
 });
 export type ProtectorApplication = z.infer<typeof protectorApplication>;
 
 const ratingValue = z.coerce.number().int().min(RATING_MIN).max(RATING_MAX);
 /** An optional question left unanswered arrives as "" or not at all. */
-const optionalRating = z.preprocess((v) => (v === "" || v === undefined ? null : v), ratingValue.nullable());
+const optionalRating = z.preprocess(
+  (v) => (v === "" || v === undefined ? null : v),
+  ratingValue.nullable(),
+);
 
 export const ratingInput = z.object({
   respect: ratingValue,
@@ -111,7 +149,9 @@ export const ratingInput = z.object({
   punctuality: ratingValue,
   judgment: optionalRating,
   comment: trimmed(RATING_COMMENT_MAX),
-}) satisfies z.ZodType<Record<RatingDimension, number | null> & { comment: string }>;
+}) satisfies z.ZodType<
+  Record<RatingDimension, number | null> & { comment: string }
+>;
 export type RatingInput = z.infer<typeof ratingInput>;
 
 export const reportInput = z
@@ -119,11 +159,22 @@ export const reportInput = z
     kind: z.enum(["REPORT", "INCIDENT"]),
     summary: required(BOOKING_LIMITS.notesMax),
     policeInvolved: z.boolean(),
-    observations: z.array(z.enum(OBSERVATION_KEYS)).min(1, "Say what happened, even if nothing notable"),
-    severity: z.preprocess((v) => (v === "" ? undefined : v), z.enum(INCIDENT_SEVERITY_KEYS).optional()),
+    observations: z
+      .array(z.enum(OBSERVATION_KEYS))
+      .min(1, "Say what happened, even if nothing notable"),
+    severity: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.enum(INCIDENT_SEVERITY_KEYS).optional(),
+    ),
   })
-  .refine((r) => r.kind !== "INCIDENT" || r.severity, { message: "Give the incident a severity", path: ["severity"] })
-  .transform((r) => ({ ...r, severity: r.kind === "INCIDENT" ? (r.severity ?? null) : null }));
+  .refine((r) => r.kind !== "INCIDENT" || r.severity, {
+    message: "Give the incident a severity",
+    path: ["severity"],
+  })
+  .transform((r) => ({
+    ...r,
+    severity: r.kind === "INCIDENT" ? (r.severity ?? null) : null,
+  }));
 
 export const complaintInput = z.object({
   category: z.enum(COMPLAINT_CATEGORY_KEYS),
@@ -155,7 +206,11 @@ export type EnvironmentInput = z.infer<typeof environmentInput>;
 export const assessmentInput = z.object({
   environmentId: z.uuid(),
   protecting: z.array(z.enum(PROTECTED_KEYS)),
-  concerns: z.array(z.enum(CONCERN_KEYS).refine((c) => c !== "UPCOMING_EVENT", "Not a concern you can tick")),
+  concerns: z.array(
+    z
+      .enum(CONCERN_KEYS)
+      .refine((c) => c !== "UPCOMING_EVENT", "Not a concern you can tick"),
+  ),
   exposures: z.array(z.enum(EXPOSURE_KEYS)),
   threats: z.array(z.enum(THREAT_KEYS)),
   measures: z.array(z.enum(MEASURE_KEYS)),
@@ -169,7 +224,11 @@ export const idInput = z.uuid();
 export const threadMessageInput = z.object({
   bookingId: idInput,
   seat: z.enum(THREAD_SEATS),
-  body: z.string().trim().min(1, "Write a message first").max(THREAD_LIMITS.messageMax),
+  body: z
+    .string()
+    .trim()
+    .min(1, "Write a message first")
+    .max(THREAD_LIMITS.messageMax),
 });
 export type ThreadMessageInput = z.infer<typeof threadMessageInput>;
 
@@ -184,14 +243,17 @@ export function formFields(
   for (const [key, value] of form.entries()) {
     if (!arrays.includes(key) && typeof value === "string") out[key] = value;
   }
-  for (const key of arrays) out[key] = form.getAll(key).filter((v) => typeof v === "string");
+  for (const key of arrays)
+    out[key] = form.getAll(key).filter((v) => typeof v === "string");
   for (const key of booleans) out[key] = form.get(key) === "on";
   return out;
 }
 
 /** Form field name for one part of a capability row. */
-export const capabilityField = (key: string, part: keyof Omit<CapabilityDeclaration, "key">) =>
-  capabilityFieldName(key, part);
+export const capabilityField = (
+  key: string,
+  part: keyof Omit<CapabilityDeclaration, "key">,
+) => capabilityFieldName(key, part);
 
 /** Collect the capability rows a form declared; a row with no level is not held. */
 export function capabilityFields(form: FormData): Record<string, unknown>[] {
@@ -214,10 +276,13 @@ export function capabilityFields(form: FormData): Record<string, unknown>[] {
   });
 }
 
-export const availabilityField = (weekday: number, part: "from" | "to") => `avail.${weekday}.${part}`;
+export const availabilityField = (weekday: number, part: "from" | "to") =>
+  `avail.${weekday}.${part}`;
 
 /** One optional from/to pair per weekday; both empty means not available. */
-export function parseAvailability(form: FormData): Result<AvailabilityWindow[]> {
+export function parseAvailability(
+  form: FormData,
+): Result<AvailabilityWindow[]> {
   const windows: AvailabilityWindow[] = [];
   for (const { day, label } of WEEKDAYS) {
     const from = form.get(availabilityField(day, "from"));
@@ -225,7 +290,8 @@ export function parseAvailability(form: FormData): Result<AvailabilityWindow[]> 
     if (!from && !to) continue;
     const start = typeof from === "string" ? clockToMinute(from) : null;
     const end = typeof to === "string" ? clockToMinute(to) : null;
-    if (start === null || end === null) return fail(`${label}: give both a start and an end time`);
+    if (start === null || end === null)
+      return fail(`${label}: give both a start and an end time`);
     windows.push(windowFromClock(day, start, end));
   }
   return ok(windows);
@@ -243,17 +309,64 @@ export function axisFields(form: FormData): Record<string, string> {
   return out;
 }
 
-/** First zod issue as a readable sentence. */
-export function describeIssue(error: z.ZodError, labels: Record<string, string> = {}): string {
+/**
+ * What each field is called on the screen, so an error names the thing the
+ * person filled in ("Start time: must be in the future") and never the code's
+ * name for it ("startsAt"). A form can pass its own to override or add.
+ */
+export const FIELD_LABELS: Record<string, string> = {
+  startsAt: "Start time",
+  hours: "Hours",
+  area: "Area",
+  meetingPoint: "Meeting point",
+  service: "What you need",
+  services: "Services you offer",
+  requiredCapabilities: "Must-haves",
+  notes: "Notes",
+  preferredName: "Name to use",
+  displayName: "Name shown to customers",
+  bio: "About you",
+  experienceYears: "Years of relevant experience",
+  languages: "Languages",
+  presenceStyle: "How visible a Protector should be",
+  presenceStyles: "Styles you work in",
+  hardConstraints: "Hard limits",
+  valuesNote: "What matters to you",
+  name: "Name",
+  environmentId: "Place",
+  budget: "Budget",
+  upcoming: "Coming up",
+  concerns: "What worries you",
+  protecting: "Who or what you are protecting",
+  exposures: "What applies to you",
+  threats: "Known threats",
+  measures: "What you already do",
+  comment: "Comment",
+  summary: "Summary",
+  text: "Text",
+};
+
+const lowerFirst = (s: string) =>
+  /^[A-Z][a-z]/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+
+/** First zod issue as a readable sentence, naming the field as the screen does. */
+export function describeIssue(
+  error: z.ZodError,
+  labels: Record<string, string> = {},
+): string {
   const issue = error.issues[0];
   if (!issue) return "Invalid input";
-  const field = issue.path.join(".");
-  const name = labels[String(issue.path[0] ?? "")] ?? field;
-  return name ? `${name}: ${issue.message}` : issue.message;
+  const key = String(issue.path[0] ?? "");
+  const name = labels[key] ?? FIELD_LABELS[key] ?? issue.path.join(".");
+  return name ? `${name}: ${lowerFirst(issue.message)}` : issue.message;
 }
 
 /** A same-site path to redirect to, or the fallback. Rejects `//host` and
  * absolute URLs so a crafted link can't bounce someone off-site. */
 export function localPath(value: unknown, fallback: string): string {
-  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//") ? value : fallback;
+  return typeof value === "string" &&
+    value.startsWith("/") &&
+    !value.startsWith("//")
+    ? value
+    : fallback;
 }
