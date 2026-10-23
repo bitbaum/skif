@@ -53,6 +53,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   ],
   changelog: [
     {
+      date: "2026-10-23",
+      done: "Applying to be a Protector is clearer: if you leave something out, the form names it in its own words (\"Styles you work in: choose at least one\") instead of a code name; after you send it, it says so and tells you how you will hear back, since Skif keeps no email address for you; and Operations is now alerted the moment an application arrives instead of finding it by chance.",
+    },
+    {
       date: "2026-10-22",
       done: "“Did it help?” under every step of your Safety Plan: say you did it, or that it is not for you, and then whether it helped. Your next plan learns from it: a step that helped counts as something you already have, and one that did not is set aside, with the next option in its place and a line saying why.",
     },

@@ -1,7 +1,7 @@
 import "server-only";
 import { conventionalFrom, fromAddress, isMailConfigured, sendMail, type SendResult } from "@bitbaum/mail-kit";
 import { OPS_ALERT_SENDER_NAME, PUBLIC_ORIGIN_DEFAULT } from "@/config/ops-alerts";
-import { bookingReference, composeOpsAlert, parseOpsRecipients, type OpsAlertEvent } from "@/domain/ops-alerts";
+import { alertReference, composeOpsAlert, parseOpsRecipients, type OpsAlertEvent } from "@/domain/ops-alerts";
 
 type Env = Record<string, string | undefined>;
 
@@ -52,7 +52,7 @@ export async function alertOps(event: OpsAlertEvent | null, deps: OpsAlertDeps =
   if (result.sent) return "sent";
   log("ops alert not sent", {
     kind: event.kind,
-    booking: bookingReference(event.bookingId),
+    ref: alertReference(event),
     error: result.error,
     status: result.status,
     retryable: result.retryable,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  applicationAlert,
   bookingAlert,
   bookingReference,
   composeOpsAlert,
@@ -33,6 +34,27 @@ describe("which events alert Operations", () => {
       reportId: REPORT,
     });
     expect(reportAlert({ id: REPORT, bookingId: BOOKING, kind: "REPORT" })).toBeNull();
+  });
+});
+
+describe("applications", () => {
+  it("alerts Operations for a first application and for a rejected one reopened", () => {
+    expect(applicationAlert(undefined, { id: "p1", status: "APPLIED" })).toEqual({ kind: "PROTECTOR_APPLIED", protectorId: "p1" });
+    expect(applicationAlert("REJECTED", { id: "p1", status: "APPLIED" })).toEqual({ kind: "PROTECTOR_APPLIED", protectorId: "p1" });
+  });
+
+  it("stays quiet when someone already waiting or approved edits their profile", () => {
+    expect(applicationAlert("APPLIED", { id: "p1", status: "APPLIED" })).toBeNull();
+    expect(applicationAlert("APPROVED", { id: "p1", status: "APPROVED" })).toBeNull();
+    expect(applicationAlert("SUSPENDED", { id: "p1", status: "SUSPENDED" })).toBeNull();
+  });
+
+  it("composes a message that names an application and links to the Protector's Ops page, with nothing personal", () => {
+    const alert = composeOpsAlert({ kind: "PROTECTOR_APPLIED", protectorId: "3f2a9c1e-7b4d-4e8a-9c21-5d6e7f809a1b" }, { recipients: ["ops@skif.ch"], origin: ORIGIN });
+    expect(alert.subject).toBe("Skif: Protector application 3F2A9C1E");
+    expect(alert.text).toContain("Application: 3F2A9C1E");
+    expect(alert.text).toContain(`${ORIGIN}/ops/protectors/3f2a9c1e-7b4d-4e8a-9c21-5d6e7f809a1b`);
+    expect(alert.idempotencyKey).toBe("skif-protector_applied-3f2a9c1e-7b4d-4e8a-9c21-5d6e7f809a1b");
   });
 });
 
