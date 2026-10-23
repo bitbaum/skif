@@ -7,9 +7,11 @@ import { ConstraintList, languagesText, presenceText } from "@/components/bookin
 import { CheckboxGroup, Field, RadioGroup, Select, TextArea, TextInput, toOptions } from "@/components/fields";
 import { Card, DefinitionList, PageHeader } from "@/components/ui";
 import { capabilityLabel } from "@/config/capabilities";
+import { PROTECTOR_LIMITS } from "@/config/protectors";
 import { AREAS, BOOKING_LIMITS, REQUIRABLE_CAPABILITIES, SERVICES } from "@/config/services";
 import { getDb } from "@/db/client";
 import { PAYMENT_LABELS } from "@/domain/payment";
+import { getCustomerProfile } from "@/server/customers";
 import { getPreferences } from "@/server/preferences";
 import { requireViewer } from "@/server/viewer";
 import { createBookingAction } from "../actions";
@@ -28,7 +30,7 @@ const MUST_HAVE_OPTIONS = REQUIRABLE_CAPABILITIES.map((k) => ({ key: k, label: c
 
 export default async function NewBookingPage() {
   const viewer = await requireViewer();
-  const prefs = await getPreferences(getDb(), viewer.sub);
+  const [prefs, profile] = await Promise.all([getPreferences(getDb(), viewer.sub), getCustomerProfile(getDb(), viewer.sub)]);
   if (!prefs) redirect("/preferences?next=/bookings/new");
 
   return (
@@ -56,6 +58,14 @@ export default async function NewBookingPage() {
             <Field label="Area" hint="Shown to the Protector before they accept.">
               <Select name="area" options={toOptions(AREAS)} />
             </Field>
+            {!profile && (
+              <Field
+                label="What should your Protector call you?"
+                hint="Any name you like — it needn't be your legal one. Shown only once they have accepted."
+              >
+                <TextInput name="preferredName" maxLength={PROTECTOR_LIMITS.displayNameMax} required />
+              </Field>
+            )}
             <Field label="Meeting point" hint="Revealed to the Protector only once they have accepted.">
               <TextInput name="meetingPoint" maxLength={BOOKING_LIMITS.meetingPointMax} required />
             </Field>

@@ -44,6 +44,9 @@ export function AvailabilityFields({ windows }: { windows: readonly Availability
 /** "Fri 20:00–04:00" lines, for read-only views. */
 export function AvailabilitySummary({ windows }: { windows: readonly AvailabilityRow[] }) {
   if (windows.length === 0) return <span className="text-muted">Not set — can&apos;t be matched</span>;
+  // Seven identical lines say one thing: the same hours every day.
+  const line = availabilityLine(windows);
+  if (line.startsWith("Every day")) return <span>{line}</span>;
   return (
     <ul className="space-y-0.5">
       {windows.map((w) => (

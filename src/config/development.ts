@@ -54,6 +54,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-23",
+      done: "Booking a Protector now asks what they should call you the first time, because starting out no longer makes you give a name; they see it once they accept, and you are not asked again. And Operations reads a Protector's hours as \"Every day 10:00–23:30\" instead of seven identical lines.",
+    },
+    {
+      date: "2026-10-23",
       done: "The signed-in part of Skif is quicker to start and easier to come back to. A new person no longer has to fill in a long preference profile before their first plan: one button starts on sensible defaults (nothing ruled out, balanced trade-offs) and takes them straight to what they came for; their name is optional until they book. Coming back, the Safety plan page opens with \"Next for you\": your next booking, the next step of your plan you have not acted on, and any step still waiting for \"Did it help?\". And a mistake on any form now names the field as it is on screen (\"Start time: must be in the future\"), not its code name.",
     },
     {

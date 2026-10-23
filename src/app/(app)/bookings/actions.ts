@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import type { ActionState } from "@/components/action-form";
 import { getDb } from "@/db/client";
-import { bookingInput, complaintInput, describeIssue, formFields, idInput, ratingInput } from "@/domain/inputs";
+import { bookingInput, complaintInput, describeIssue, formFields, idInput, profileInput, ratingInput } from "@/domain/inputs";
 import { bookingAlert } from "@/domain/ops-alerts";
 import { fileComplaint } from "@/server/complaints";
 import { createBooking } from "@/server/bookings";
+import { saveCustomerProfile } from "@/server/customers";
 import { rateBooking } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { alertOps } from "@/server/ops-alerts";
@@ -21,6 +22,12 @@ export async function createBookingAction(_: ActionState, form: FormData): Promi
   if (!limited.success) return { error: limited.error };
   const parsed = bookingInput.safeParse(formFields(form, ["requiredCapabilities"]));
   if (!parsed.success) return { error: describeIssue(parsed.error) };
+  // A first booking carries the name the Protector will use, when none is saved.
+  if (form.has("preferredName")) {
+    const name = profileInput.safeParse({ preferredName: form.get("preferredName") });
+    if (!name.success) return { error: describeIssue(name.error) };
+    await saveCustomerProfile(getDb(), viewer.sub, name.data);
+  }
   const result = await createBooking(getDb(), viewer.sub, parsed.data);
   if (!result.success) return { error: result.error };
   // After the response: the customer never waits on, or sees, the Ops email.
