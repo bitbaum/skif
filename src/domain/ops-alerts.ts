@@ -8,7 +8,8 @@ import { OPS_ALERT_COPY, OPS_ALERT_FOOTER } from "@/config/ops-alerts";
  */
 export type OpsAlertEvent =
   | { kind: "BOOKING_NEEDS_ASSIGNING"; bookingId: string }
-  | { kind: "INCIDENT_FILED"; bookingId: string; reportId: string };
+  | { kind: "INCIDENT_FILED"; bookingId: string; reportId: string }
+  | { kind: "PROTECTOR_APPLIED"; protectorId: string };
 
 export type OpsAlert = {
   to: string[];
@@ -37,6 +38,19 @@ export function reportAlert(report: { id: string; bookingId: string; kind: strin
     : null;
 }
 
+/**
+ * An application needs Operations when it is new, or when a rejected one was
+ * reopened by an update. Saving a profile that is already waiting, or already
+ * approved, says nothing: the first alert covers it.
+ */
+export function applicationAlert(
+  before: string | undefined,
+  protector: { id: string; status: string },
+): OpsAlertEvent | null {
+  const reopened = before === undefined || before === "REJECTED";
+  return reopened && protector.status === "APPLIED" ? { kind: "PROTECTOR_APPLIED", protectorId: protector.id } : null;
+}
+
 const email = z.email();
 
 /** SKIF_OPS_EMAIL: comma-separated addresses; blanks and malformed entries are
@@ -52,20 +66,34 @@ export function parseOpsRecipients(raw: string | undefined): string[] {
   return [...seen.values()];
 }
 
-/** Short, human-quotable booking reference: the first 8 hex digits of the id. */
-export function bookingReference(bookingId: string): string {
-  return bookingId.replace(/-/g, "").slice(0, 8).toUpperCase();
+/** Short, human-quotable reference: the first 8 hex digits of an id. */
+export function bookingReference(id: string): string {
+  return id.replace(/-/g, "").slice(0, 8).toUpperCase();
+}
+
+/** The id an event is about, for its reference and its key. */
+function subjectId(event: OpsAlertEvent): string {
+  if (event.kind === "PROTECTOR_APPLIED") return event.protectorId;
+  return event.kind === "INCIDENT_FILED" ? event.reportId : event.bookingId;
+}
+
+/** The reference Operations quotes for an event: the booking's, or the application's. */
+export function alertReference(event: OpsAlertEvent): string {
+  return bookingReference(event.kind === "PROTECTOR_APPLIED" ? event.protectorId : event.bookingId);
 }
 
 /** One key per event (per incident, not per booking: a job can have several). */
 export function opsAlertKey(event: OpsAlertEvent): string {
-  const subject = event.kind === "INCIDENT_FILED" ? event.reportId : event.bookingId;
-  return `skif-${event.kind.toLowerCase()}-${subject}`;
+  return `skif-${event.kind.toLowerCase()}-${subjectId(event)}`;
 }
 
-/** Absolute link to the Operations page for the event's booking. */
+/** Absolute link to the Operations page the event is about. */
 export function opsLink(event: OpsAlertEvent, origin: string): string {
-  return new URL(`/ops/bookings/${encodeURIComponent(event.bookingId)}`, new URL(origin).origin).href;
+  const path =
+    event.kind === "PROTECTOR_APPLIED"
+      ? `/ops/protectors/${encodeURIComponent(event.protectorId)}`
+      : `/ops/bookings/${encodeURIComponent(event.bookingId)}`;
+  return new URL(path, new URL(origin).origin).href;
 }
 
 const escapeHtml = (s: string) =>
@@ -76,12 +104,12 @@ export function composeOpsAlert(
   { recipients, origin }: { recipients: string[]; origin: string },
 ): OpsAlert {
   const copy = OPS_ALERT_COPY[event.kind];
-  const ref = bookingReference(event.bookingId);
+  const ref = alertReference(event);
   const link = opsLink(event, origin);
-  const text = [copy.headline, "", `Booking: ${ref}`, `${copy.action}: ${link}`, "", OPS_ALERT_FOOTER].join("\n");
+  const text = [copy.headline, "", `${copy.refLabel}: ${ref}`, `${copy.action}: ${link}`, "", OPS_ALERT_FOOTER].join("\n");
   const html = [
     `<p>${escapeHtml(copy.headline)}</p>`,
-    `<p>Booking: <strong>${escapeHtml(ref)}</strong></p>`,
+    `<p>${escapeHtml(copy.refLabel)}: <strong>${escapeHtml(ref)}</strong></p>`,
     `<p><a href="${escapeHtml(link)}">${escapeHtml(copy.action)}</a></p>`,
     `<p><small>${escapeHtml(OPS_ALERT_FOOTER)}</small></p>`,
   ].join("\n");

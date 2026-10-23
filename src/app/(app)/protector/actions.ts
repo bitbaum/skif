@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { z } from "zod";
 import type { ActionState } from "@/components/action-form";
+import { APPLICATION_FIELD_LABELS } from "@/config/protectors";
 import { getDb } from "@/db/client";
 import {
   capabilityFields,
@@ -16,7 +17,7 @@ import {
   protectorApplication,
   reportInput,
 } from "@/domain/inputs";
-import { reportAlert } from "@/domain/ops-alerts";
+import { applicationAlert, reportAlert } from "@/domain/ops-alerts";
 import { fileReport } from "@/server/feedback";
 import { applyBookingAction } from "@/server/lifecycle";
 import { alertOps } from "@/server/ops-alerts";
@@ -32,10 +33,11 @@ export async function applyAction(_: ActionState, form: FormData): Promise<Actio
     ...formFields(form, ["languages", "services", "presenceStyles"]),
     capabilities: capabilityFields(form),
   });
-  if (!parsed.success) return { error: describeIssue(parsed.error) };
+  if (!parsed.success) return { error: describeIssue(parsed.error, APPLICATION_FIELD_LABELS) };
   const limited = await checkRateLimit("APPLY", viewer.sub);
   if (!limited.success) return { error: limited.error };
-  await applyAsProtector(getDb(), viewer.sub, parsed.data);
+  const protector = await applyAsProtector(getDb(), viewer.sub, parsed.data);
+  after(() => alertOps(applicationAlert(viewer.protector?.status, protector)));
   redirect("/protector?saved=1");
 }
 

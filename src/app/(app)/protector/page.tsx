@@ -23,7 +23,7 @@ import { listComplaintsForProtector } from "@/server/complaints";
 export const metadata: Metadata = { title: "Protector" };
 
 const STATUS_NOTE: Record<Protector["status"], string> = {
-  APPLIED: "Your application is with Operations. You'll see jobs here once you're approved.",
+  APPLIED: "Your application is with Operations. Skif keeps no email address for you, so no message will arrive: come back to this page, which shows where your application stands and, once you're approved, your jobs.",
   APPROVED: "You're approved. Jobs Operations assigns to you appear below.",
   SUSPENDED: "Your profile is paused. Contact Operations.",
   REJECTED: "Operations did not accept your application. You can update it and it will be reviewed again.",
@@ -88,7 +88,11 @@ export default async function ProtectorPage({ searchParams }: { searchParams: Pr
           <Badge tone={protector.status === "APPROVED" ? "accent" : "warn"}>{PROTECTOR_STATUS_LABELS[protector.status]}</Badge>
         )}
       </PageHeader>
-      {saved && <p className="mb-4 rounded-lg bg-accent-soft p-3 text-sm text-accent">Saved.</p>}
+      {saved && (
+        <p role="status" className="mb-4 rounded-lg bg-accent-soft p-3 text-sm text-accent">
+          {protector?.status === "APPLIED" ? "Application sent. Operations will review it." : "Saved."}
+        </p>
+      )}
       {protector && <p className="mb-6 text-muted">{STATUS_NOTE[protector.status]}</p>}
       {needsAvailability && (
         <div className="mb-6 rounded-lg border border-warn bg-warn-soft px-3 pt-3 text-sm text-warn">

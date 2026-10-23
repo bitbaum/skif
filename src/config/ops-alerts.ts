@@ -6,7 +6,7 @@
  * links to the page where a signed-in operator sees the rest.
  */
 import { PUBLIC_ORIGIN } from "./site";
-export const OPS_ALERT_KINDS = ["BOOKING_NEEDS_ASSIGNING", "INCIDENT_FILED"] as const;
+export const OPS_ALERT_KINDS = ["BOOKING_NEEDS_ASSIGNING", "INCIDENT_FILED", "PROTECTOR_APPLIED"] as const;
 export type OpsAlertKind = (typeof OPS_ALERT_KINDS)[number];
 
 /** The sender's display name when RESEND_FROM is unset (mail-kit's fleet convention). */
@@ -17,17 +17,25 @@ export const PUBLIC_ORIGIN_DEFAULT = PUBLIC_ORIGIN;
 
 export const OPS_ALERT_COPY: Record<
   OpsAlertKind,
-  { subject: (ref: string) => string; headline: string; action: string }
+  { subject: (ref: string) => string; headline: string; action: string; refLabel: string }
 > = {
   BOOKING_NEEDS_ASSIGNING: {
     subject: (ref) => `Skif: booking ${ref} needs a Protector`,
     headline: "A customer has requested a booking that needs a Protector assigned.",
     action: "Assign a Protector",
+    refLabel: "Booking",
   },
   INCIDENT_FILED: {
     subject: (ref) => `Skif: incident filed on booking ${ref}`,
     headline: "A Protector has filed an incident report that needs review.",
     action: "Review the incident",
+    refLabel: "Booking",
+  },
+  PROTECTOR_APPLIED: {
+    subject: (ref) => `Skif: Protector application ${ref}`,
+    headline: "Someone has applied to be a Protector, and the application is waiting for Operations.",
+    action: "Review the application",
+    refLabel: "Application",
   },
 };
 

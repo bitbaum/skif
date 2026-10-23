@@ -89,12 +89,12 @@ export const protectorApplication = z.object({
   displayName: required(PROTECTOR_LIMITS.displayNameMax),
   bio: required(PROTECTOR_LIMITS.bioMax),
   experienceYears: z.coerce.number().int().min(0).max(PROTECTOR_LIMITS.experienceYearsMax),
-  languages: z.array(z.enum(LANGUAGE_KEYS)).min(1, "Pick at least one language"),
+  languages: z.array(z.enum(LANGUAGE_KEYS)).min(1, "choose at least one"),
   capabilities: z
     .array(capabilityDeclaration)
     .refine((list) => new Set(list.map((c) => c.key)).size === list.length, "Each capability once"),
-  services: z.array(z.enum(SERVICE_KEYS)).min(1, "Pick at least one service"),
-  presenceStyles: z.array(z.enum(PRESENCE_STYLE_KEYS)).min(1, "Pick at least one style"),
+  services: z.array(z.enum(SERVICE_KEYS)).min(1, "choose at least one"),
+  presenceStyles: z.array(z.enum(PRESENCE_STYLE_KEYS)).min(1, "choose at least one"),
 });
 export type ProtectorApplication = z.infer<typeof protectorApplication>;
 
@@ -244,11 +244,12 @@ export function axisFields(form: FormData): Record<string, string> {
 }
 
 /** First zod issue as a readable sentence. */
-export function describeIssue(error: z.ZodError): string {
+export function describeIssue(error: z.ZodError, labels: Record<string, string> = {}): string {
   const issue = error.issues[0];
   if (!issue) return "Invalid input";
   const field = issue.path.join(".");
-  return field ? `${field}: ${issue.message}` : issue.message;
+  const name = labels[String(issue.path[0] ?? "")] ?? field;
+  return name ? `${name}: ${issue.message}` : issue.message;
 }
 
 /** A same-site path to redirect to, or the fallback. Rejects `//host` and
