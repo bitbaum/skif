@@ -54,6 +54,10 @@ export const PUBLIC_DEVELOPMENT: DevelopmentProfile = {
   changelog: [
     {
       date: "2026-10-23",
+      done: "The signed-in part of Skif is quicker to start and easier to come back to. A new person no longer has to fill in a long preference profile before their first plan: one button starts on sensible defaults (nothing ruled out, balanced trade-offs) and takes them straight to what they came for; their name is optional until they book. Coming back, the Safety plan page opens with \"Next for you\": your next booking, the next step of your plan you have not acted on, and any step still waiting for \"Did it help?\". And a mistake on any form now names the field as it is on screen (\"Start time: must be in the future\"), not its code name.",
+    },
+    {
+      date: "2026-10-23",
       done: "Applying to be a Protector is clearer: if you leave something out, the form names it in its own words (\"Styles you work in: choose at least one\") instead of a code name; after you send it, it says so and tells you how you will hear back, since Skif keeps no email address for you; and Operations is now alerted the moment an application arrives instead of finding it by chance.",
     },
     {
