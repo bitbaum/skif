@@ -12,8 +12,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
       '@bitbaum/ai-kit':
-        specifier: ^1.21.4
-        version: 1.21.4(react@19.3.0)
+        specifier: ^1.21.5
+        version: 1.21.5(react@19.3.0)
       '@bitbaum/chatkit':
         specifier: ^0.21.2
         version: 0.21.2(react@19.3.0)
@@ -227,8 +227,8 @@ packages:
       next:
         optional: true
 
-  '@bitbaum/ai-kit@1.21.4':
-    resolution: {integrity: sha512-aBK/yh5X74ZPTCURwEznXT5kKbe1GuCc0RUHy+e9v0uVivDERAq67E1LmUpasDZ3G81DB0OdOuIWMjJ+IF6ihA==}
+  '@bitbaum/ai-kit@1.21.5':
+    resolution: {integrity: sha512-TdiPrUdzSnQWDG7XE/iUA+BozJg2+xJMYHb/6ZRtbW4692n1so+jBfb5PGHyxjwiWApbnPg9TUHKv04p87vzvQ==}
     engines: {node: '>=20'}
     peerDependencies:
       react: '>=18'
@@ -3792,7 +3792,7 @@ snapshots:
       drizzle-orm: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0)
       next: 16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
-  '@bitbaum/ai-kit@1.21.4(react@19.3.0)':
+  '@bitbaum/ai-kit@1.21.5(react@19.3.0)':
     dependencies:
       '@mozilla/readability': 0.6.0
       ai-forms: 0.1.3(react@19.3.0)

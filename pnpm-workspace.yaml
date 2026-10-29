@@ -10,3 +10,4 @@ minimumReleaseAgeExclude:
   - '@bitbaum/chatkit@0.21.1 || 0.21.2'
   - '@bitbaum/listkit@0.2.2'
   - limitkit@0.2.1
+  - '@bitbaum/ai-kit@1.21.5'
