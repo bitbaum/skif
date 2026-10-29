@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@bitbaum/accountkit':
-        specifier: github:bitbaum/accountkit#c9fb1e59e124638ca7a1c36e00a76fef8aba20c7
-        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/c9fb1e59e124638ca7a1c36e00a76fef8aba20c7(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
+        specifier: github:bitbaum/accountkit#4d62ab8ebed295a9b0af8bda0838fb01bd336418
+        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/4d62ab8ebed295a9b0af8bda0838fb01bd336418(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
       '@bitbaum/ai-kit':
         specifier: ^1.21.5
         version: 1.21.5(react@19.3.0)
@@ -205,9 +205,9 @@ packages:
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/c9fb1e59e124638ca7a1c36e00a76fef8aba20c7':
-    resolution: {gitHosted: true, integrity: sha512-3alEPLbzqhOr2Z/yefgT4vtt7YG9FKt1JJUwV0Co9zAJmC4G9jjoJ4mzO+I551IF0FD9eojxQ+pKReGgCmtunQ==, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/c9fb1e59e124638ca7a1c36e00a76fef8aba20c7}
-    version: 0.9.2
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/4d62ab8ebed295a9b0af8bda0838fb01bd336418':
+    resolution: {gitHosted: true, integrity: sha512-yCKFPpUx/gIMuBn/d75LXG086lFr4N5EtryiJBP+ArgA5dkhSryupRQaHX78sRDRXeB+Pkeg4vIX8cY0MMpX6g==, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/4d62ab8ebed295a9b0af8bda0838fb01bd336418}
+    version: 0.10.0
     engines: {node: '>=20'}
     peerDependencies:
       '@better-auth/passkey': ^1.7.10
@@ -3666,6 +3666,9 @@ packages:
   zod@4.6.5:
     resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
 
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
 snapshots:
 
   '@acemir/cssom@0.9.32': {}
@@ -3780,10 +3783,11 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/c9fb1e59e124638ca7a1c36e00a76fef8aba20c7(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)':
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/4d62ab8ebed295a9b0af8bda0838fb01bd336418(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)':
     dependencies:
       limitkit: 0.2.1
       react: 19.3.0
+      zod: 4.6.7
     optionalDependencies:
       '@bitbaum/mail-kit': 0.2.0
       drizzle-orm: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0)
@@ -6901,3 +6905,5 @@ snapshots:
       zod: 4.6.5
 
   zod@4.6.5: {}
+
+  zod@4.6.7: {}
