@@ -30,12 +30,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <Document lang={locale}>
       <NextIntlClientProvider locale={locale}>
-      <SiteHeader account={{ name: viewer.name }} />
-      <div className="border-b border-subtle bg-surface-page">
-        <AppNav links={links} className={SHELL} />
+      {/* A printed page (a case report) is the page alone, without the chrome. */}
+      <div className="print:hidden">
+        <SiteHeader account={{ name: viewer.name }} />
+        <div className="border-b border-subtle bg-surface-page">
+          <AppNav links={links} className={SHELL} />
+        </div>
       </div>
-      <main className={`${SHELL} py-8`}>{children}</main>
-      <PublicFooter locale={locale} />
+      <main className={`${SHELL} py-8 print:py-0`}>{children}</main>
+      <div className="print:hidden">
+        <PublicFooter locale={locale} />
+      </div>
       </NextIntlClientProvider>
     </Document>
   );

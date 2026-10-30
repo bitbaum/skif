@@ -71,6 +71,7 @@ export const EN = {
     nav: "My Skif",
     plan: "Safety plan",
     bookings: "Bookings",
+    cases: "Cases",
     preferences: "Preferences",
     training: "Training",
     protector: "Protector",
@@ -256,6 +257,9 @@ export const EN = {
     properly: "Want it done properly?",
     properlyBody: "A Safety Plan looks at your whole situation and weighs every step against your limits and budget.",
     start: "Start an assessment",
+    caseFile: "Already happened?",
+    caseFileBody: "A case file keeps the timeline, the numbers and accounts they used, and the steps you took, and prints one clear report for the bank and the police. Only you can see it.",
+    startCaseFile: "Start a case file",
   },
   fieldPage: {
     eyebrow: (n: string, total: number, label: string) => `Field ${n} of ${total} · ${label}`,

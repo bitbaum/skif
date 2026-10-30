@@ -8,6 +8,9 @@ import { describe, expect, it } from "vitest";
  */
 const APP = join(__dirname, "..", "app", "(app)");
 const OWN_PAGES = ["preferences", "bookings", "assessments", "protector", "training"];
+/** Sections whose text must never be carried to Loki: other people's data
+ * (/ops), and a person's own case files about a scam (/cases). */
+const NO_WIDGET = ["ops", "cases"];
 const WIDGET_IMPORT = /@\/components\/(loki-watch|feedback-widget)"/;
 
 function filesUnder(dir: string): string[] {
@@ -20,7 +23,7 @@ function filesUnder(dir: string): string[] {
 describe("Loki widget in the app", () => {
   it("covers every section of the app: the person's own pages, or Operations", () => {
     const sections = readdirSync(APP).filter((name) => statSync(join(APP, name)).isDirectory());
-    expect(sections.sort()).toEqual([...OWN_PAGES, "ops"].sort());
+    expect(sections.sort()).toEqual([...OWN_PAGES, ...NO_WIDGET].sort());
   });
 
   it("is mounted by the layout of each of the person's own pages", () => {
@@ -29,10 +32,12 @@ describe("Loki widget in the app", () => {
     }
   });
 
-  it("never loads under /ops, whose layout drops it after a client-side navigation", () => {
-    const ops = join(APP, "ops");
-    for (const file of filesUnder(ops)) expect(readFileSync(file, "utf8"), file).not.toMatch(WIDGET_IMPORT);
-    expect(readFileSync(join(ops, "layout.tsx"), "utf8")).toMatch(/<NoFeedbackWidget \/>/);
+  it("never loads under /ops or /cases, whose layouts drop it after a client-side navigation", () => {
+    for (const section of NO_WIDGET) {
+      const dir = join(APP, section);
+      for (const file of filesUnder(dir)) expect(readFileSync(file, "utf8"), file).not.toMatch(WIDGET_IMPORT);
+      expect(readFileSync(join(dir, "layout.tsx"), "utf8"), section).toMatch(/<NoFeedbackWidget \/>/);
+    }
   });
 
   it("is not in the app-wide layout, which wraps /ops too", () => {

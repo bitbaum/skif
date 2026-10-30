@@ -123,6 +123,7 @@ export function siteText(locale: Locale) {
       sections: [
         { href: "/assessments", label: w.mySkif.plan },
         { href: "/bookings", label: w.mySkif.bookings },
+        { href: "/cases", label: w.mySkif.cases },
         { href: "/preferences", label: w.mySkif.preferences },
         { href: "/training", label: w.mySkif.training },
       ],

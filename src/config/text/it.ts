@@ -64,6 +64,7 @@ export const IT: SiteWords = {
     nav: "Il mio Skif",
     plan: "Piano di sicurezza",
     bookings: "Prenotazioni",
+    cases: "Casi",
     preferences: "Preferenze",
     training: "Formazione",
     protector: "Protector",
@@ -249,6 +250,9 @@ export const IT: SiteWords = {
     properly: "Vuoi farlo per bene?",
     properlyBody: "Un piano di sicurezza guarda tutta la tua situazione e pesa ogni passo contro i tuoi limiti e il tuo budget.",
     start: "Inizia una valutazione",
+    caseFile: "È già successo?",
+    caseFileBody: "Un fascicolo conserva la cronologia, i numeri e i conti usati e i passi fatti, e stampa un rapporto chiaro per la banca e la polizia. Lo vedi solo tu.",
+    startCaseFile: "Apri un fascicolo",
   },
   fieldPage: {
     eyebrow: (n: string, total: number, label: string) => `Ambito ${n} di ${total} · ${label}`,

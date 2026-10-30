@@ -151,6 +151,20 @@ const DE: Translations = {
       { text: "In der Schweiz helfen die Opferhilfe-Beratungsstellen gratis und vertraulich." },
     ],
   },
+  "someone-got-into-my-computer": {
+    title: "Jemand war in meinem Computer",
+    when: "Du hast einer anrufenden Person erlaubt, AnyDesk, TeamViewer oder Ähnliches zu installieren, oder du hast gesehen, wie sich die Maus von selbst bewegt.",
+    steps: [
+      { text: "Schalte das WLAN aus oder zieh das Kabel.", detail: "Ein Fernzugriffsprogramm erreicht den Computer nur, solange er online ist." },
+      { text: "Ruf deine Bank an, unter der Nummer auf deiner Karte.", detail: "Lass E-Banking und Karten sperren, jede Zahlung seit Beginn des Anrufs prüfen und Überweisungen zurückrufen." },
+      { text: "Ändere deine Passwörter vom Telefon oder einem anderen Computer aus.", detail: "Zuerst E-Banking, dann E-Mail, dann dein Apple-, Google- oder Microsoft-Konto. Nie auf dem Computer, den sie gesteuert haben." },
+      { text: "Sichere die Beweise, bevor du etwas löschst.", detail: "Bildschirmfotos von Anrufliste und Chats, und die Dokumente, die sie geschickt haben. AnyDesk protokolliert auf dem Mac jede Verbindung im versteckten Ordner .anydesk in deinem Benutzerordner." },
+      { text: "Lösche die Fernzugriffsprogramme.", detail: "Auf dem Mac: das Programm in «Programme», die Dateien mit seinem Namen in /Library/LaunchAgents und /Library/LaunchDaemons, und seinen Eintrag unter Systemeinstellungen → Allgemein → Anmeldeobjekte." },
+      { text: "Erstatte Anzeige bei der Polizei und bewahre die Fallnummer auf." },
+      { text: "Melde es dem BACS, dem Bundesamt für Cybersicherheit, auf bacs.admin.ch." },
+      { text: "Erzähl es den Menschen, die dir nahestehen.", detail: "Wenn jemand anruft und anbietet, dein Geld zurückzuholen, ist das derselbe Betrug. Leg auf." },
+    ],
+  },
 };
 
 const FR: Translations = {
@@ -288,6 +302,20 @@ const FR: Translations = {
       { text: "En Suisse, les centres de consultation LAVI aident gratuitement et en toute confidentialité." },
     ],
   },
+  "someone-got-into-my-computer": {
+    title: "Quelqu'un est entré dans mon ordinateur",
+    when: "Vous avez laissé quelqu'un au téléphone installer AnyDesk, TeamViewer ou un programme semblable, ou vous avez vu la souris bouger toute seule.",
+    steps: [
+      { text: "Coupez le Wi-Fi ou débranchez le câble.", detail: "Un programme d'accès à distance n'atteint l'ordinateur que tant qu'il est en ligne." },
+      { text: "Appelez votre banque au numéro inscrit sur votre carte.", detail: "Demandez de bloquer l'e-banking et les cartes, de vérifier chaque paiement depuis le début de l'appel et de rappeler tout virement." },
+      { text: "Changez vos mots de passe depuis votre téléphone ou un autre ordinateur.", detail: "D'abord l'e-banking, puis l'e-mail, puis votre compte Apple, Google ou Microsoft. Jamais sur l'ordinateur qu'ils ont contrôlé." },
+      { text: "Gardez les preuves avant de supprimer quoi que ce soit.", detail: "Des captures de l'historique d'appels et des discussions, et les documents qu'ils ont envoyés. Sur un Mac, AnyDesk enregistre chaque connexion dans le dossier caché .anydesk de votre dossier personnel." },
+      { text: "Supprimez les programmes d'accès à distance.", detail: "Sur un Mac : l'application dans Applications, les fichiers portant son nom dans /Library/LaunchAgents et /Library/LaunchDaemons, et son entrée sous Réglages Système → Général → Ouverture." },
+      { text: "Portez plainte à la police et gardez le numéro de dossier." },
+      { text: "Signalez-le à l'OFCS, l'Office fédéral de la cybersécurité, sur bacs.admin.ch." },
+      { text: "Parlez-en à vos proches.", detail: "Si quelqu'un appelle en proposant de récupérer votre argent, c'est la même arnaque. Raccrochez." },
+    ],
+  },
 };
 
 const IT: Translations = {
@@ -423,6 +451,20 @@ const IT: Translations = {
       { text: "Sporgi denuncia alla polizia, e conserva il numero del caso." },
       { text: "Racconta a una persona vicina cosa è successo." },
       { text: "In Svizzera, i consultori per l'aiuto alle vittime (LAV) aiutano gratuitamente e in modo confidenziale." },
+    ],
+  },
+  "someone-got-into-my-computer": {
+    title: "Qualcuno è entrato nel mio computer",
+    when: "Hai lasciato che chi ti chiamava installasse AnyDesk, TeamViewer o simili, oppure hai visto il mouse muoversi da solo.",
+    steps: [
+      { text: "Spegni il Wi-Fi o stacca il cavo.", detail: "Un programma di accesso remoto raggiunge il computer solo finché è online." },
+      { text: "Chiama la tua banca al numero sulla tua carta.", detail: "Chiedi di bloccare l'e-banking e le carte, di controllare ogni pagamento dall'inizio della chiamata e di richiamare i bonifici." },
+      { text: "Cambia le password dal telefono o da un altro computer.", detail: "Prima l'e-banking, poi l'e-mail, poi il tuo account Apple, Google o Microsoft. Mai sul computer che hanno controllato." },
+      { text: "Conserva le prove prima di cancellare qualcosa.", detail: "Screenshot del registro chiamate e delle chat, e i documenti che ti hanno mandato. Su un Mac, AnyDesk registra ogni connessione nella cartella nascosta .anydesk della tua cartella utente." },
+      { text: "Elimina i programmi di accesso remoto.", detail: "Su un Mac: l'app in Applicazioni, i file con il suo nome in /Library/LaunchAgents e /Library/LaunchDaemons, e la sua voce in Impostazioni di Sistema → Generali → Elementi login." },
+      { text: "Sporgi denuncia alla polizia e conserva il numero del caso." },
+      { text: "Segnalalo all'UFCS, l'Ufficio federale della cibersicurezza, su bacs.admin.ch." },
+      { text: "Dillo alle persone a te vicine.", detail: "Se qualcuno chiama offrendo di recuperare i tuoi soldi, è la stessa truffa. Riaggancia." },
     ],
   },
 };
