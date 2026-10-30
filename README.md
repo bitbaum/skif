@@ -25,6 +25,12 @@ End to end, with everything persisted in Postgres:
    proportionate step per concern within the person's hard limits, the
    trade-offs, what's excluded and why — and says **"you don't need to buy
    anything"** when that's the answer.
+8. **Case files** (`/cases`) are for after a scam: the person records the
+   timeline, what the scammers left behind (numbers, names, accounts,
+   remote-access IDs) and ticks off the recovery steps for that kind of scam,
+   then prints the report for the police or copies it as text for BACS or the
+   bank. Owner-only: no Operations, Protector, AI or Loki-widget path reads it.
+   The public checklist `/act/someone-got-into-my-computer` leads into it.
 
 ## Layout
 

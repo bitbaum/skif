@@ -63,6 +63,7 @@ export const FR: SiteWords = {
     nav: "Mon Skif",
     plan: "Plan de sécurité",
     bookings: "Réservations",
+    cases: "Dossiers",
     preferences: "Préférences",
     training: "Formation",
     protector: "Protector",
@@ -248,6 +249,9 @@ export const FR: SiteWords = {
     properly: "Vous voulez le faire à fond ?",
     properlyBody: "Un plan de sécurité regarde toute votre situation et pèse chaque mesure contre vos limites et votre budget.",
     start: "Commencer une évaluation",
+    caseFile: "C'est déjà arrivé ?",
+    caseFileBody: "Un dossier garde la chronologie, les numéros et comptes utilisés et les mesures prises, et imprime un rapport clair pour la banque et la police. Vous seul le voyez.",
+    startCaseFile: "Ouvrir un dossier",
   },
   fieldPage: {
     eyebrow: (n: string, total: number, label: string) => `Domaine ${n} sur ${total} · ${label}`,

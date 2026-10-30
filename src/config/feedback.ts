@@ -8,7 +8,8 @@
  * SKIF_LOKI_WATCH_SUBS alone (the owner, so Loki's watch mode can see the app
  * being used), on their own pages (preferences, bookings, assessments,
  * Protector), never under /ops, where other people's bookings, incidents and
- * complaints are: a report carries the page's text to Loki.
+ * complaints are, nor under /cases, a person's account of a scam: a report
+ * carries the page's text to Loki.
  */
 export const FEEDBACK_WIDGET = {
   src: "https://loki.orangecat.ch/widget.js",

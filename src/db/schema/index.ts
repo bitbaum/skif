@@ -6,6 +6,7 @@
 export * from "./academy";
 export * from "./assessments";
 export * from "./audit";
+export * from "./cases";
 export * from "./bookings";
 export * from "./complaints";
 export * from "./mail";

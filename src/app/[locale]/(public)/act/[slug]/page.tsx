@@ -60,6 +60,15 @@ export default async function ChecklistPage({ params }: { params: Params }) {
               <p className="mt-2 text-sm leading-relaxed text-fg-secondary">{guide.summary}</p>
             </div>
           )}
+          {c.caseFile && (
+            <div className={`${PANEL} p-5`}>
+              <p className={LABEL}>{t.caseFile}</p>
+              <p className="mt-2 text-sm leading-relaxed text-fg-secondary">{t.caseFileBody}</p>
+              <Link href={signInTo("/cases")} className={`${ACTION.primary} mt-4`}>
+                {t.startCaseFile}
+              </Link>
+            </div>
+          )}
           <div className={`${PANEL} p-5`}>
             <p className={LABEL}>{t.properly}</p>
             <p className="mt-2 text-sm leading-relaxed text-fg-secondary">{t.properlyBody}</p>

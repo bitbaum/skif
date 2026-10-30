@@ -19,6 +19,9 @@ export type Checklist = {
   photo?: PhotoKey;
   /** The guide that explains the why, by slug. */
   guide?: string;
+  /** For what has already happened: the page offers a case file
+   * (src/config/cases.ts) to record it for the bank and the police. */
+  caseFile?: true;
   steps: readonly ChecklistStep[];
 };
 
@@ -178,6 +181,7 @@ export const CHECKLISTS = [
     minutes: 5,
     fields: ["FINANCIAL", "CYBER"],
     guide: "scams-coercion-keys",
+    caseFile: true,
     steps: [
       { text: "Stop. Do not pay, transfer, click or read out any code yet." },
       { text: "Hang up or close the message." },
@@ -203,6 +207,25 @@ export const CHECKLISTS = [
       { text: "Report it to the police, and keep the case number." },
       { text: "Tell someone close what happened." },
       { text: "In Switzerland, victim support centres (Opferhilfe) help for free and in confidence." },
+    ],
+  },
+  {
+    slug: "someone-got-into-my-computer",
+    title: "Someone got into my computer",
+    when: "You let a caller install AnyDesk, TeamViewer or similar, or you saw the mouse move by itself.",
+    minutes: 30,
+    fields: ["CYBER", "FINANCIAL"],
+    guide: "scams-coercion-keys",
+    caseFile: true,
+    steps: [
+      { text: "Turn off Wi-Fi or unplug the cable.", detail: "A remote-access program only reaches the computer while it is online." },
+      { text: "Call your bank on the number on your card.", detail: "Ask them to block e-banking and cards, check every payment since the call began and recall any transfer." },
+      { text: "Change your passwords from your phone or another computer.", detail: "E-banking first, then email, then your Apple, Google or Microsoft account. Never on the computer they controlled." },
+      { text: "Keep the evidence before you delete anything.", detail: "Screenshots of the call log and chats, and the documents they sent. AnyDesk on a Mac logs every connection in the hidden .anydesk folder in your home folder." },
+      { text: "Delete the remote-access programs.", detail: "On a Mac: the app in Applications, the files with its name in /Library/LaunchAgents and /Library/LaunchDaemons, and its entry under System Settings → General → Login Items." },
+      { text: "Report it to the police and keep the case number." },
+      { text: "Report it to BACS, the federal office for cyber security, at bacs.admin.ch." },
+      { text: "Tell the people close to you.", detail: "If someone calls offering to get your money back, it is the same scam. Hang up." },
     ],
   },
 ] as const satisfies readonly Checklist[];

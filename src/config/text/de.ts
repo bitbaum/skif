@@ -64,6 +64,7 @@ export const DE: SiteWords = {
     nav: "Mein Skif",
     plan: "Sicherheitsplan",
     bookings: "Buchungen",
+    cases: "Fälle",
     preferences: "Einstellungen",
     training: "Training",
     protector: "Protector",
@@ -249,6 +250,9 @@ export const DE: SiteWords = {
     properly: "Lieber gründlich?",
     properlyBody: "Ein Sicherheitsplan schaut deine ganze Lage an und wägt jeden Schritt gegen deine Grenzen und dein Budget ab.",
     start: "Einschätzung starten",
+    caseFile: "Schon passiert?",
+    caseFileBody: "Eine Fallakte hält den Ablauf, die benutzten Nummern und Konten und deine Schritte fest und druckt einen klaren Bericht für Bank und Polizei. Nur du siehst sie.",
+    startCaseFile: "Fallakte anlegen",
   },
   fieldPage: {
     eyebrow: (n: string, total: number, label: string) => `Feld ${n} von ${total} · ${label}`,
