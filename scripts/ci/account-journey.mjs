@@ -150,6 +150,9 @@ try {
   await signInWithPassword(page, EMAIL, PASSWORD);
   await page.waitForURL((url) => url.pathname === "/act", { timeout: 30_000 });
   check((await session(page))?.email === EMAIL, "sign-in with the right password works");
+  // A public page asks for the session in the browser and shows the account menu.
+  await page.getByRole("button", { name: /^Account: / }).first().waitFor({ timeout: 15_000 }).catch(() => {});
+  check((await page.getByRole("button", { name: /^Account: / }).count()) > 0, "a public page shows the signed-in account menu");
 
   // ── The account page: passkeys and a second factor ─────────────────────
   await page.goto(`${BASE}/account`);
