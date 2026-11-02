@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@bitbaum/accountkit':
-        specifier: github:bitbaum/accountkit#99d43a4439da4b57a471ebceae98a1203861d070
-        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/99d43a4439da4b57a471ebceae98a1203861d070(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.4.1(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
+        specifier: github:bitbaum/accountkit#aa5eefde2749af841115f8cb2807cda011eb0f99
+        version: https://codeload.github.com/bitbaum/accountkit/tar.gz/aa5eefde2749af841115f8cb2807cda011eb0f99(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.4.1(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
       '@bitbaum/ai-kit':
         specifier: ^1.22.0
         version: 1.22.0(react@19.3.0)
@@ -208,9 +208,9 @@ packages:
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/99d43a4439da4b57a471ebceae98a1203861d070':
-    resolution: {gitHosted: true, integrity: sha512-QET3nYEtiOp1Zz17Qt1w1d+v2p9viZzkwlKNLa0RGdEeKles5iN3jehqIJ58UZjLD1bRu7RrmgNd0a6+UADj3w==, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/99d43a4439da4b57a471ebceae98a1203861d070}
-    version: 0.21.0
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/aa5eefde2749af841115f8cb2807cda011eb0f99':
+    resolution: {gitHosted: true, integrity: sha512-C9lpx1a345KkkID6BIMy5db0U+qpOhreLByH/Hz1bsf2tFkWPfrAtiWjjw+d6pmNSUk3BWJACytRbYt8khoKOA==, tarball: https://codeload.github.com/bitbaum/accountkit/tar.gz/aa5eefde2749af841115f8cb2807cda011eb0f99}
+    version: 0.23.0
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
@@ -3793,7 +3793,7 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/99d43a4439da4b57a471ebceae98a1203861d070(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.4.1(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)':
+  '@bitbaum/accountkit@https://codeload.github.com/bitbaum/accountkit/tar.gz/aa5eefde2749af841115f8cb2807cda011eb0f99(@bitbaum/mail-kit@0.2.0)(drizzle-orm@0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.0))(next@16.4.1(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)':
     dependencies:
       limitkit: 0.2.1
       react: 19.3.0
