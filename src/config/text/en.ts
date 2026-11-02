@@ -83,22 +83,14 @@ export const EN = {
     create: {
       title: "Create your Skif account",
       lede: "Free, and it takes a minute. Then save Safety Plans, set your limits and preferences, and book a Protector.",
-      submit: "Create account",
-      switchPrompt: "Already have an account?",
-      switchLabel: "Sign in",
     },
     signIn: {
       title: "Sign in to Skif",
       lede: "Welcome back.",
-      submit: "Continue",
-      switchPrompt: "New to Skif?",
-      switchLabel: "Create an account",
     },
-    providers: { google: "With Google", github: "With GitHub" },
-    or: "or with your email",
-    email: "Email",
     fineprint:
-      "Skif accounts run on OrangeCat, the account service shared by the products built here: one account, and Skif itself stores no password and no email address, only an anonymous id.",
+      "Skif keeps your address only to sign you in and to send the links you ask for.",
+    yourAccount: "Your account",
     notConfigured: "Accounts are not switched on in this copy of Skif.",
   },
   academyHero: {
@@ -347,17 +339,7 @@ export const EN = {
     signingOut: "Signing out…",
     signOutFailed: "Sign-out did not complete. Try again.",
   },
-  signInError: {
-    kicker: "Sign in to Skif",
-    failedTitle: "Sign-in did not finish",
-    failedBody: "Nothing was changed. Start again: it usually works the second time. If it keeps failing, OrangeCat may be briefly unavailable.",
-    deniedTitle: "This account cannot sign in here",
-    deniedBody: "OrangeCat signed you in, but Skif could not accept the account.",
-    configurationTitle: "Sign-in is not available right now",
-    configurationBody: "Sign-in is not set up on this server yet. Nothing you did caused this.",
-    tryAgain: "Try again",
-    home: "Back to the start",
-  },
+
   guides: {
     indexEyebrow: "Library · Guides",
     indexStatement: "Read deeper. Act today.",

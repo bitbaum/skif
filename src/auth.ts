@@ -1,60 +1,54 @@
 /**
- * Sign-in is OrangeCat OIDC only. There is no users table and no adapter:
- * the session is a JWT and the OIDC `sub` — carried as `token.actorId` — is
- * the person's identity. The provider and the session refresh are
- * @bitbaum/accountkit/orangecat, shared by every bitbaum app: once the access
- * token expires the session refreshes, and when OrangeCat refuses
- * (Disconnect, Sign out everywhere, account deleted) `actorId` is dropped and
- * the person is signed out here too.
+ * Accounts for Skif: the same account system as every fleet product
+ * (@bitbaum/accountkit/auth). A person signs in with an email and a password,
+ * an emailed sign-in link, a passkey, a second factor, "Continue with
+ * OrangeCat" or the shared bitbaum sign-in, each offered only when its env is
+ * set (src/config/auth.ts). OrangeCat is one button among them, never a
+ * requirement.
  *
- * A "dev" credentials provider exists solely so the flows can be exercised on
- * a laptop without OIDC client credentials. It is mounted only when
- * NODE_ENV is "development" AND SKIF_DEV_LOGIN=1; a production build inlines
- * NODE_ENV, so it can never be mounted there.
+ * Skif's rows were keyed on the OrangeCat `sub` before it had accounts.
+ * `legacyIdentityProvider: "orangecat"` keeps that key for everyone whose
+ * first way in was OrangeCat, so their bookings, profiles and assessments stay
+ * theirs with no data migration: their first OrangeCat sign-in here creates
+ * the account and links it by that `sub`, never by an address. Everyone else
+ * is their account id. `session.user.id` below is that id, the one every row
+ * stores, as it was under Auth.js.
  */
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import type { Provider } from "next-auth/providers";
-import { z } from "zod";
-import { orangecatProvider, syncOcSession } from "@bitbaum/accountkit/orangecat";
-import { authConfig } from "@/config/auth";
+import "server-only";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { createAuthRuntime } from "@bitbaum/accountkit/auth/next";
+import { createAuthMailer } from "@bitbaum/accountkit/auth/mail";
+import { isDeliverable } from "@bitbaum/accountkit/auth";
+import { getDb } from "@/db/client";
+import { authSite, skifAuthOptions } from "@/config/auth";
 
-const providers: Provider[] = [];
+export const authMail = createAuthMailer({ site: authSite() });
+/** Whether account mail can be sent: recovery and sign-in links are offered only then. */
+export const mailConfigured = () => authMail.configured;
 
-if (authConfig.orangecat) {
-  // Identity only, and no email: Skif never asks for one.
-  providers.push(orangecatProvider({ ...authConfig.orangecat, scopes: "openid profile" }));
+export const { GET, POST, getSession, sessionFor, authStatus, getAuth } = createAuthRuntime(
+  skifAuthOptions({ mail: authMail, getDatabase: () => getDb() }),
+);
+
+export type SkifSession = { user: { id: string; name: string | null } };
+
+/** The signed-in person as the rest of Skif reads them, or null. */
+export async function auth(): Promise<SkifSession | null> {
+  const session = await getSession();
+  if (!session) return null;
+  // A new account has no name until the person gives one; the address stands
+  // in, unless it is the placeholder an OrangeCat sign-in carries.
+  const { name, email } = session.user;
+  return { user: { id: session.user.actorId, name: name || (isDeliverable(email) ? email : null) } };
 }
 
-if (authConfig.devLogin) {
-  providers.push(
-    Credentials({
-      id: "dev",
-      name: "Development login",
-      credentials: { sub: { label: "Identity (any string)" } },
-      authorize(credentials) {
-        const parsed = z.object({ sub: z.string().trim().min(1).max(64) }).safeParse(credentials);
-        if (!parsed.success) return null;
-        return { id: `dev:${parsed.data.sub}`, name: parsed.data.sub };
-      },
-    }),
-  );
+/** End the session and go where the caller asked. */
+export async function signOut(options: { redirectTo: string }): Promise<never> {
+  try {
+    await getAuth().api.signOut({ headers: await headers() });
+  } catch {
+    // Already signed out, or accounts unavailable: either way, go on.
+  }
+  redirect(options.redirectTo);
 }
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers,
-  session: { strategy: "jwt" },
-  pages: { signIn: "/signin", error: "/auth/error" },
-  callbacks: {
-    async jwt({ token, account, profile }) {
-      // The dev login has no OrangeCat grant to refresh; its sub is its identity.
-      if (account?.provider === "dev") token.actorId = token.sub;
-      return syncOcSession({ token, account, profile }, authConfig.orangecat);
-    },
-    session({ session, token }) {
-      // actorId, never token.sub: a revoked grant drops actorId, not sub.
-      if (typeof token.actorId === "string") session.user.id = token.actorId;
-      return session;
-    },
-  },
-});

@@ -9,8 +9,9 @@ import { describe, expect, it } from "vitest";
 const APP = join(__dirname, "..", "app", "(app)");
 const OWN_PAGES = ["preferences", "bookings", "assessments", "protector", "training"];
 /** Sections whose text must never be carried to Loki: other people's data
- * (/ops), and a person's own case files about a scam (/cases). */
-const NO_WIDGET = ["ops", "cases"];
+ * (/ops), a person's own case files about a scam (/cases), and their ways in
+ * (/account). */
+const NO_WIDGET = ["ops", "cases", "account"];
 const WIDGET_IMPORT = /@\/components\/(loki-watch|feedback-widget)"/;
 
 function filesUnder(dir: string): string[] {
@@ -32,7 +33,7 @@ describe("Loki widget in the app", () => {
     }
   });
 
-  it("never loads under /ops or /cases, whose layouts drop it after a client-side navigation", () => {
+  it("never loads under /ops, /cases or /account, whose layouts drop it after a client-side navigation", () => {
     for (const section of NO_WIDGET) {
       const dir = join(APP, section);
       for (const file of filesUnder(dir)) expect(readFileSync(file, "utf8"), file).not.toMatch(WIDGET_IMPORT);

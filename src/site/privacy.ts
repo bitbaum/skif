@@ -26,7 +26,7 @@ export function privacyPage(): SitePage {
         anchor: "stored",
         columns: ["Record", "What is in it", "Who sees it"],
         rows: [
-          ["Your account", "An anonymous id from your account. No email address, no password.", "Skif's systems"],
+          ["Your account", "Your email address and how you sign in: a password (kept only as a hash), and passkeys or a second factor if you add them. Signing in through another account service stores its id for you instead of an address.", "Skif's systems"],
           ["Your profile", "The name a Protector should call you, if you give one.", "The Protector on your booking, once they accept"],
           ["Your preferences", "Your hard limits, trade-off leanings, presence style and languages.", "You; used to rank steps and match Protectors"],
           ["Assessments", "The places you describe (a name you choose and a district), what worries you, an occasion in your words, your budget, and the plan.", "You"],
@@ -52,7 +52,7 @@ export function privacyPage(): SitePage {
         anchor: "where",
         paragraphs: [
           "Everything is in Skif's own database on a server it runs in Germany, never with a camera, alarm or advertising company.",
-          `Deleting your records yourself is not built yet. Until it is, write to ${CONTACT_EMAIL} and a person deletes them.`,
+          `You can delete your account, and with it how you sign in, under Your account. Deleting the records it holds yourself is not built yet. Until it is, write to ${CONTACT_EMAIL} and a person deletes them.`,
         ],
       },
     ],

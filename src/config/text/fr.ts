@@ -75,22 +75,14 @@ export const FR: SiteWords = {
     create: {
       title: "Créez votre compte Skif",
       lede: "Gratuit, et c'est fait en une minute. Ensuite, enregistrez des plans de sécurité, fixez vos limites et vos préférences, et réservez un Protector.",
-      submit: "Créer un compte",
-      switchPrompt: "Vous avez déjà un compte ?",
-      switchLabel: "Se connecter",
     },
     signIn: {
       title: "Se connecter à Skif",
       lede: "Bon retour.",
-      submit: "Continuer",
-      switchPrompt: "Nouveau sur Skif ?",
-      switchLabel: "Créer un compte",
     },
-    providers: { google: "Avec Google", github: "Avec GitHub" },
-    or: "ou avec votre e-mail",
-    email: "E-mail",
     fineprint:
-      "Les comptes Skif passent par OrangeCat, le service de comptes commun aux produits construits ici : un seul compte, et Skif lui-même ne garde ni mot de passe ni adresse e-mail, seulement un identifiant anonyme.",
+      "Skif garde votre adresse uniquement pour vous connecter et vous envoyer les liens que vous demandez.",
+    yourAccount: "Votre compte",
     notConfigured: "Les comptes ne sont pas activés dans cette copie de Skif.",
   },
   academyHero: {
@@ -338,17 +330,7 @@ export const FR: SiteWords = {
     signingOut: "Déconnexion…",
     signOutFailed: "La déconnexion n'a pas abouti. Réessayez.",
   },
-  signInError: {
-    kicker: "Se connecter à Skif",
-    failedTitle: "La connexion n'a pas abouti",
-    failedBody: "Rien n'a été modifié. Recommencez : cela fonctionne généralement la deuxième fois. Si l'échec persiste, OrangeCat est peut-être brièvement indisponible.",
-    deniedTitle: "Ce compte ne peut pas se connecter ici",
-    deniedBody: "OrangeCat vous a connecté, mais Skif n'a pas pu accepter le compte.",
-    configurationTitle: "La connexion n'est pas disponible pour le moment",
-    configurationBody: "La connexion n'est pas encore configurée sur ce serveur. Vous n'y êtes pour rien.",
-    tryAgain: "Réessayer",
-    home: "Retour au début",
-  },
+
   guides: {
     indexEyebrow: "Bibliothèque · Guides",
     indexStatement: "Lire plus loin. Agir aujourd'hui.",

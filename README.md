@@ -51,7 +51,7 @@ src/components/ UI
 drizzle/        committed SQL migrations
 ```
 
-Roles are derived, not stored on a user: **Operations** = subs listed in
+Roles are derived, not stored on a user: **Operations** = actor ids listed in
 `SKIF_OPS_SUBS`; **Protector** = a row in `protectors` (applied → approved by
 Operations); everyone signed in is a **customer**.
 
@@ -59,16 +59,33 @@ Operations); everyone signed in is a **customer**.
 
 ```bash
 pnpm install
-cp .env.example .env.local        # dev login is on by default
+cp .env.example .env.local
 pnpm db:local                     # in-process Postgres on :5433 (keep running)
 pnpm db:migrate                   # in another shell
 pnpm dev
 ```
 
-Sign in with the development form using any identity. Use `ops` to get
-Operations (it becomes the sub `dev:ops`, which `.env.example` lists in
-`SKIF_OPS_SUBS`). The development login only mounts when `NODE_ENV` is
-`development` **and** `SKIF_DEV_LOGIN=1`, so it can't exist in a production build.
+Create an account at `/signin?mode=create` with any address and password.
+For Operations, put that account's id (`SELECT id FROM users`) in
+`SKIF_OPS_SUBS` and restart.
+
+## Accounts
+
+Accounts are `@bitbaum/accountkit` (`src/auth.ts`), on AccountKit's own
+screens: `/signin` (password, passkey, an emailed sign-in link, recovery, the
+second factor), `/signin?mode=create` and `/account` (password, passkeys,
+second factor, linked sign-ins, deletion). "Continue with OrangeCat" and the
+shared bitbaum sign-in appear when their clients are set; the link and
+recovery when mail is.
+
+Every row that belongs to a person stores their **actor id**. For a person
+whose first way into Skif was OrangeCat (everyone who signed in before
+2026-11-02, when OrangeCat was the only way in), that is their OrangeCat
+`sub`, exactly as before: their first OrangeCat sign-in on AccountKit
+creates the account and links it by that `sub`
+(`legacyIdentityProvider: "orangecat"`), so nothing was migrated and no
+address is ever used to find them. Everyone else's actor id is their account
+id. `SKIF_OPS_SUBS` and `SKIF_LOKI_WATCH_SUBS` list actor ids.
 
 ## Verify
 
@@ -81,11 +98,15 @@ the committed migrations applied.
 
 ## Production
 
-Required env on the box: `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`,
-`AUTH_TRUST_HOST=true`, `ORANGECAT_OAUTH_CLIENT_ID`,
-`ORANGECAT_OAUTH_CLIENT_SECRET`, `SKIF_OPS_SUBS`. The landing page needs none
-of them. Optional: `SKIF_OPS_EMAIL`, `RESEND_API_KEY` (and `RESEND_FROM`) turn on
-Operations alerts by email — new bookings to assign, incidents filed — which
+Required env on the box: `DATABASE_URL`, `AUTH_SECRET` (or
+`BETTER_AUTH_SECRET`, 32+ characters), `AUTH_URL`, `SKIF_OPS_SUBS`. The landing
+page needs none of them. `ORANGECAT_OAUTH_CLIENT_ID` and
+`ORANGECAT_OAUTH_CLIENT_SECRET` add "Continue with OrangeCat";
+`SIGNIN_ISSUER`, `SIGNIN_CLIENT_ID` and `SIGNIN_CLIENT_SECRET` the shared
+sign-in (loki `app-secrets.yml action=signin-on`, once Morulia has a
+provider). `RESEND_API_KEY` (and `RESEND_FROM`) sends account mail: the
+emailed sign-in link and recovery are offered only with it. With
+`SKIF_OPS_EMAIL` it also turns on Operations alerts by email — new bookings to assign, incidents filed — which
 carry no personal or location data; `/api/health` reports `mail`.
 Optional: `GROQ_API_KEY` (and/or `GEMINI_API_KEY`, `OPENROUTER_API_KEY`)
 switches on AI form assistance — only on the Protector application, where a

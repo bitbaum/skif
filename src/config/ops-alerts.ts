@@ -1,6 +1,6 @@
 /**
- * What Skif tells Operations by email, and nothing more. Skif keeps no one's
- * email address, so mail goes only to Operations (SKIF_OPS_EMAIL), and it
+ * What Skif tells Operations by email, and nothing more. Account addresses
+ * are for signing in only, so mail goes only to Operations (SKIF_OPS_EMAIL), and it
  * carries no personal or location data: no names, no meeting point, no notes,
  * no report text. It says what happened, gives a short booking reference and
  * links to the page where a signed-in operator sees the rest.

@@ -1,0 +1,85 @@
+name: Accounts
+
+# Every way into a Skif account, in a real Chromium against the production
+# build and a throwaway PostgreSQL built from the committed migrations
+# (scripts/ci/account-journey.mjs): the method set on /signin and
+# /signin?mode=create at 320px and 390px; sign up, sign out, a wrong password
+# refused, sign in; a password reset through the mailed link; an emailed
+# sign-in link; passkeys and the second factor on /account. Mail is
+# AccountKit's real mail, caught by scripts/ci/mail-sink.cjs instead of being
+# sent. Synthetic people only; the OrangeCat and bitbaum sign-in client values
+# below exist only so their buttons render, and are never used to sign in.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: accounts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: skif_journey
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U app -d skif_journey"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://app:app@127.0.0.1:5432/skif_journey
+      AUTH_SECRET: synthetic-skif-journey-secret-at-least-32-chars
+      AUTH_URL: http://localhost:3000
+      NEXT_TELEMETRY_DISABLED: "1"
+      BASE_URL: http://localhost:3000
+      # Outside the uploaded artifacts: it holds (synthetic) reset tokens.
+      MAIL_SINK: /tmp/skif-ci-mail.jsonl
+      RESEND_API_KEY: re_ci_sink_only
+      RESEND_FROM: Skif <hello@skif.orangecat.ch>
+      ORANGECAT_OAUTH_CLIENT_ID: skif-ci
+      ORANGECAT_OAUTH_CLIENT_SECRET: ci-only
+      SIGNIN_ISSUER: https://morulia.orangecat.ch
+      SIGNIN_CLIENT_ID: skif-ci
+      SIGNIN_CLIENT_SECRET: ci-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Node version file
+        run: "[ -f .nvmrc ] || echo 22 > .nvmrc"
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Schema from the committed migrations
+        run: pnpm db:migrate
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+      - name: Account journey
+        run: |
+          mkdir -p account-journey
+          NODE_OPTIONS="--require ./scripts/ci/mail-sink.cjs" pnpm exec next start -p 3000 > next.log 2>&1 &
+          for i in $(seq 60); do curl -sf -o /dev/null http://localhost:3000/signin && break; sleep 1; done
+          node scripts/ci/account-journey.mjs
+      - name: Keep screenshots and the server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skif-account-journey
+          path: |
+            account-journey/
+            next.log
+          retention-days: 14
+          if-no-files-found: warn

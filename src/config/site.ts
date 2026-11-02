@@ -130,8 +130,8 @@ export function siteText(locale: Locale) {
       protector: { href: "/protector", label: w.mySkif.protector, jobs: w.mySkif.jobs },
       ops: { href: "/ops", label: w.mySkif.ops },
     },
-    /** The account screen's words. Accounts are OrangeCat accounts (fleet
-     * identity contract); the screen says so once, in the fine print. */
+    /** The account screens' own words (title, lede, fine print). The forms'
+     * words come from @bitbaum/accountkit. */
     ACCOUNT: w.account,
     ACADEMY_HERO: w.academyHero,
     HOME: {

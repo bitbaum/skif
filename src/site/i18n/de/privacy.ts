@@ -19,7 +19,7 @@ export const PRIVACY_DE: SitePage = {
       anchor: "stored",
       columns: ["Eintrag", "Was er enthält", "Wer ihn sieht"],
       rows: [
-        ["Dein Konto", "Eine anonyme Kennung aus deinem Konto. Keine E-Mail-Adresse, kein Passwort.", "Skifs Systeme"],
+        ["Dein Konto", "Deine E-Mail-Adresse und wie du dich anmeldest: ein Passwort (nur als Hash gespeichert) und Passkeys oder ein zweiter Faktor, wenn du sie hinzufügst. Meldest du dich über einen anderen Kontodienst an, wird statt einer Adresse dessen Kennung gespeichert.", "Skifs Systeme"],
         ["Dein Profil", "Der Name, mit dem dich ein Protector ansprechen soll, wenn du einen angibst.", "Der Protector deiner Buchung, sobald er annimmt"],
         ["Deine Einstellungen", "Deine festen Grenzen, deine Neigungen bei Abwägungen, deine bevorzugte Auftrittsart und deine Sprachen.", "Du; genutzt, um Schritte zu reihen und Protectors zuzuteilen"],
         [
@@ -59,7 +59,7 @@ export const PRIVACY_DE: SitePage = {
       anchor: "where",
       paragraphs: [
         "Alles liegt in Skifs eigener Datenbank auf einem Server, den Skif in Deutschland betreibt, nie bei einer Kamera-, Alarm- oder Werbefirma.",
-        "Deine Einträge selbst zu löschen, ist noch nicht gebaut. Bis es so weit ist, schreib an cato@orangecat.ch, und ein Mensch löscht sie.",
+        "Dein Konto, und damit wie du dich anmeldest, löschst du unter «Dein Konto». Die Einträge darin selbst zu löschen, ist noch nicht gebaut. Bis es so weit ist, schreib an cato@orangecat.ch, und ein Mensch löscht sie.",
       ],
     },
   ],
