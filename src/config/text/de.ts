@@ -76,22 +76,14 @@ export const DE: SiteWords = {
     create: {
       title: "Erstelle dein Skif-Konto",
       lede: "Gratis und in einer Minute erledigt. Danach speicherst du Sicherheitspläne, legst deine Grenzen und Vorlieben fest und buchst einen Protector.",
-      submit: "Konto erstellen",
-      switchPrompt: "Schon ein Konto?",
-      switchLabel: "Anmelden",
     },
     signIn: {
       title: "Bei Skif anmelden",
       lede: "Willkommen zurück.",
-      submit: "Weiter",
-      switchPrompt: "Neu bei Skif?",
-      switchLabel: "Konto erstellen",
     },
-    providers: { google: "Mit Google", github: "Mit GitHub" },
-    or: "oder mit deiner E-Mail",
-    email: "E-Mail",
     fineprint:
-      "Skif-Konten laufen über OrangeCat, den Kontodienst der Produkte, die hier gebaut werden: ein Konto für alle, und Skif selbst speichert weder Passwort noch E-Mail-Adresse, nur eine anonyme Kennung.",
+      "Skif braucht deine Adresse nur, um dich anzumelden und dir die Links zu schicken, um die du bittest.",
+    yourAccount: "Dein Konto",
     notConfigured: "Konten sind in dieser Kopie von Skif nicht eingeschaltet.",
   },
   academyHero: {
@@ -339,17 +331,7 @@ export const DE: SiteWords = {
     signingOut: "Wird abgemeldet…",
     signOutFailed: "Die Abmeldung hat nicht geklappt. Versuch es nochmals.",
   },
-  signInError: {
-    kicker: "Bei Skif anmelden",
-    failedTitle: "Die Anmeldung wurde nicht abgeschlossen",
-    failedBody: "Es wurde nichts geändert. Fang nochmals an: Meist klappt es beim zweiten Mal. Wenn es weiter scheitert, ist OrangeCat vielleicht kurz nicht erreichbar.",
-    deniedTitle: "Mit diesem Konto geht die Anmeldung hier nicht",
-    deniedBody: "OrangeCat hat dich angemeldet, aber Skif konnte das Konto nicht annehmen.",
-    configurationTitle: "Die Anmeldung ist gerade nicht verfügbar",
-    configurationBody: "Die Anmeldung ist auf diesem Server noch nicht eingerichtet. Das liegt nicht an dir.",
-    tryAgain: "Nochmals versuchen",
-    home: "Zurück zum Anfang",
-  },
+
   guides: {
     indexEyebrow: "Bibliothek · Ratgeber",
     indexStatement: "Tiefer lesen. Heute handeln.",

@@ -1,8 +1,9 @@
 /**
- * Database schema, one module per area. There is deliberately no users table:
- * identity is the OrangeCat OIDC `sub`, stored as text wherever a row belongs
- * to a person.
+ * Database schema, one module per area. A row that belongs to a person stores
+ * their `actorId` as text (src/auth.ts): the OrangeCat `sub` for everyone
+ * whose first way in was OrangeCat, the account id for everyone else.
  */
+export * from "./accounts";
 export * from "./academy";
 export * from "./assessments";
 export * from "./audit";

@@ -19,7 +19,7 @@ export const PRIVACY_IT: SitePage = {
       anchor: "stored",
       columns: ["Dato", "Cosa contiene", "Chi lo vede"],
       rows: [
-        ["Il tuo account", "Un identificativo anonimo del tuo account. Nessun indirizzo e-mail, nessuna password.", "I sistemi di Skif"],
+        ["Il tuo account", "Il tuo indirizzo e-mail e come accedi: una password (conservata solo come hash), e passkey o un secondo fattore se li aggiungi. Se accedi tramite un altro servizio di account, al posto di un indirizzo viene conservato il suo identificativo.", "I sistemi di Skif"],
         ["Il tuo profilo", "Il nome con cui un Protector deve chiamarti, se ne indichi uno.", "Il Protector della tua prenotazione, una volta che accetta"],
         [
           "Le tue preferenze",
@@ -70,7 +70,7 @@ export const PRIVACY_IT: SitePage = {
       anchor: "where",
       paragraphs: [
         "Tutto si trova nella banca dati di Skif, su un server che gestisce in Germania, mai presso un'azienda di telecamere, di allarmi o di pubblicità.",
-        "Cancellare i tuoi dati da solo non è ancora possibile. Finché non lo sarà, scrivi a cato@orangecat.ch e una persona li cancella.",
+        "Puoi cancellare il tuo account, e con esso come accedi, in «Il tuo account». Cancellare da solo i dati che contiene non è ancora possibile. Finché non lo sarà, scrivi a cato@orangecat.ch e una persona li cancella.",
       ],
     },
   ],

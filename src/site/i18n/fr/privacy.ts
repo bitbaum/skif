@@ -19,7 +19,7 @@ export const PRIVACY_FR: SitePage = {
       anchor: "stored",
       columns: ["Donnée", "Ce qu'elle contient", "Qui la voit"],
       rows: [
-        ["Votre compte", "Un identifiant anonyme issu de votre compte. Pas d'adresse e-mail, pas de mot de passe.", "Les systèmes de Skif"],
+        ["Votre compte", "Votre adresse e-mail et votre façon de vous connecter : un mot de passe (conservé uniquement sous forme de hash), et des passkeys ou un second facteur si vous en ajoutez. Si vous vous connectez par un autre service de comptes, son identifiant est conservé à la place d'une adresse.", "Les systèmes de Skif"],
         ["Votre profil", "Le nom par lequel un Protector doit vous appeler, si vous en donnez un.", "Le Protector de votre réservation, une fois qu'il a accepté"],
         ["Vos préférences", "Vos limites strictes, vos préférences entre les compromis, votre style de présence et vos langues.", "Vous ; elles servent à classer les mesures et à attribuer les Protectors"],
         ["Évaluations", "Les lieux que vous décrivez (un nom que vous choisissez et un quartier), ce qui vous inquiète, une occasion dans vos propres mots, votre budget, et le plan.", "Vous"],
@@ -45,7 +45,7 @@ export const PRIVACY_FR: SitePage = {
       anchor: "where",
       paragraphs: [
         "Tout se trouve dans la propre base de données de Skif, sur un serveur qu'il exploite en Allemagne, jamais chez une entreprise de caméras, d'alarmes ou de publicité.",
-        "La suppression de vos données par vous-même n'est pas encore disponible. D'ici là, écrivez à cato@orangecat.ch et une personne les supprime.",
+        "Vous pouvez supprimer votre compte, et avec lui votre façon de vous connecter, sous « Votre compte ». La suppression par vous-même des données qu'il contient n'est pas encore disponible. D'ici là, écrivez à cato@orangecat.ch et une personne les supprime.",
       ],
     },
   ],

@@ -76,22 +76,14 @@ export const IT: SiteWords = {
     create: {
       title: "Crea il tuo account Skif",
       lede: "Gratis, e ci vuole un minuto. Poi salva piani di sicurezza, imposta i tuoi limiti e le tue preferenze e prenota un Protector.",
-      submit: "Crea un account",
-      switchPrompt: "Hai già un account?",
-      switchLabel: "Accedi",
     },
     signIn: {
       title: "Accedi a Skif",
       lede: "Bentornato.",
-      submit: "Continua",
-      switchPrompt: "Nuovo su Skif?",
-      switchLabel: "Crea un account",
     },
-    providers: { google: "Con Google", github: "Con GitHub" },
-    or: "o con la tua e-mail",
-    email: "E-mail",
     fineprint:
-      "Gli account Skif funzionano con OrangeCat, il servizio di account comune ai prodotti costruiti qui: un solo account, e Skif stesso non conserva né password né indirizzo e-mail, solo un identificativo anonimo.",
+      "Skif conserva il tuo indirizzo solo per farti accedere e inviarti i link che chiedi.",
+    yourAccount: "Il tuo account",
     notConfigured: "Gli account non sono attivati in questa copia di Skif.",
   },
   academyHero: {
@@ -339,17 +331,7 @@ export const IT: SiteWords = {
     signingOut: "Uscita in corso…",
     signOutFailed: "L'uscita non è andata a buon fine. Riprova.",
   },
-  signInError: {
-    kicker: "Accedi a Skif",
-    failedTitle: "L'accesso non è stato completato",
-    failedBody: "Non è cambiato nulla. Ricomincia: di solito funziona la seconda volta. Se continua a non riuscire, OrangeCat potrebbe essere momentaneamente non disponibile.",
-    deniedTitle: "Con questo account non puoi accedere qui",
-    deniedBody: "OrangeCat ti ha fatto accedere, ma Skif non ha potuto accettare l'account.",
-    configurationTitle: "L'accesso non è disponibile in questo momento",
-    configurationBody: "L'accesso non è ancora configurato su questo server. Non dipende da te.",
-    tryAgain: "Riprova",
-    home: "Torna all'inizio",
-  },
+
   guides: {
     indexEyebrow: "Biblioteca · Guide",
     indexStatement: "Leggi a fondo. Agisci oggi.",
