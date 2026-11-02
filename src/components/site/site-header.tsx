@@ -274,17 +274,23 @@ function AccountLinks({ who, t, stretch = false }: { who: { name: string } | nul
   );
 }
 
-/** Who is signed in, asked of Auth.js once in the browser; null when nobody
- * is (or when the page already knows and `ask` is false). */
+/** Who is signed in, asked of the account runtime (AccountKit's
+ * /api/auth/get-session) once in the browser; null when nobody is (or when
+ * the page already knows and `ask` is false). A person with no name yet is
+ * shown by their address, unless it is the `.invalid` placeholder an
+ * OrangeCat sign-in carries. */
 function useSessionName(ask: boolean): { name: string } | null {
   const [who, setWho] = useState<{ name: string } | null>(null);
   useEffect(() => {
     if (!ask) return;
     let live = true;
-    fetch("/api/auth/session")
+    fetch("/api/auth/get-session")
       .then((r) => (r.ok ? r.json() : null))
-      .then((s: { user?: { id?: string; name?: string | null } } | null) => {
-        if (live && s?.user?.id) setWho({ name: s.user.name ?? "" });
+      .then((s: { user?: { id?: string; name?: string | null; email?: string | null } } | null) => {
+        const user = s?.user;
+        if (!live || !user?.id) return;
+        const email = user.email && !user.email.endsWith(".invalid") ? user.email : "";
+        setWho({ name: user.name || email });
       })
       .catch(() => {});
     return () => {
