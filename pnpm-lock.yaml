@@ -27,8 +27,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       '@bitbaum/sitekit':
-        specifier: 0.6.1
-        version: 0.6.1(react@19.3.0)
+        specifier: 0.7.0
+        version: 0.7.0(react@19.3.0)
       better-auth:
         specifier: ^1.7.15
         version: 1.7.15(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(kysely@0.29.8)(pg@8.23.0))(next@16.4.1(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@22.20.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vitest@5.0.1(@types/node@22.20.4)(vite@8.3.5(@types/node@22.20.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))
@@ -338,8 +338,8 @@ packages:
     resolution: {integrity: sha512-YkgMFRQ6HuzIB0q/Ao4FB4zb/YxVc0iKyVdRkFe2psJ4CQJvGxBfDlURomZMkgQfpBQox4QiT/iN9IGRz6SeTg==}
     engines: {node: '>=20'}
 
-  '@bitbaum/sitekit@0.6.1':
-    resolution: {integrity: sha512-2Yjz69kn+mAZpSYdBTlpmr+MPBljBYSVOWW+gSyH3XuMonHoaDAi523QvVEKUAp3BUuItnslrIfg75xUpIPVig==}
+  '@bitbaum/sitekit@0.7.0':
+    resolution: {integrity: sha512-FG1CzAvhR1yXGKPtKbQdpHhK44r2ULClhWY8A5zXf94k/ub/+Mfhyb0lk/vBTdJmROu+sOM6f0xXiEFhmZHkzg==}
     engines: {node: '>=20'}
     peerDependencies:
       react: '>=18'
@@ -4133,7 +4133,7 @@ snapshots:
 
   '@bitbaum/mail-kit@0.2.0': {}
 
-  '@bitbaum/sitekit@0.6.1(react@19.3.0)':
+  '@bitbaum/sitekit@0.7.0(react@19.3.0)':
     dependencies:
       react: 19.3.0
       zod: 4.6.7
